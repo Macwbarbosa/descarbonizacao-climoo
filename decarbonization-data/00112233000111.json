@@ -1,0 +1,5288 @@
+{
+  "modulo": "descarbonizacao",
+  "cnpj": "27093558006580",
+  "empresa": "Mills Locação, Serviços e Logística S.A.",
+  "exportadoEm": "2026-06-19T17:33:35.899Z",
+  "atualizadoEm": "2026-06-19T17:33:32.869Z",
+  "metasPeriodo": {
+    "params": {
+      "baseYear": 2025,
+      "recentYear": 2025,
+      "netZeroYear": 2050,
+      "inventoryDone": true
+    },
+    "metas": [
+      {
+        "id": "ef7d747d-ef2b-4e9d-a2fd-eea8c3a34e98",
+        "scopes": {
+          "scope1": true,
+          "scope2": true,
+          "scope3": false
+        },
+        "type": "absoluta",
+        "denominatorDriverId": null,
+        "ambition": "1p5",
+        "submissionYear": 2026,
+        "nearTermYear": 2036,
+        "netZeroYear": 2050,
+        "name": "Meta curto prazo Escopo E1+E2 (absoluta)",
+        "autoName": false
+      }
+    ]
+  },
+  "inventario": {
+    "atividades": [
+      {
+        "id": "210a3a6a-7dd3-42d6-ab22-f0fb52f83387",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo de GLP em refeitórios_ | Formas e Escoras",
+        "emission": 0.114607947,
+        "year": 2025
+      },
+      {
+        "id": "d3c605af-65c5-435f-bf78-78c11e52c4d2",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Quantidade de Acetileno em KG | Formas e Escoras",
+        "emission": 0.097815385,
+        "year": 2025
+      },
+      {
+        "id": "f28a582c-e84e-4b98-bd46-7515641b2ac1",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo de GLP em refeitórios | Leves",
+        "emission": 3.591049004,
+        "year": 2025
+      },
+      {
+        "id": "f1f308ad-1f60-427c-85fc-ea10ac1c9e80",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo Gerador Diesel - Filial Maracanaú | Leves",
+        "emission": 17.76772937,
+        "year": 2025
+      },
+      {
+        "id": "82256609-c7e1-4f2e-84fb-1a073f37ec85",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo interno de óleo diesel em equipamentos internos - Osasco | Leves",
+        "emission": 100.4418635,
+        "year": 2025
+      },
+      {
+        "id": "ba37f3a2-34a2-469e-861d-a55058427155",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo interno Diesel (manutenção equipamentos) | Leves",
+        "emission": 397.0321389,
+        "year": 2025
+      },
+      {
+        "id": "e537ea94-83c3-4021-814d-85b8273c774f",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo de GLP em refeitórios - Quantidade consumida de gás de cozinha (kg) | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "e6dd7de8-56d3-4075-a409-5ea9325cd551",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Consumo Diesel - Gerador Sumaré | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "b381e4f9-13d3-4a95-a009-45ca4b5f6138",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Solda e Corte - Quantidade consumida em gases para solda (Acetileno) (kg)_ | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "2d56f4cd-f8ff-49d6-bee4-7b9d6f9a040e",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Benef. Aux. Combustível (Corporativo) - Valor consumido nos cartões ticket log (R$) _ | Corporativo",
+        "emission": 20.53932131,
+        "year": 2025
+      },
+      {
+        "id": "33465a15-8ca1-4cfc-96a4-ad9cb9a163ed",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Benef. Aux. Combustível_ | Formas e Escoras",
+        "emission": 27.1952545,
+        "year": 2025
+      },
+      {
+        "id": "6a9fd53c-0558-437a-b101-f29b01c1ac7f",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo carros_Diesel | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "0c26f48a-e55a-4d82-a3cc-e9003c5b47d6",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo Etanol_ | Formas e Escoras",
+        "emission": 5.811043975,
+        "year": 2025
+      },
+      {
+        "id": "f8688c26-5740-438e-8add-1deb647a0b77",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo Gasolina_ | Formas e Escoras",
+        "emission": 4.520123685,
+        "year": 2025
+      },
+      {
+        "id": "f702d8b7-f1e5-4691-af60-637371e67293",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Uso de empilhadeiras - GLP_ | Formas e Escoras",
+        "emission": 1.025309999,
+        "year": 2025
+      },
+      {
+        "id": "19c6d4db-d6e3-42b2-bd6f-2d19801b9633",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Benef. Aux. Combustível_ | Intralogística",
+        "emission": 3.471647977,
+        "year": 2025
+      },
+      {
+        "id": "5eca1017-a051-4510-8990-a55d8f18a642",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo Diesel - Caminhão de apoio| Intralogística",
+        "emission": 114.7461292,
+        "year": 2025
+      },
+      {
+        "id": "14eb8ac8-9be3-4a31-a0cf-642e3a4ce782",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo empilhadeiras -  GLP | Intralogística",
+        "emission": 13.08778057,
+        "year": 2025
+      },
+      {
+        "id": "135ca90f-5982-4841-aaf2-a699c5ab2d52",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Diesel | Intralogística",
+        "emission": 6.752172744,
+        "year": 2025
+      },
+      {
+        "id": "09a7927a-1106-454b-bd6a-c394c513cc5d",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Etanol  | Intralogística",
+        "emission": 9.118380059,
+        "year": 2025
+      },
+      {
+        "id": "1de4cbba-9167-4ab9-8150-7be059876fa6",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Gasolina | Intralogística",
+        "emission": 33.89376743,
+        "year": 2025
+      },
+      {
+        "id": "536db830-e32b-4586-bec6-0b50883b2cb0",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Benef. Aux. Combustível_ | Leves",
+        "emission": 80.42057785,
+        "year": 2025
+      },
+      {
+        "id": "a56942ae-dc09-4514-bc83-7a3f48fef9a9",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Diesel_ | Leves",
+        "emission": 104.2533658,
+        "year": 2025
+      },
+      {
+        "id": "40c26727-9ad7-451b-b5d4-7d1dde6e8c6a",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Etanol_ | Leves",
+        "emission": 45.15313833,
+        "year": 2025
+      },
+      {
+        "id": "f2622330-fce7-4580-b72c-82378d0e9d8a",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Gasolina_ | Leves",
+        "emission": 172.7539625,
+        "year": 2025
+      },
+      {
+        "id": "56e27395-cd29-41a3-b66a-1dc1af954c46",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Uso de empilhadeiras - GLP_ | Leves",
+        "emission": 5.789985876,
+        "year": 2025
+      },
+      {
+        "id": "6050b24b-78bd-4937-8402-767f8b6bf06e",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Benef. Aux. Combustível (Gasolina) - Valor consumido nos cartões ticket log (R$)_ | Pesados",
+        "emission": 17.35823988,
+        "year": 2025
+      },
+      {
+        "id": "59d2a64d-eec5-4009-a786-3cb03c5e2b09",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo de Diesel - Caminhão de apoio - Quantidade de diesel consumida (litros)_ | Pesados",
+        "emission": 139.5337968,
+        "year": 2025
+      },
+      {
+        "id": "cbcb68bf-c896-4fdd-b058-b58ef5421986",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo de Diesel - Carros  - Quantidade de diesel consumida (litros) | Pesados",
+        "emission": 163.1548082,
+        "year": 2025
+      },
+      {
+        "id": "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo de diesel nos equipamentos  locados no cliente - quando o abastecimento é por conta da Mills | Pesados",
+        "emission": 447.9790606,
+        "year": 2025
+      },
+      {
+        "id": "5edcd294-1e38-45a3-9011-eca201730003",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo de Etanol - Carros - Quantidade de etanol consumida (litros) | Pesados",
+        "emission": 4.95858353,
+        "year": 2025
+      },
+      {
+        "id": "9c806f1c-50eb-4560-a02b-6cb947025acf",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Consumo de gasolina - Carros - Quantidade de gasolina consumida (litros) | Pesados",
+        "emission": 87.10923338,
+        "year": 2025
+      },
+      {
+        "id": "52ad326a-9dbe-4946-a169-4a25c1139bec",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Next Rental - Consumo Combustível no cliente por conta da Mills - Diesel | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "492e08cf-18c4-4045-a9bc-3d7b9d0641b6",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "NEXT Rental - Consumo de Diesel - Carros | Pesados",
+        "emission": 539.3654527,
+        "year": 2025
+      },
+      {
+        "id": "39528414-4dbc-45ff-830d-7b1d1d542a4e",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "NEXT Rental - Consumo de Etanol - Carros | Pesados",
+        "emission": 0.879686366,
+        "year": 2025
+      },
+      {
+        "id": "91af28be-1768-48d2-9674-aada1b6e9d6c",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "NEXT Rental - Consumo de Gasolina - Carros | Pesados",
+        "emission": 408.7820295,
+        "year": 2025
+      },
+      {
+        "id": "9bb21a6d-ab5d-4a3c-b515-d6441cb020e8",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Uso de empilhadeiras GLP - Consumo de cilindros de GLP (kg)_ | Pesados",
+        "emission": 0.723748234,
+        "year": 2025
+      },
+      {
+        "id": "179a1b36-be62-4eb2-91fe-57613323b13b",
+        "scope": "Escopo 1",
+        "category": "Efluentes",
+        "name": "Efluentes - fossas sépticas | Formas e Escoras",
+        "emission": 21.84014,
+        "year": 2025
+      },
+      {
+        "id": "8ab524ef-8eeb-4acb-b622-e8df8ae8e65f",
+        "scope": "Escopo 1",
+        "category": "Efluentes",
+        "name": "Efluentes - fossas sépticas | Intralogística",
+        "emission": 22.73439,
+        "year": 2025
+      },
+      {
+        "id": "c62fa8c5-272c-4dcd-aaf7-772b66a7c134",
+        "scope": "Escopo 1",
+        "category": "Efluentes",
+        "name": "Efluentes - Fossa séptica (Leves) | Leves",
+        "emission": 34.99328,
+        "year": 2025
+      },
+      {
+        "id": "7a8fde47-39d2-41ab-be70-d90388df92dc",
+        "scope": "Escopo 1",
+        "category": "Efluentes",
+        "name": "Efluentes - fossas sépticas | Pesados",
+        "emission": 13.86343,
+        "year": 2025
+      },
+      {
+        "id": "bcedb582-f2e4-4c06-b438-5aa98218b12a",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Ar condicionado | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "28077d09-3d8b-4ba2-b176-71d71338df40",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Cabine de Pintura - Consumo tintas PU - anexar relatório de compra ou consumo (litros) | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "cc01f499-58c9-4c9f-8fb2-3ac4cbdcc13b",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Recarga Extintor CO2 | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "7c6c2360-00de-494d-a555-d9ca58c3c373",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Ar condicionado - recarga de gases de refrigeração. Enviar relatório contendo os tipos e quantidades de gases recarregados. | Intralogística",
+        "emission": 0.677,
+        "year": 2025
+      },
+      {
+        "id": "f9ffb6e6-349a-4871-97fa-03933c5ab6d7",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Cabine de Pintura - Consumo tintas PU - anexar relatório de compra ou consumo (litros) | Intralogística",
+        "emission": 0.1430946,
+        "year": 2025
+      },
+      {
+        "id": "8ddf1a36-731e-4ebb-81fb-dfabb49d00d3",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Descarte de Extintores - CO2 | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "3d50f117-d5be-46f7-ba56-622f68683295",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Recarga Extintor CO2 | Intralogística",
+        "emission": 0.03,
+        "year": 2025
+      },
+      {
+        "id": "11548460-9094-4550-bc0c-2f22180831ae",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Refrigerantes - Ar condicionado (equipamentos) - Quantidade e tipo de gás utilizado em manutenções de ar condicionado nas máquinas (kg) | Intralogística",
+        "emission": 53.53824,
+        "year": 2025
+      },
+      {
+        "id": "9eee5ef4-17a3-4d6c-900e-02b9852c5802",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Ar condicionado Filiais _R134a | Leves",
+        "emission": 17.784,
+        "year": 2025
+      },
+      {
+        "id": "462263ed-e132-4a63-b47b-d6b4f28dfdb8",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Ar condicionado Filiais _R410a | Leves",
+        "emission": 20.7449475,
+        "year": 2025
+      },
+      {
+        "id": "8ba23640-8d90-4f1b-b78d-703ccd4984b4",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Ar condicionado_R32 | Leves",
+        "emission": 1.354,
+        "year": 2025
+      },
+      {
+        "id": "51f3a10d-32fe-468d-8759-f2c44186ca06",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Cabine de Pintura - Consumo tintas PU - anexar relatório de compra ou consumo (litros) | Leves",
+        "emission": 17.65485493,
+        "year": 2025
+      },
+      {
+        "id": "e378fac6-36ba-4465-87d7-0b2078d3655d",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Descarte de Extintores - CO2 | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "14f0160c-dc55-4b8b-b8ac-067f1ae98d27",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Recarga Extintor CO2 | Leves",
+        "emission": 0.024,
+        "year": 2025
+      },
+      {
+        "id": "0c027559-c8a6-408a-a8d4-789fb5a653cd",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Cabine de Pintura - Consumo tintas PU - anexar relatório de compra ou consumo (litros) | Pesados",
+        "emission": 0.97382736,
+        "year": 2025
+      },
+      {
+        "id": "ae3fe72c-6b59-4332-945d-73aaebb6326f",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Descarte de Extintores  CO2 - Quantidade em kg de extintores descartados no ano | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "b6a002da-17e2-456f-87cf-7de9d8bc0ce2",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "NEXT - refrigerantes  | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "cbd90deb-4aa6-423d-8c44-69a7914ffd60",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Recarga Extintor CO2 - Quantidade referente a utilização em emergências e/ou recargas (kg)_ | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "c2c948ba-2291-463f-bf27-e3a079f87893",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Refrigerantes - Ar condicionado (equipamentos) - Quantidade e tipo de gás utilizado em manutenções de ar condicionado nas máquinas (kg) | Pesados",
+        "emission": 1443.338,
+        "year": 2025
+      },
+      {
+        "id": "48d7548a-e53b-489b-8f41-143a6153a56f",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "Refrigerantes - Ar condicionado (filiais) - Quantidade e tipo de gás utilizado em manutenções de ar condicionado das filiais (kg)_ | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "7d64f910-c425-4af7-aad0-7fe862caf4fe",
+        "scope": "Escopo 1",
+        "category": "Fugitivas",
+        "name": "R22 | Leves",
+        "emission": 30.362112,
+        "year": 2025
+      },
+      {
+        "id": "4aa0e6e3-2ed7-4dc3-822b-20f56dd8666c",
+        "scope": "Escopo 1",
+        "category": "Processos industriais",
+        "name": "Solda e Corte - Quantidade consumida em gases para solda (Mistura de gases) - em KG | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "dc17fc16-0bf6-4f03-9302-85752bb25961",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs)- Corporativo | Corporativo",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "f15d10d4-d3a5-4cbb-b133-83264cd0579b",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs) - F&E | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "4dd3d5f2-abd7-4738-ad8b-b78119e369e9",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "c027e1c6-32ea-4a70-a822-62f292793dd6",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs) | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "44f0fcf2-fe71-476b-8ba7-f081c1316719",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs) - Leves | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "c98950d2-2b4a-4959-875a-a03a987d6a48",
+        "scope": "Escopo 2",
+        "category": "Eletricidade mercado",
+        "name": "Consumo de energia elétrica de fontes renováveis (iRECs) - Pesados | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "e68356c6-ee1f-4c9f-b6a6-87fb883380a6",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Benef. Aux. Combustível (Corporativo) - Valor consumido nos cartões ticket log (R$) _ | Corporativo",
+        "emission": 4.848753125,
+        "year": 2025
+      },
+      {
+        "id": "d649358c-3efb-4a0f-8396-82fe878e3745",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de eletricidade (Corporativo) | Corporativo",
+        "emission": 31.08350479,
+        "year": 2025
+      },
+      {
+        "id": "40fc829c-58c4-4102-b314-b34fafbc938c",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Benef. Aux. Combustível_ | Formas e Escoras",
+        "emission": 6.420007833,
+        "year": 2025
+      },
+      {
+        "id": "223c6f5e-99fd-4e3a-9ae0-6b91ce60eae1",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo carros_Diesel | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "d53c4223-75a0-4283-a0ff-7970df9b3fae",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de eletricidade (F&E) | Formas e Escoras",
+        "emission": 35.71445565,
+        "year": 2025
+      },
+      {
+        "id": "fd4b55c7-e11a-4f18-b65b-5bf3da13919b",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de GLP em refeitórios_ | Formas e Escoras",
+        "emission": 0.0000309631,
+        "year": 2025
+      },
+      {
+        "id": "144a2ecb-f182-41e9-9f01-695ffd12cebc",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo Etanol_ | Formas e Escoras",
+        "emission": 45.66977441,
+        "year": 2025
+      },
+      {
+        "id": "117a492b-8416-42bd-b144-cd1278a01220",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo Gasolina_ | Formas e Escoras",
+        "emission": 1.35280712,
+        "year": 2025
+      },
+      {
+        "id": "48483961-f8e2-46b3-9ec0-3839dfe8e3a8",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Quantidade de Acetileno em KG | Formas e Escoras",
+        "emission": 0.166753,
+        "year": 2025
+      },
+      {
+        "id": "81134d1e-d84a-4cc5-8a04-042dcdac2bd0",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Solda e Corte - Quantidade consumida em gases para solda (Mistura gases) - em kg  | Formas e Escoras",
+        "emission": 2.90231,
+        "year": 2025
+      },
+      {
+        "id": "ec9bc98d-3c45-45cd-929b-482c281ba249",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Uso de empilhadeiras - GLP_ | Formas e Escoras",
+        "emission": 0.269934516,
+        "year": 2025
+      },
+      {
+        "id": "d502f6b0-d4a0-4474-b574-5f223b20295a",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Benef. Aux. Combustível_ | Intralogística",
+        "emission": 0.819563782,
+        "year": 2025
+      },
+      {
+        "id": "685bf933-d639-4ece-9fde-3be2759a0196",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de eletricidade | Intralogística",
+        "emission": 8.287061334,
+        "year": 2025
+      },
+      {
+        "id": "a72297f6-9010-455f-b14a-06c3bdc568dd",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo Diesel | Intralogística",
+        "emission": 30.20204243,
+        "year": 2025
+      },
+      {
+        "id": "3c84fa4c-414d-457a-97ec-03bdd3cdaa40",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo empilhadeiras -  GLP | Intralogística",
+        "emission": 3.445634709,
+        "year": 2025
+      },
+      {
+        "id": "44a0867d-d419-4454-9160-520ee280960c",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Diesel | Intralogística",
+        "emission": 1.780199035,
+        "year": 2025
+      },
+      {
+        "id": "17f231b4-f3b1-4d04-ad03-cf6667210da7",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Etanol  | Intralogística",
+        "emission": 71.66257253,
+        "year": 2025
+      },
+      {
+        "id": "e97570ac-3fc5-4b3d-83a6-117693b6686c",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Gasolina | Intralogística",
+        "emission": 10.21569738,
+        "year": 2025
+      },
+      {
+        "id": "ff20fb2b-99bc-48f0-8ceb-f7f197239e76",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Benef. Aux. Combustível_ | Leves",
+        "emission": 18.98481568,
+        "year": 2025
+      },
+      {
+        "id": "87aee7f3-fef4-49c2-8f13-b7fd1b189ebb",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de eletricidade (Leves) | Leves",
+        "emission": 16.18465196,
+        "year": 2025
+      },
+      {
+        "id": "069ca2c4-9503-431f-8fe7-e494a169ae29",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de GLP em refeitórios | Leves",
+        "emission": 0.000970176,
+        "year": 2025
+      },
+      {
+        "id": "e7ef8a48-acec-442f-aa71-d13737856c71",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo Gerador Diesel - Filial Maracanaú | Leves",
+        "emission": 4.755056793,
+        "year": 2025
+      },
+      {
+        "id": "70afe702-01b1-44fc-a762-92c69ceace8a",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo interno de óleo diesel - Osasco | Leves",
+        "emission": 26.63015489,
+        "year": 2025
+      },
+      {
+        "id": "77287a86-6d4e-4547-a4a1-d9e280c8212e",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo interno Diesel (manutenção equipamentos) | Leves",
+        "emission": 105.2549067,
+        "year": 2025
+      },
+      {
+        "id": "53d3fb16-f6ba-4127-9d3b-2b4c671f8401",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Diesel_ | Leves",
+        "emission": 27.42412901,
+        "year": 2025
+      },
+      {
+        "id": "40642f16-31d6-4b13-af80-4b294d60b7e0",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Etanol_ | Leves",
+        "emission": 354.8645735,
+        "year": 2025
+      },
+      {
+        "id": "5c430e8e-5ed4-4ecc-a047-6ed323cb6dfe",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Gasolina_ | Leves",
+        "emission": 51.66178568,
+        "year": 2025
+      },
+      {
+        "id": "1d092b0a-935d-46b4-8c91-ef5b8be5735f",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Uso de empilhadeiras - GLP_ | Leves",
+        "emission": 1.524336093,
+        "year": 2025
+      },
+      {
+        "id": "2b621ac6-3a6a-4b10-be8a-5bb50de31f75",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Benef. Aux. Combustível (Gasolina) - Valor consumido nos cartões ticket log (R$)_ | Pesados",
+        "emission": 4.097818912,
+        "year": 2025
+      },
+      {
+        "id": "7ffda0a7-233f-42ba-acbd-79cc62e62a9a",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de Diesel - Caminhão de apoio - Quantidade de diesel consumida (litros)_ | Pesados",
+        "emission": 50.5233776,
+        "year": 2025
+      },
+      {
+        "id": "0df0f30a-0ad3-41e8-8ebb-421c8e225bde",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de Diesel - Carros  - Quantidade de diesel consumida (litros) | Pesados",
+        "emission": 59.07454968,
+        "year": 2025
+      },
+      {
+        "id": "0a90b0d8-2b2c-4b79-bd00-3407852fed27",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de diesel nos equipamentos  locados no cliente - quando o abastecimento é por conta da Mills | Pesados",
+        "emission": 117.8432356,
+        "year": 2025
+      },
+      {
+        "id": "8ab2b0a3-4036-4de1-a45d-abd1e7ef485a",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de Etanol - Carros - Quantidade de etanol consumida (litros) | Pesados",
+        "emission": 32.04053681,
+        "year": 2025
+      },
+      {
+        "id": "2d043ea2-3661-4ea2-9c86-ab2ecf7294a7",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de gasolina - Carros - Quantidade de gasolina consumida (litros) | Pesados",
+        "emission": 17.8363107,
+        "year": 2025
+      },
+      {
+        "id": "9f650cba-79d4-4661-8d67-d064c4468924",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo de GLP em refeitórios - Quantidade consumida de gás de cozinha (kg) | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "257bcd08-f974-4c2e-80ae-789b4306d6b3",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Consumo Diesel - Gerador Sumaré | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "5dc1f0e4-9d73-4244-b3f8-2632ade911fb",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Next Rental - Consumo Combustível no cliente por conta da Mills - Diesel | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "7bd012ef-9b43-48cf-bbcb-a3894460ae82",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] NEXT Rental - Consumo de Diesel - Carros | Pesados",
+        "emission": 141.976502,
+        "year": 2025
+      },
+      {
+        "id": "15367ea1-4a32-479e-aa0f-e7169cf8ccbf",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] NEXT Rental - Consumo de Etanol - Carros | Pesados",
+        "emission": 6.913573198,
+        "year": 2025
+      },
+      {
+        "id": "8114ab51-5ae7-4a83-bc6b-f59016b8ca61",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] NEXT Rental - Consumo de Gasolina - Carros | Pesados",
+        "emission": 122.8692228,
+        "year": 2025
+      },
+      {
+        "id": "d5c97005-65ee-4c20-a5c0-575364cdfc9c",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Solda e Corte - Quantidade consumida em gases para solda (Acetileno) (kg)_ | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "cbf215f4-1d2c-46d7-8699-9c8dbea2a075",
+        "scope": "Escopo 3",
+        "category": "Categoria 3",
+        "name": "[Ciclo de Vida] Uso de empilhadeiras GLP - Consumo de cilindros de GLP (kg)_ | Pesados",
+        "emission": 0.190542012,
+        "year": 2025
+      },
+      {
+        "id": "287e1ca6-5429-4dc9-a486-7a6dbcdd72ca",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Uso dos equipamentos - Caminhões Locados | Intralogística",
+        "emission": 0.147124934,
+        "year": 2025
+      },
+      {
+        "id": "66e1e058-5781-4880-a637-f0423344a73b",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Uso dos equipamentos no cliente - Consumo de combustíveis Empilhadeiras - Diesel | Intralogística",
+        "emission": 131.3913645,
+        "year": 2025
+      },
+      {
+        "id": "fb9a2acd-25d6-49b0-bffa-33c77a2e5715",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Uso dos equipamentos no cliente - Consumo de combustíveis Empilhadeiras - GLP | Intralogística",
+        "emission": 764.8372541,
+        "year": 2025
+      },
+      {
+        "id": "5681792b-f391-4f3d-9bf8-7c546a7f0101",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Uso dos equipamentos - Caminhões Locados | Intralogística",
+        "emission": 0.559043596,
+        "year": 2025
+      },
+      {
+        "id": "51289af9-3bd7-4bf1-9302-86c307c39d08",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Uso dos equipamentos no cliente - Consumo de combustíveis Empilhadeiras - Diesel | Intralogística",
+        "emission": 499.2593644,
+        "year": 2025
+      },
+      {
+        "id": "b03ef947-026f-4edb-a6b5-b51f1bc768ff",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Uso dos equipamentos no cliente - Consumo de combustíveis Empilhadeiras - GLP | Intralogística",
+        "emission": 2905.131565,
+        "year": 2025
+      },
+      {
+        "id": "4ab09b66-e9ee-48a4-930a-7ce265f6eb9e",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Plataformas | Leves",
+        "emission": 3399.513072,
+        "year": 2025
+      },
+      {
+        "id": "7c20473e-cd16-4416-a75a-c5677fca7b5c",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Torre de iluminação | Leves",
+        "emission": 7.939842257,
+        "year": 2025
+      },
+      {
+        "id": "924c3252-71b7-4101-a120-3d7347369bae",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Uso de compressor | Leves",
+        "emission": 1463.694616,
+        "year": 2025
+      },
+      {
+        "id": "28b1fee3-ddf6-4658-8e31-e363e9a352e4",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Uso de gerador | Leves",
+        "emission": 261.0157873,
+        "year": 2025
+      },
+      {
+        "id": "caf38ea8-7655-4431-8fdc-09e84ca66e65",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Plataformas | Leves",
+        "emission": 12917.42987,
+        "year": 2025
+      },
+      {
+        "id": "439bed41-3e85-47d4-8a07-5c93c906b694",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Torre de iluminação | Leves",
+        "emission": 30.16971941,
+        "year": 2025
+      },
+      {
+        "id": "7c0514c4-bebe-4986-aa7b-34f862b5ccb9",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Uso de compressor | Leves",
+        "emission": 5561.729622,
+        "year": 2025
+      },
+      {
+        "id": "22ac2a6c-8bfc-4413-ad7d-95ea7cbdd6f3",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Uso de gerador | Leves",
+        "emission": 991.8047249,
+        "year": 2025
+      },
+      {
+        "id": "fb70a2e3-f1bb-4565-9ba6-44361d44d85c",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] Consumo de combustível no uso dos equipamentos pelos clientes | Pesados",
+        "emission": 16344.62242,
+        "year": 2025
+      },
+      {
+        "id": "f30898cd-d89e-48ee-8618-84526dab48ea",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] NEXT Rental- Consumo de Combustível no cliente - Diesel | Pesados",
+        "emission": 4399.728748,
+        "year": 2025
+      },
+      {
+        "id": "f20cd8f5-6436-4132-b2ca-4d0f504406ca",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "[Ciclo de Vida] NEXT Rental- Consumo de Combustível no cliente - GLP | Pesados",
+        "emission": 1363.853592,
+        "year": 2025
+      },
+      {
+        "id": "a0fc5fd5-352d-4160-94d8-25aabc7eae67",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "Consumo de combustível no uso dos equipamentos pelos clientes | Pesados",
+        "emission": 62056.89947,
+        "year": 2025
+      },
+      {
+        "id": "6a2816fc-645a-417d-b282-1fd3b20f34b6",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "NEXT Rental- Consumo de Combustível no cliente - Diesel | Pesados",
+        "emission": 16717.21008,
+        "year": 2025
+      },
+      {
+        "id": "d8973e53-c1dd-4316-b046-19301d2d2af4",
+        "scope": "Escopo 3",
+        "category": "Categoria 13",
+        "name": "NEXT Rental- Consumo de Combustível no cliente - GLP | Pesados",
+        "emission": 5180.414655,
+        "year": 2025
+      },
+      {
+        "id": "76ef2a8b-5692-471a-804f-fbf5147736ac",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Benfeitorias | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "f87b52aa-ae8a-44b8-b469-a88a820e139d",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Bens de Uso Operacional | Formas e Escoras",
+        "emission": 1.375482509,
+        "year": 2025
+      },
+      {
+        "id": "77fb264b-e585-4002-99ce-1291030158e0",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Computadores e periféricos | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "6e6beb46-a219-4ea1-8847-ef4b6aa87e9d",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Equipamentos de Locação | Formas e Escoras",
+        "emission": 51.94101912,
+        "year": 2025
+      },
+      {
+        "id": "f140fe6b-6cdb-4ee3-b7e4-e12eb3ae2b06",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Móveis e Utensílios | Formas e Escoras",
+        "emission": 7.644296543,
+        "year": 2025
+      },
+      {
+        "id": "bd8d473c-bc2c-4aa0-a07e-3cd6787166ae",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Softwares e projetos (TI) | Formas e Escoras",
+        "emission": 0.030323202,
+        "year": 2025
+      },
+      {
+        "id": "6910186c-3435-4175-9b67-4ad0e1c8018d",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Veículos | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "92d4465f-b851-42ea-a379-57910d1626ab",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Bens de Capital / Investimentos - Relatório de fornecedores ou CAPEX descrevendo o bem e valor gasto | Intralogística",
+        "emission": 17.36283308,
+        "year": 2025
+      },
+      {
+        "id": "734e9314-a976-4338-8010-398fa7b5b85d",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Benfeitorias e Obras em andamento | Leves",
+        "emission": 422.1078322,
+        "year": 2025
+      },
+      {
+        "id": "24e69122-e5d5-4a08-966b-20bd4b64a73c",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Bens de Uso Operacional | Leves",
+        "emission": 2.968547421,
+        "year": 2025
+      },
+      {
+        "id": "5d7a619c-8ef0-4c46-8840-38cdb76a7264",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Computadores e periféricos  | Leves",
+        "emission": 0.152901146,
+        "year": 2025
+      },
+      {
+        "id": "44715cfd-630e-44a3-a0f4-695b5d1f08cd",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Equipamentos de Locação | Leves",
+        "emission": 107.5989377,
+        "year": 2025
+      },
+      {
+        "id": "b6275dbd-9ca7-40f6-8d93-81f8b89a944c",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Móveis e Utensílios | Leves",
+        "emission": 4.538341773,
+        "year": 2025
+      },
+      {
+        "id": "175022e1-49d9-4b54-bbce-b222273fde35",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Softwares e projetos (TI) | Leves",
+        "emission": 65.76472922,
+        "year": 2025
+      },
+      {
+        "id": "c6ed3c5a-b778-495e-b1f8-9405438095cf",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Veículos | Leves",
+        "emission": 1.187068074,
+        "year": 2025
+      },
+      {
+        "id": "84865346-5e76-4020-86ef-f88e3e56ef9d",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Benfeitorias e Obras em andamento | Pesados",
+        "emission": 211.5413338,
+        "year": 2025
+      },
+      {
+        "id": "491611f6-33a2-457c-9781-393a4074eb1a",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Bens de Uso Operacional | Pesados",
+        "emission": 3.047006387,
+        "year": 2025
+      },
+      {
+        "id": "b7f30cb1-452a-4598-a0fe-c418929546db",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Computadores e periféricos  | Pesados",
+        "emission": 0.242741505,
+        "year": 2025
+      },
+      {
+        "id": "181361ae-d62d-4288-91a3-b65231d5debc",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Equipamentos de Locação | Pesados",
+        "emission": 575.1829598,
+        "year": 2025
+      },
+      {
+        "id": "bfc84aae-26be-4419-bb0d-dc91e5e169f8",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Móveis e Utensílios | Pesados",
+        "emission": 0.065595807,
+        "year": 2025
+      },
+      {
+        "id": "ae2e48b5-8bcc-43c6-9108-c18aade5f1ea",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Softwares e projetos (TI) | Pesados",
+        "emission": 16.08911443,
+        "year": 2025
+      },
+      {
+        "id": "3038a7ac-e1c9-4d67-ae53-0354d5913102",
+        "scope": "Escopo 3",
+        "category": "Categoria 2",
+        "name": "Veículos | Pesados",
+        "emission": 5.620912123,
+        "year": 2025
+      },
+      {
+        "id": "8c0153d4-1b10-499d-a321-062e04d4054f",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - Material de uso e consumo | Corporativo",
+        "emission": 28.70919604,
+        "year": 2025
+      },
+      {
+        "id": "b82d70ae-36f9-4f99-9006-5285fce9a5d6",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - Serviços | Corporativo",
+        "emission": 7955.164349,
+        "year": 2025
+      },
+      {
+        "id": "fc9815a8-5cf7-4592-9652-08556d55b976",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - Relatório de aquisição de bens e serviços (softwares e projetos de TI, melhorias,serviços de consultoria, adequações estruturais na filial, etc) | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "09911716-6898-4fd2-9791-2bd6dce6df34",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos -  Material de Uso e Consumo | Intralogística",
+        "emission": 608.7145977,
+        "year": 2025
+      },
+      {
+        "id": "13b20f30-7325-4c2f-8acd-48f85fdd20ca",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - EPIs e EPCs | Intralogística",
+        "emission": 32.43232723,
+        "year": 2025
+      },
+      {
+        "id": "e02ca86a-eac6-4460-bb58-c522074d2d48",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - Insumo de Reparo (ou Insumos de Reposição) | Intralogística",
+        "emission": 0.780592199,
+        "year": 2025
+      },
+      {
+        "id": "557169db-4e81-4494-9d49-4923e46867e1",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - MATERIA PRIMA+ MERCADORIA PARA REVENDA | Intralogística",
+        "emission": 1.276905435,
+        "year": 2025
+      },
+      {
+        "id": "c275416d-2410-4398-b862-a60713646cfc",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Bens e serviços adquiridos - Serviços  | Intralogística",
+        "emission": 1.155982571,
+        "year": 2025
+      },
+      {
+        "id": "9040a7f8-532e-45ba-b5bd-725ee3fa205d",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Emissões do serviço de armazenamento na nuvem - AWS | Leves",
+        "emission": 22.022,
+        "year": 2025
+      },
+      {
+        "id": "b31153c4-b1d5-4919-979d-f3df37d6c2e7",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Emissões do serviço de armazenamento na nuvem - Microsoft | Leves",
+        "emission": 31.06,
+        "year": 2025
+      },
+      {
+        "id": "af90ac1f-03f2-4078-add9-c7053b30db86",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Brindes | Pesados",
+        "emission": 0.043986784,
+        "year": 2025
+      },
+      {
+        "id": "909c9c0d-55dc-4c51-80af-ee75f6272a04",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Computador e serviços relacionados | Pesados",
+        "emission": 37.44939535,
+        "year": 2025
+      },
+      {
+        "id": "df498785-fbe8-4f5c-bd02-66a5d6bd32d7",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Impressão de materiais e publicações | Pesados",
+        "emission": 0.012113304,
+        "year": 2025
+      },
+      {
+        "id": "6a347bcf-b3ac-4928-bce7-111667528f15",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços de aluguel de máquinas e equipamentos | Pesados",
+        "emission": 0.001099153,
+        "year": 2025
+      },
+      {
+        "id": "bfce9b53-5a51-41c2-915c-4accf7a5cec6",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços de manutenção | Pesados",
+        "emission": 3622.771304,
+        "year": 2025
+      },
+      {
+        "id": "ecda6baf-7c05-483e-bdf3-113391ece24a",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços de segurança | Pesados",
+        "emission": 1.108059778,
+        "year": 2025
+      },
+      {
+        "id": "289e2165-0e3b-4067-81a9-10be81fe0e7a",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços diversos | Pesados",
+        "emission": 2.055623332,
+        "year": 2025
+      },
+      {
+        "id": "d960745e-5aaa-4de0-96db-ea2ad6ce7a11",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços empresariais diversos | Pesados",
+        "emission": 161.1444411,
+        "year": 2025
+      },
+      {
+        "id": "c45f4a19-10f3-4b26-a096-b63281580f09",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços relacionados a educação | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "f0987861-8d69-4a36-86f9-8d8151608a3f",
+        "scope": "Escopo 3",
+        "category": "Categoria 1",
+        "name": "Serviços relacionados a saúde | Pesados",
+        "emission": 0.154309432,
+        "year": 2025
+      },
+      {
+        "id": "b3284c25-48d7-496f-b183-5737d8b900f5",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] *Deslocamento de colaboradores\t- Carros / Intralogística",
+        "emission": 40.673824414320315,
+        "year": 2025
+      },
+      {
+        "id": "3cffb8f1-cf93-4277-b137-565827530941",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] *Deslocamento de colaboradores - Carros / Corporativo",
+        "emission": 72.28299411803265,
+        "year": 2025
+      },
+      {
+        "id": "b34d78e3-dfe5-4280-934f-2a3766909fcb",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] *Deslocamento de colaboradores - Carros / Pesados",
+        "emission": 29.016003639122815,
+        "year": 2025
+      },
+      {
+        "id": "f22949da-4bef-4c4b-9e34-9c624a13a69c",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento Colaboradores Casa Trabalho - Ônibus - Pesados / Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "b8b61323-be59-486d-825b-c73fe711f493",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento de colaboradores - Ônibus de viagem / Intralogística",
+        "emission": 244.0960225274783,
+        "year": 2025
+      },
+      {
+        "id": "ea05a403-46d0-4daa-b304-38b92f155b50",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento de colaboradores - Ônibus municipal / Intralogística",
+        "emission": 0.5129948042232999,
+        "year": 2025
+      },
+      {
+        "id": "aafb05ac-2376-4ae9-b10b-e20dc1e986ee",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento funcionário (Automóvel) / Leves",
+        "emission": 185.15541967195213,
+        "year": 2025
+      },
+      {
+        "id": "d2ce4e48-70a1-4757-918d-33bef9774bcf",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento funcionário (Automóvel)\t / Formas e Escoras",
+        "emission": 66.00102239263529,
+        "year": 2025
+      },
+      {
+        "id": "213a99d4-e2d2-42d4-a7bb-fc0f5f2b8f2e",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento funcionário (Ônibus municipal)\t / Formas e Escoras",
+        "emission": 6.1014004751394495,
+        "year": 2025
+      },
+      {
+        "id": "8c05ea58-44d0-4458-9252-73d0fc3693ff",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "[Ciclo de Vida] Deslocamento funcionário (Ônibus municipal)\t / Leves",
+        "emission": 10.97775304940344,
+        "year": 2025
+      },
+      {
+        "id": "a24a6114-e388-491b-a340-6cf5d8e3ca5a",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores\t- Carros / Intralogística",
+        "emission": 135.27245787859638,
+        "year": 2025
+      },
+      {
+        "id": "8a94cb2a-e084-45c5-a0a1-4e94eaf5f259",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Carros / Corporativo",
+        "emission": 240.3978091061392,
+        "year": 2025
+      },
+      {
+        "id": "c289e723-a33b-4f1c-a1b0-95f9e1207862",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Carros / Pesados",
+        "emission": 96.5010344268614,
+        "year": 2025
+      },
+      {
+        "id": "ce605bf6-a6b5-4d5c-8837-cb42b19c8d41",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Ônibus de viagem / Corporativo",
+        "emission": 0.2788753316438186,
+        "year": 2025
+      },
+      {
+        "id": "d53182c3-dc8b-4a82-9374-bb65454d811b",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Ônibus municipal / Corporativo",
+        "emission": 6.653136216896102,
+        "year": 2025
+      },
+      {
+        "id": "d8332463-9872-40d6-983c-011ce27f1542",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento Colaboradores Casa Trabalho - Ônibus - Pesados / Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "69058508-5f1f-43ad-acf1-0d09053afd8a",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Ônibus de viagem / Intralogística",
+        "emission": 5.445810777664466,
+        "year": 2025
+      },
+      {
+        "id": "4c9f2e74-86b8-43ec-81d4-9bead24668fb",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento de colaboradores - Ônibus municipal / Intralogística",
+        "emission": 2.3368789636666167,
+        "year": 2025
+      },
+      {
+        "id": "539fbfb8-a8fe-4f28-b9d2-62ae7c0f0263",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Automóvel) / Leves",
+        "emission": 615.7874030588997,
+        "year": 2025
+      },
+      {
+        "id": "960e3be0-c2f4-4bd9-9419-29462eafe30c",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Automóvel)\t / Formas e Escoras",
+        "emission": 219.50531207998893,
+        "year": 2025
+      },
+      {
+        "id": "dcfdc2d6-6e76-4d7d-916e-a4fe3b7d892f",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Ônibus de viagem) / Formas e Escoras",
+        "emission": 6.416174424012661,
+        "year": 2025
+      },
+      {
+        "id": "ff4b91b7-4ecd-4cea-90a3-9ae40e082eff",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Ônibus de viagem)\t / Leves",
+        "emission": 5.2255236537871825,
+        "year": 2025
+      },
+      {
+        "id": "927639ff-5212-44f8-9d4c-dacadc534f7b",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Ônibus municipal)\t / Formas e Escoras",
+        "emission": 27.794110782167813,
+        "year": 2025
+      },
+      {
+        "id": "43c5d817-7053-4a36-82ff-4a85d526b668",
+        "scope": "Escopo 3",
+        "category": "Categoria 7",
+        "name": "Deslocamento funcionário (Ônibus municipal)\t / Leves",
+        "emission": 50.00768030841737,
+        "year": 2025
+      },
+      {
+        "id": "9af856f8-45d4-4c24-8511-c8842adc0526",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Consumo de diesel | Nest",
+        "emission": 11.29802167,
+        "year": 2025
+      },
+      {
+        "id": "96f39914-59b1-4558-8360-3278fe3b675e",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Consumo de eletricidade | Nest",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "eb730de4-c867-4049-886b-97bf5b89d765",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Consumo de gasolina | Nest",
+        "emission": 3.592386972,
+        "year": 2025
+      },
+      {
+        "id": "f657e0b6-f7fc-43f5-bcb9-3df258a62bed",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Consumo Etanol | Nest",
+        "emission": 0.058296237,
+        "year": 2025
+      },
+      {
+        "id": "08041ecf-5ce3-440e-af1e-8c66c67787e4",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Manutenção ar-condicionado | Nest",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "e16c2e43-ddf8-4867-9dbd-42499a2c3717",
+        "scope": "Escopo 3",
+        "category": "Categoria 15",
+        "name": "Recarga em extintores* | Nest",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "4d5f38ca-5739-4328-813f-4e4f8b17173f",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "_Evidência | Corporativo",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "63ae0fe2-05c3-46b7-951e-67adf0070228",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para RECICLAGEM | Corporativo",
+        "emission": 0.070565068,
+        "year": 2025
+      },
+      {
+        "id": "16fbe61d-540d-4cd1-9c70-3dfa06ec2cbd",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo de esgoto doméstico enviados para TRATAMENTO DE EFLUENTES | Corporativo",
+        "emission": 0.3296441,
+        "year": 2025
+      },
+      {
+        "id": "5eb2b3a6-e5db-4322-95ed-1713c40a4728",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para TRATAMENTO DE EFLUENTES | Corporativo",
+        "emission": 0.0472601,
+        "year": 2025
+      },
+      {
+        "id": "57d69eba-f60b-4bc9-8db2-8ca83a59a81a",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para RECICLAGEM | Corporativo",
+        "emission": 0.00292875,
+        "year": 2025
+      },
+      {
+        "id": "0dc64d9e-0504-4be1-87db-cc997140082f",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos alimentares enviados para ATERRO DE RESÍDUOS CLASSE II | Formas e Escoras",
+        "emission": 83.34261481,
+        "year": 2025
+      },
+      {
+        "id": "b32cfe45-3e57-437a-a9d0-a939893f0b82",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos de jardim e parque enviados para ATERRO DE RESÍDUOS CLASSE II | Formas e Escoras",
+        "emission": 8.490890974,
+        "year": 2025
+      },
+      {
+        "id": "c59e87cd-b85c-4892-bb5c-d532f1b4f7f8",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE I | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "487d8332-6fc3-44fa-ba05-afc068a92596",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE II | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "1dc5bd74-37b8-4203-9d38-7aa654d86cb5",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS DE CONSTRUÇÃO CIVIL | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "52cf19a6-8d29-49e1-b826-bbe3cac2b2d5",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para RECICLAGEM | Formas e Escoras",
+        "emission": 0.340208755,
+        "year": 2025
+      },
+      {
+        "id": "3481c584-1d45-4499-9454-1f4d60bd877a",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo de esgoto doméstico enviados para TRATAMENTO DE EFLUENTES | Formas e Escoras",
+        "emission": 0.08895096,
+        "year": 2025
+      },
+      {
+        "id": "157279ef-59eb-4843-8448-aa483835009f",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para TRATAMENTO DE EFLUENTES | Formas e Escoras",
+        "emission": 0.0005883,
+        "year": 2025
+      },
+      {
+        "id": "d7249c82-f380-40fa-8bf6-e224d18714d1",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Madeira enviados para RECICLAGEM | Formas e Escoras",
+        "emission": 1.868462838,
+        "year": 2025
+      },
+      {
+        "id": "6e58fbc0-de32-4bf4-94d1-4db0964ac84b",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para RECICLAGEM | Formas e Escoras",
+        "emission": 0.038135605,
+        "year": 2025
+      },
+      {
+        "id": "7f26bd6e-4446-4007-a096-56837c9881dc",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE I | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "754f57f8-1e1e-440b-9ce2-295febdc4054",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para RECICLAGEM | Intralogística",
+        "emission": 0.518126334,
+        "year": 2025
+      },
+      {
+        "id": "3b448f68-d12b-42ff-aa2b-874fbe6db066",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para TRATAMENTO DE EFLUENTES | Intralogística",
+        "emission": 0.00303955,
+        "year": 2025
+      },
+      {
+        "id": "87c0843a-2f45-49d4-9866-e1e95200bcae",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Madeira enviados para RECICLAGEM | Intralogística",
+        "emission": 0.04686,
+        "year": 2025
+      },
+      {
+        "id": "9b846c53-f78f-4dc6-8608-0642e44de432",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para RECICLAGEM | Intralogística",
+        "emission": 0.012624084,
+        "year": 2025
+      },
+      {
+        "id": "eac8aa28-c7a6-4199-a681-6a4bdf42d6be",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos alimentares enviados para ATERRO DE RESÍDUOS CLASSE II | Leves",
+        "emission": 20.31451709,
+        "year": 2025
+      },
+      {
+        "id": "5d96e41f-d465-4438-8669-d453abb94224",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos alimentares enviados para INCINERAÇÃO | Leves",
+        "emission": 0.006447936,
+        "year": 2025
+      },
+      {
+        "id": "5e371a62-7416-411b-9777-b19f42b2a805",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos alimentares enviados para RECICLAGEM | Leves",
+        "emission": 0.0009372,
+        "year": 2025
+      },
+      {
+        "id": "a562c44c-3651-4288-b8e7-59926e33c5e0",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos de jardim e parque enviados para ATERRO DE RESÍDUOS CLASSE II | Leves",
+        "emission": 1.076715052,
+        "year": 2025
+      },
+      {
+        "id": "242af993-849f-447f-b26c-d159e492bf77",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos de jardim e parque enviados para RECICLAGEM | Leves",
+        "emission": 0.004686,
+        "year": 2025
+      },
+      {
+        "id": "5543d56d-9560-40a3-adcf-ef1323eebe22",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE I | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "7b2456b4-0cda-4fec-a4a9-1e6567f64f3a",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE II | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "804cbea6-d677-4772-b5d8-07b0e286d95c",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para INCINERAÇÃO | Leves",
+        "emission": 0.009118956,
+        "year": 2025
+      },
+      {
+        "id": "06ac41d3-d8a1-49ef-8341-0cca32b12bbb",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para RECICLAGEM | Leves",
+        "emission": 1.153674456,
+        "year": 2025
+      },
+      {
+        "id": "57489cdd-367a-462b-ad27-a0c6468b9709",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo de esgoto doméstico enviados para TRATAMENTO DE EFLUENTES | Leves",
+        "emission": 0.0811854,
+        "year": 2025
+      },
+      {
+        "id": "12f57d2d-3d88-442b-83df-64a0d1ece903",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para ATERRO DE RESÍDUOS CLASSE I | Leves",
+        "emission": 6.335736006,
+        "year": 2025
+      },
+      {
+        "id": "806428f2-a79d-41ee-9ada-135ba252f80f",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para INCINERAÇÃO | Leves",
+        "emission": 0.000468568,
+        "year": 2025
+      },
+      {
+        "id": "b5900649-ee24-4923-9592-3eab9e104649",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para RECICLAGEM | Leves",
+        "emission": 0.003498099,
+        "year": 2025
+      },
+      {
+        "id": "bc722fe3-0ac2-4842-8e77-74f0f6bb1861",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para TRATAMENTO DE EFLUENTES | Leves",
+        "emission": 0.201258214,
+        "year": 2025
+      },
+      {
+        "id": "86e34958-0088-45ba-8f88-03bd624744c8",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Madeira enviados para ATERRO DE RESÍDUOS CLASSE II | Leves",
+        "emission": 0.025065878,
+        "year": 2025
+      },
+      {
+        "id": "bbf4cd01-615b-432b-bb1e-2b1510b90dcb",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Madeira enviados para RECICLAGEM | Leves",
+        "emission": 0.04205685,
+        "year": 2025
+      },
+      {
+        "id": "699d6a7b-4c7f-4832-a3bd-acb106c908bf",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para ATERRO DE RESÍDUOS CLASSE II | Leves",
+        "emission": 0.264727237,
+        "year": 2025
+      },
+      {
+        "id": "1d08e338-3290-40d6-9604-e3ade8cf9259",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para RECICLAGEM | Leves",
+        "emission": 0.046307052,
+        "year": 2025
+      },
+      {
+        "id": "053e8d98-2332-408d-b72a-27418cb8dc50",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS CLASSE II | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "5507754f-b820-404c-a921-b0a9095f735d",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para ATERRO DE RESÍDUOS DE CONSTRUÇÃO CIVIL | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "80436bca-0410-4a67-9d8d-ed66cfda2a69",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos inertes enviados para RECICLAGEM | Pesados",
+        "emission": 0.0077319,
+        "year": 2025
+      },
+      {
+        "id": "397c8e57-19fa-4139-a8ae-f2eec79feda9",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Lodo industrial enviados para TRATAMENTO DE EFLUENTES | Pesados",
+        "emission": 0.0207866,
+        "year": 2025
+      },
+      {
+        "id": "54040450-90fd-4532-965f-2b2bc5388d04",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Madeira enviados para ATERRO DE RESÍDUOS CLASSE II | Pesados",
+        "emission": 0.793752815,
+        "year": 2025
+      },
+      {
+        "id": "7577ff2c-0d68-4f17-9d4e-9799732ec3b0",
+        "scope": "Escopo 3",
+        "category": "Categoria 5",
+        "name": "Resíduos Papéis/papelão enviados para RECICLAGEM | Pesados",
+        "emission": 0.0105435,
+        "year": 2025
+      },
+      {
+        "id": "ea8ac05d-3aeb-4089-8b1e-ee7b625e7f90",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão 3,5 a 7,5 ton) | Formas e Escoras",
+        "emission": 58.19942544,
+        "year": 2025
+      },
+      {
+        "id": "5a6bdb3d-701f-4851-86f5-19c29a299d64",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão 7,5 a 17 ton) | Formas e Escoras",
+        "emission": 129.0583491,
+        "year": 2025
+      },
+      {
+        "id": "c1143d02-f752-4b3e-ab83-e96899d88a6c",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão acima de 17 ton) | Formas e Escoras",
+        "emission": 34.70619186,
+        "year": 2025
+      },
+      {
+        "id": "33813e3a-e0b8-477a-b563-2b13e3eecd7f",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão média) | Formas e Escoras",
+        "emission": 114.1924573,
+        "year": 2025
+      },
+      {
+        "id": "c527f845-dfcc-4395-9682-80a64ac42bf1",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão 3,5 a 7,5 ton) | Formas e Escoras",
+        "emission": 218.2708644,
+        "year": 2025
+      },
+      {
+        "id": "75bc6165-13f0-4a25-a2c0-b9333d00b78e",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão 7,5 a 17 ton) | Formas e Escoras",
+        "emission": 482.7408128,
+        "year": 2025
+      },
+      {
+        "id": "be262730-7979-48bd-835f-c6b9907ab01f",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão acima de 17 ton) | Formas e Escoras",
+        "emission": 129.8756457,
+        "year": 2025
+      },
+      {
+        "id": "2cd023ad-25cb-49d0-aafd-742fb4a48f43",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transportes RODOVIÁRIOS pagos pelo Cliente - Fretes contratados pelo cliente. (Caminhão média) | Formas e Escoras",
+        "emission": 428.116242,
+        "year": 2025
+      },
+      {
+        "id": "f3fbf95d-caed-4b28-95c1-61255f466e4b",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Transportes pagos pelo cliente (Intralogística) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "e61259df-0442-42e8-a8bb-00e0d35cec6e",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transportes pagos pelo cliente (Intralogística) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "ddd1fa21-69d3-4f8d-ae20-bb519dfca2ff",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "[Ciclo de Vida] Fretes Clientes - Caminhão - rígido (3,5 a 7,5 toneladas) | Leves",
+        "emission": 219.4905688,
+        "year": 2025
+      },
+      {
+        "id": "850a04e6-8bd4-4808-94d7-ada8d7296c27",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Fretes Clientes - Caminhão - rígido (3,5 a 7,5 toneladas) | Leves",
+        "emission": 822.7023798,
+        "year": 2025
+      },
+      {
+        "id": "725f4021-3c81-469e-ae74-6bccb0a8ee41",
+        "scope": "Escopo 3",
+        "category": "Categoria 9",
+        "name": "Transporte pagos por terceiros (máquinas) - Frete realizado pelo cliente (km/CTE) | Pesados",
+        "emission": 25.34230848,
+        "year": 2025
+      },
+      {
+        "id": "9cddc511-1d90-43c5-a00b-ba4bb5eced81",
+        "scope": "Escopo 3",
+        "category": "Categoria 12",
+        "name": "Uso de máquinas vendidas C12 - LEVES | Leves",
+        "emission": 11.62611192,
+        "year": 2025
+      },
+      {
+        "id": "c50f1e09-49f8-4ec4-856c-12559a5ff64b",
+        "scope": "Escopo 3",
+        "category": "Categoria 12",
+        "name": "Uso de máquinas vendidas C12 - PESADOS | Pesados",
+        "emission": 0.226941217,
+        "year": 2025
+      },
+      {
+        "id": "c6bcdb82-7ae9-4a1e-856e-4f2913dd9cee",
+        "scope": "Escopo 3",
+        "category": "Categoria 11",
+        "name": "Uso de máquinas vendidas C11 - LEVES | Leves",
+        "emission": 2096.843927,
+        "year": 2025
+      },
+      {
+        "id": "c3e6eb87-65a0-43c5-bb8c-0dfc1fd4a788",
+        "scope": "Escopo 3",
+        "category": "Categoria 11",
+        "name": "Uso de máquinas vendidas C11 - PESADOS | Pesados",
+        "emission": 216.618065,
+        "year": 2025
+      },
+      {
+        "id": "b9cedf4a-b3fd-4aee-ba62-2e38ab61856d",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transferência Interna de equipamentos - (Caminhão - rígido (3,5 a 7,5 toneladas)) | Formas e Escoras",
+        "emission": 3.780138689,
+        "year": 2025
+      },
+      {
+        "id": "46a3a627-8824-4b2f-9763-21a5db00946e",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transferência Interna de equipamentos - (Caminhão - rígido (7,5 a 17 toneladas)) | Formas e Escoras",
+        "emission": 31.20102791,
+        "year": 2025
+      },
+      {
+        "id": "543ac5de-c6c9-456c-bcb1-e666ca5129e0",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transferência Interna de equipamentos - (Caminhão - rígido (acima de 17 toneladas)) | Formas e Escoras",
+        "emission": 28.07647787,
+        "year": 2025
+      },
+      {
+        "id": "6bae8bec-e1f0-48f5-ad7a-ec83064fc7ac",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transferência Interna de equipamentos - (Caminhão - rígido (média)) | Formas e Escoras",
+        "emission": 11.76910523,
+        "year": 2025
+      },
+      {
+        "id": "25d9b604-e888-40d1-88b1-20f39c1b5ba4",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pela Mills (Caminhão 3,5 a 7,5 ton) | Formas e Escoras",
+        "emission": 1.451117876,
+        "year": 2025
+      },
+      {
+        "id": "ce62d291-2953-4c1e-b7ac-77dcfda4ed06",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pela Mills (Caminhão 7,5 a 17 ton) | Formas e Escoras",
+        "emission": 0.984697012,
+        "year": 2025
+      },
+      {
+        "id": "4823ec3a-74a5-414d-b3df-4701fa64df9a",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pela Mills (Caminhão acima de 17 ton) | Formas e Escoras",
+        "emission": 0.060123763,
+        "year": 2025
+      },
+      {
+        "id": "bdefd1a5-71d3-4ded-b740-229f1b6b7913",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pela Mills (Caminhão média) | Formas e Escoras",
+        "emission": 9.739177209,
+        "year": 2025
+      },
+      {
+        "id": "09db78d7-8514-454b-b2c4-27838e653a59",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transferência Interna de equipamentos - (Caminhão - rígido (3,5 a 7,5 toneladas)) | Formas e Escoras",
+        "emission": 14.14692193,
+        "year": 2025
+      },
+      {
+        "id": "2d1f6e5b-8f53-4cc9-a9c8-6efcf43ffa85",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transferência Interna de equipamentos - (Caminhão - rígido (7,5 a 17 toneladas)) | Formas e Escoras",
+        "emission": 116.9643047,
+        "year": 2025
+      },
+      {
+        "id": "b591bdae-4217-424c-94b6-c4c3334cf4a6",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transferência Interna de equipamentos - (Caminhão - rígido (acima de 17 toneladas)) | Formas e Escoras",
+        "emission": 105.1809249,
+        "year": 2025
+      },
+      {
+        "id": "e8006247-a6b4-483f-92ba-53205919047b",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transferência Interna de equipamentos - (Caminhão - rígido (média)) | Formas e Escoras",
+        "emission": 44.07482251,
+        "year": 2025
+      },
+      {
+        "id": "e4c9c10a-5447-4e81-9ff5-48d920d1f04a",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS pagos pela Mills (Caminhão 3,5 a 7,5 ton) | Formas e Escoras",
+        "emission": 5.456783325,
+        "year": 2025
+      },
+      {
+        "id": "e2c999cf-79e7-47bb-9a6d-7913a2993017",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS pagos pela Mills (Caminhão 7,5 a 17 ton) | Formas e Escoras",
+        "emission": 3.701246255,
+        "year": 2025
+      },
+      {
+        "id": "9a5ee5ec-f49e-49f6-83d8-cb507aa40cc4",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS pagos pela Mills (Caminhão acima de 17 ton) | Formas e Escoras",
+        "emission": 0.226294249,
+        "year": 2025
+      },
+      {
+        "id": "998b112a-844c-45cf-9b77-53cc1b77693a",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS pagos pela Mills (Caminhão média) | Formas e Escoras",
+        "emission": 36.45694014,
+        "year": 2025
+      },
+      {
+        "id": "c3451d2d-d051-409f-8530-d7a519bc5ba1",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Fretes comerciais pagos pela Mills - Relatório de fretes contratados pela Mills para envio dos equipamentos ao cliente. Necessário relatório com dados de origem e destino, incluindo CEP. | Intralogística",
+        "emission": 15.55262554,
+        "year": 2025
+      },
+      {
+        "id": "ca3e4a76-c5ea-40f6-9ec6-a9893694503e",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Fretes de peças e insumos pagos pela empresa - Fretes rodoviários. Necessário dados de origem e destino, e peso do material transportado | Intralogística",
+        "emission": 48.91760454,
+        "year": 2025
+      },
+      {
+        "id": "b6b5f776-7502-43c0-82ae-4ad755794a02",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transferência entre filiais pagos pela Mills - transferência de equipamentos entre filiais, relatório contendo dados de origem e destino, incluindo CEP | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "84b74fec-4dfb-4153-9adc-dcf767c7305a",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Fretes aéreos de peças e insumos - relatório contendo aeroporto de origem e destino, e peso do material transportado | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "7cd01064-0c8a-46e4-bd99-9ce2a647dba2",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Fretes comerciais pagos pela Mills - Relatório de fretes contratados pela Mills para envio dos equipamentos ao cliente. Necessário relatório com dados de origem e destino, incluindo CEP. | Intralogística",
+        "emission": 58.10976984,
+        "year": 2025
+      },
+      {
+        "id": "1a172bac-07f6-4102-95f8-f0d767ea1b04",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Fretes de peças e insumos pagos pela empresa - Fretes rodoviários. Necessário dados de origem e destino, e peso do material transportado | Intralogística",
+        "emission": 182.939551,
+        "year": 2025
+      },
+      {
+        "id": "1e4f638c-546c-4b1c-b9c5-95eab326a6a4",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transferência entre filiais pagos pela Mills - transferência de equipamentos entre filiais, relatório contendo dados de origem e destino, incluindo CEP | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "0b784358-27b8-4c95-8cb2-9356dd0af49f",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Fretes entre filiais - Caminhão - rígido (3,5 a 7,5 toneladas) | Leves",
+        "emission": 16.91010705,
+        "year": 2025
+      },
+      {
+        "id": "da20821f-2f54-4fb3-b799-069acae74292",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS de peças e insumos | Leves",
+        "emission": 20.86861311,
+        "year": 2025
+      },
+      {
+        "id": "28d542b9-a320-47dc-b998-878fce3d7762",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transportes RODOVIÁRIOS pagos pelas Mills | Leves",
+        "emission": 239.693391,
+        "year": 2025
+      },
+      {
+        "id": "eb3d4ec0-a2bc-487f-96ac-496c7e7f3a27",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Fretes aéreos de peças | Leves",
+        "emission": 89.08502394,
+        "year": 2025
+      },
+      {
+        "id": "5a48d0e7-a612-42ae-9aa6-2f402a7ac232",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Fretes entre filiais - Caminhão - rígido (3,5 a 7,5 toneladas) | Leves",
+        "emission": 63.35200765,
+        "year": 2025
+      },
+      {
+        "id": "d5e906ec-ebc6-4c9c-a01b-72ca5c884b71",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS de peças e insumos | Leves",
+        "emission": 79.34413151,
+        "year": 2025
+      },
+      {
+        "id": "d341251a-0914-4ab1-8aed-f71e4f7db5a5",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transportes RODOVIÁRIOS pagos pelas Mills | Leves",
+        "emission": 897.9927071,
+        "year": 2025
+      },
+      {
+        "id": "0bf04e98-fd7c-4dfd-83d4-bf6341878df2",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "[Ciclo de Vida] Transporte pagos pela empresa (máquinas) - Frete de máquinas (km/CTE) | Pesados",
+        "emission": 7.047368423,
+        "year": 2025
+      },
+      {
+        "id": "908dfccc-defa-4e4c-a98e-79677bb9e0e8",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transporte AÉREOS pagos pela empresa - Fretes Aéreos de peças e insumos (Documento de Transporte Aéreo de Cargas - AWB)  | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "b1d184fd-136d-4fa1-a487-c68c42778010",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transporte pagos pela empresa (máquinas) - Frete de máquinas (km/CTE) | Pesados",
+        "emission": 26.40696064,
+        "year": 2025
+      },
+      {
+        "id": "a403bd9b-021f-4e5e-ab48-0089f30e262c",
+        "scope": "Escopo 3",
+        "category": "Categoria 4",
+        "name": "Transporte pagos pela empresa (peças e insumos) - Peças e Insumos | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "d4a826f6-94e2-47e1-b16f-ad2f4578c3d5",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Locação de carros - Modalidade SPOT | Corporativo",
+        "emission": 5.58040139,
+        "year": 2025
+      },
+      {
+        "id": "7222bd66-a116-4ef3-b12e-fbadb8cd6e26",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Reembolso de Km (Corporativo) - anexar relatório de reembolso por valor | Corporativo",
+        "emission": 512.0498436,
+        "year": 2025
+      },
+      {
+        "id": "1479e8c8-296c-423d-821f-897e48471eae",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Locação de carros - Modalidade SPOT | Formas e Escoras",
+        "emission": 3.36316973,
+        "year": 2025
+      },
+      {
+        "id": "026ec7a7-7b58-41b4-a195-ee45257bcc4d",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens a negócios - Ônibus | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "699dfa11-ae5f-4ec6-a8c7-31b55c254741",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens de Taxi e App (km) | Formas e Escoras",
+        "emission": 1.12851094,
+        "year": 2025
+      },
+      {
+        "id": "cb82a487-3aba-44a6-8865-96d607ceefdf",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Locação de carros - Modalidade SPOT | Formas e Escoras",
+        "emission": 11.10964037,
+        "year": 2025
+      },
+      {
+        "id": "57f21c88-d9a2-4303-9bfc-14c789351602",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens a negócios - Ônibus | Formas e Escoras",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "1ce1c26a-9d9c-48d6-af17-1cc5f4331ce8",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens aéreas - anexar relatório de viagens contendo aeroporto de origem e destino, e quantidade de trechos voados no ano | Formas e Escoras",
+        "emission": 40.35877,
+        "year": 2025
+      },
+      {
+        "id": "9806751e-0922-45a4-bd40-d4b2103f9d15",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens de Taxi e App (km) | Formas e Escoras",
+        "emission": 3.740598599,
+        "year": 2025
+      },
+      {
+        "id": "18e00f56-a062-4be3-a162-cd811affa774",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "_Evidência | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "0dd056f8-82b0-4f3e-837f-921373213657",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens de ônibus (km) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "fe2f9c5c-1b00-4486-83dc-f66aa01d33ba",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens de Táxi e Aplicativo (km) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "0ca06faf-8c62-4e86-87a6-1a6234d033f6",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagem aérea | Intralogística",
+        "emission": 35.85543559,
+        "year": 2025
+      },
+      {
+        "id": "394b26e6-08c9-47eb-a484-6bdf70aa3ffd",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens de ônibus (km) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "ee81f7eb-fc11-4658-ac94-263463f7c4b4",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens de Táxi e Aplicativo (km) | Intralogística",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "2ec24fa9-0a13-4630-94a3-1b822355a3b0",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Locação de carros - Modalidade SPOT | Leves",
+        "emission": 12.29345604,
+        "year": 2025
+      },
+      {
+        "id": "826f8f45-0cd4-4888-82da-6d315b040b38",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens a negócios - Ônibus | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "29914b30-1924-4cf3-a0cb-55848b33c10d",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens de Taxi e App (km) | Leves",
+        "emission": 7.021183856,
+        "year": 2025
+      },
+      {
+        "id": "05c4c5f2-5950-4b64-85a0-e0ec81525482",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Locação de carros - Modalidade SPOT | Leves",
+        "emission": 40.79985885,
+        "year": 2025
+      },
+      {
+        "id": "e2593c7e-517e-4707-bec1-c2936031f15f",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens a negócios - Ônibus | Leves",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "bf52e6a2-133d-4e5f-ac37-9d95d85218c9",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens aéreas - anexar relatório de viagens contendo aeroporto de origem e destino, e quantidade de trechos voados no ano | Leves",
+        "emission": 372.57378,
+        "year": 2025
+      },
+      {
+        "id": "cfb81aa2-917b-49b5-b468-ba0f5c340705",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens de Taxi e App (km) | Leves",
+        "emission": 23.27866802,
+        "year": 2025
+      },
+      {
+        "id": "d5b15c82-63cb-437f-85aa-0beda76d3c94",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Locação de carros - Modalidade SPOT | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "e912afc1-ada2-4a3e-8b51-2649dbc6d040",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Reembolso de Km - anexar relatório de reembolso por valor_ | Pesados",
+        "emission": 12.5706314,
+        "year": 2025
+      },
+      {
+        "id": "0a8dabea-e98e-4bb1-aa5a-e56d7621921a",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "[Ciclo de Vida] Viagens a negócios ( ônibus) - Valor gasto ou distância percorrida  - Carros spot ou ônibus | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "3328892f-301f-4d33-a317-a591dd7b0831",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Locação de carros - Modalidade SPOT | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "d928d954-f231-4c36-8d18-7800f1f2f71c",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Reembolso de Km - anexar relatório de reembolso por valor_ | Pesados",
+        "emission": 53.24449242,
+        "year": 2025
+      },
+      {
+        "id": "0dbc40dc-e268-4194-8ded-3c4c6a6ac259",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens a negócios ( ônibus) - Valor gasto ou distância percorrida  - Carros spot ou ônibus | Pesados",
+        "emission": 0,
+        "year": 2025
+      },
+      {
+        "id": "c20eebbc-1578-403e-a3d2-b26583ad7fed",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens a negócios (táxis, motorista particular ou aplicativo) - Distância percorrida (KM) | Pesados",
+        "emission": 0.391372593,
+        "year": 2025
+      },
+      {
+        "id": "bc873798-00dd-465a-917e-abab0833635a",
+        "scope": "Escopo 3",
+        "category": "Categoria 6",
+        "name": "Viagens a negócios (viagens aéreas) - anexar relatório de viagens contendo aeroporto de origem e destino, e quantidade de trechos voados no ano | Pesados",
+        "emission": 33.66264,
+        "year": 2025
+      }
+    ]
+  },
+  "variaveisCrescimento": {
+    "drivers": [
+      {
+        "id": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "name": "Receita Líquida  Mills",
+        "unit": "Milhões de Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 1837,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [],
+        "yearly": {
+          "2026": 2048.866,
+          "2027": 2294.73,
+          "2028": 2547.15,
+          "2029": 2852.808,
+          "2030": 3138.089,
+          "2031": 3510.035,
+          "2032": 3971.38,
+          "2033": 3998.423,
+          "2034": 4374.929,
+          "2035": 4723.516,
+          "2036": 5257.109,
+          "2037": 5850.978,
+          "2038": 6511.934,
+          "2039": 7247.555,
+          "2040": 8066.275,
+          "2041": 8977.483,
+          "2042": 9991.624,
+          "2043": 11120.329,
+          "2044": 12376.537,
+          "2045": 13774.653,
+          "2046": 15330.707,
+          "2047": 17062.541,
+          "2048": 18990.012,
+          "2049": 21135.219,
+          "2050": 23522.76
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "79a6abfb-36d3-4458-a416-78a68b9e0070",
+        "name": "Receita Líquida de locação Leves",
+        "unit": "Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 961282000,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 989628583.9153,
+          "2027": 1108384013.9851,
+          "2028": 1230306255.5235,
+          "2029": 1377943006.1863,
+          "2030": 1515737306.8049,
+          "2031": 1661092971.4596,
+          "2032": 1820387904.5827,
+          "2033": 1994958849.437,
+          "2034": 2186270739.8397,
+          "2035": 2395928993.3363,
+          "2036": 2625692983.2627,
+          "2037": 2877490802.7449,
+          "2038": 3153435444.5327,
+          "2039": 3455842532.4415,
+          "2040": 3787249753.1979,
+          "2041": 4150438151.7534,
+          "2042": 4548455468.7698,
+          "2043": 4984641716.1143,
+          "2044": 5462657204.9845,
+          "2045": 5986513261.8661,
+          "2046": 6560605890.078,
+          "2047": 7189752659.3819,
+          "2048": 7879233133.2181,
+          "2049": 8634833172.8201,
+          "2050": 9462893489.9889
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "name": "Receita Líquida de locação Pesados",
+        "unit": "Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 374808000,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 475821757.92,
+          "2027": 532920368.8704,
+          "2028": 591541609.4461,
+          "2029": 662526602.5797,
+          "2030": 728779262.8377,
+          "2031": 833651766.1508,
+          "2032": 953615590.6801,
+          "2033": 1090842401.7225,
+          "2034": 1247816370.6899,
+          "2035": 1427379145.2395,
+          "2036": 1632781290.6784,
+          "2037": 1867741133.8682,
+          "2038": 2136512074.862,
+          "2039": 2443959584.794,
+          "2040": 2795649283.8882,
+          "2041": 3197947694.0341,
+          "2042": 3658137489.8194,
+          "2043": 4184549334.3705,
+          "2044": 4786712686.5823,
+          "2045": 5475528309.7492,
+          "2046": 6263465604.4651,
+          "2047": 7164788338.0433,
+          "2048": 8195812856.762,
+          "2049": 9375203455.2648,
+          "2050": 10724310250.0922
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "a90d08e4-2dce-4df3-b111-adf275e0c88a",
+        "name": "Receita Líquida de locação F&E",
+        "unit": "Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 306605000,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 344681826.213,
+          "2027": 386043645.3586,
+          "2028": 428508446.348,
+          "2029": 479929459.9098,
+          "2030": 527922405.9007,
+          "2031": 588547804.6196,
+          "2032": 656135285.1307,
+          "2033": 731484356.9449,
+          "2034": 815486343.4124,
+          "2035": 909134925.4134,
+          "2036": 1013537895.862,
+          "2037": 1129930264.0709,
+          "2038": 1259688864.9905,
+          "2039": 1404348646.1405,
+          "2040": 1565620824.8942,
+          "2041": 1745413130.9052,
+          "2042": 1945852373.1262,
+          "2043": 2169309598.3742,
+          "2044": 2418428139.0462,
+          "2045": 2696154881.7716,
+          "2046": 3005775126.8838,
+          "2047": 3350951451.0741,
+          "2048": 3735767032.9441,
+          "2049": 4164773953.9642,
+          "2050": 4643047046.2043
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "name": "Receita Líquida de locação Intra",
+        "unit": "Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 187187000,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 229031541.8765,
+          "2027": 256515326.9017,
+          "2028": 284732012.8609,
+          "2029": 318899854.4042,
+          "2030": 350789839.8446,
+          "2031": 398044322.4008,
+          "2032": 451664400.1595,
+          "2033": 512507574.8878,
+          "2034": 581546861.3967,
+          "2035": 659886348.1664,
+          "2036": 748778854.1246,
+          "2037": 849645963.9482,
+          "2038": 964100762.2972,
+          "2039": 1093973630.5494,
+          "2040": 1241341518.5834,
+          "2041": 1408561159.7283,
+          "2042": 1598306760.0602,
+          "2043": 1813612764.7782,
+          "2044": 2057922385.5893,
+          "2045": 2335142665.1584,
+          "2046": 2649706959.2261,
+          "2047": 3006645835.6174,
+          "2048": 3411667523.9725,
+          "2049": 3871249202.7644,
+          "2050": 4392740583.4826
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "6094353c-dc99-4014-9d2a-60d481699a14",
+        "name": "Receita Líquida da Nest",
+        "unit": "Reais",
+        "type": "Financeiro",
+        "note": "Release de resultados do ano de 2025",
+        "baseValue": 7954000,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 9702200,
+          "2027": 10866464,
+          "2028": 12061775.04,
+          "2029": 13509188.0448,
+          "2030": 14860106.8493,
+          "2031": 16850733.4331,
+          "2032": 19108019.8894,
+          "2033": 21667687.3764,
+          "2034": 24570242.179,
+          "2035": 27861616.7128,
+          "2036": 31593896.3969,
+          "2037": 35826143.8964,
+          "2038": 40625333.7784,
+          "2039": 46067412.3729,
+          "2040": 52238499.61,
+          "2041": 59236251.8522,
+          "2042": 67171407.2895,
+          "2043": 76169538.3515,
+          "2044": 86373038.8686,
+          "2045": 97943377.4297,
+          "2046": 111063652.5933,
+          "2047": 125941490.3904,
+          "2048": 142812329.9694,
+          "2049": 161943149.3787,
+          "2050": 183636690.4478
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "name": "Qtd. Equipamentos Leves",
+        "unit": "Und",
+        "type": "Físico",
+        "note": "Plataformas, compressores, geradores e torres de iluminação",
+        "baseValue": 287,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 287,
+          "2027": 100,
+          "2028": 100,
+          "2029": 100,
+          "2030": 100,
+          "2031": 100,
+          "2032": 100,
+          "2033": 100,
+          "2034": 100,
+          "2035": 100,
+          "2036": 100,
+          "2037": 100,
+          "2038": 100,
+          "2039": 100,
+          "2040": 100,
+          "2041": 100,
+          "2042": 100,
+          "2043": 100,
+          "2044": 100,
+          "2045": 100,
+          "2046": 100,
+          "2047": 100,
+          "2048": 100,
+          "2049": 100,
+          "2050": 100
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "name": "Qtd. Equipamentos Pesados",
+        "unit": "Und",
+        "type": "Físico",
+        "note": "Pá carregadeiras, escavadeiras, motoniveladoras, tradores de esteiras, rolos compactadores, manipuladores, caminhões etc.",
+        "baseValue": 70,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 70,
+          "2027": 196,
+          "2028": 230,
+          "2029": 230,
+          "2030": 230,
+          "2031": 230,
+          "2032": 230,
+          "2033": 230,
+          "2034": 230,
+          "2035": 230,
+          "2036": 230,
+          "2037": 230,
+          "2038": 230,
+          "2039": 230,
+          "2040": 230,
+          "2041": 230,
+          "2042": 230,
+          "2043": 230,
+          "2044": 230,
+          "2045": 230,
+          "2046": 230,
+          "2047": 230,
+          "2048": 230,
+          "2049": 230,
+          "2050": 230
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "name": "Qtd. Equipamentos Intra",
+        "unit": "Und",
+        "type": "Físico",
+        "note": "empilhadeiras, transpaleteiras, pá carregadeiras",
+        "baseValue": 250,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 250,
+          "2027": 88,
+          "2028": 88,
+          "2029": 68,
+          "2030": 68,
+          "2031": 68,
+          "2032": 68,
+          "2033": 68,
+          "2034": 68,
+          "2035": 68,
+          "2036": 68,
+          "2037": 68,
+          "2038": 68,
+          "2039": 68,
+          "2040": 68,
+          "2041": 68,
+          "2042": 68,
+          "2043": 68,
+          "2044": 68,
+          "2045": 68,
+          "2046": 68,
+          "2047": 68,
+          "2048": 68,
+          "2049": 68,
+          "2050": 68
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "name": "Qtd. Equipamentos F&E",
+        "unit": "und",
+        "type": "Físico",
+        "note": "Formas e escoramentos",
+        "baseValue": 3768,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 3768,
+          "2027": 945,
+          "2028": 945,
+          "2029": 945,
+          "2030": 945,
+          "2031": 945,
+          "2032": 945,
+          "2033": 945,
+          "2034": 945,
+          "2035": 945,
+          "2036": 945,
+          "2037": 945,
+          "2038": 945,
+          "2039": 945,
+          "2040": 945,
+          "2041": 945,
+          "2042": 945,
+          "2043": 945,
+          "2044": 945,
+          "2045": 945,
+          "2046": 945,
+          "2047": 945,
+          "2048": 945,
+          "2049": 945,
+          "2050": 945
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "name": "Crescimento Equipes Operacionais",
+        "unit": "Pessoas",
+        "type": "Operacional",
+        "note": "Quantidade de colaboradores operacionais no ano de 2025. Base headcount do RH.",
+        "baseValue": 2232,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 2455.2,
+          "2027": 2700.72,
+          "2028": 2754.73,
+          "2029": 2809.83,
+          "2030": 2866.03,
+          "2031": 3015.06,
+          "2032": 3171.84,
+          "2033": 3336.78,
+          "2034": 3510.29,
+          "2035": 3692.83,
+          "2036": 3884.85,
+          "2037": 4086.86,
+          "2038": 4299.38,
+          "2039": 4522.95,
+          "2040": 4758.14,
+          "2041": 5005.57,
+          "2042": 5265.86,
+          "2043": 5539.68,
+          "2044": 5827.74,
+          "2045": 6130.79,
+          "2046": 6449.59,
+          "2047": 6784.97,
+          "2048": 7137.78,
+          "2049": 7508.95,
+          "2050": 7899.41
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "name": "Crescimento Equipes  Corporativo",
+        "unit": "Pessoas",
+        "type": "Operacional",
+        "note": "Quantidade de colaboradores operacionais no ano de 2025. Base headcount do RH.",
+        "baseValue": 255,
+        "method": "yearly",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2025,
+            "to": 2050,
+            "g": 3
+          },
+          {
+            "from": 2050,
+            "to": 2050,
+            "g": 3
+          },
+          {
+            "from": 2050,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {
+          "2026": 280.5,
+          "2027": 308.55,
+          "2028": 314.72,
+          "2029": 321.02,
+          "2030": 327.44,
+          "2031": 344.46,
+          "2032": 362.37,
+          "2033": 381.22,
+          "2034": 401.04,
+          "2035": 421.9,
+          "2036": 443.83,
+          "2037": 466.91,
+          "2038": 491.19,
+          "2039": 516.73,
+          "2040": 543.61,
+          "2041": 571.87,
+          "2042": 601.61,
+          "2043": 632.89,
+          "2044": 665.8,
+          "2045": 700.43,
+          "2046": 736.85,
+          "2047": 775.16,
+          "2048": 815.47,
+          "2049": 857.88,
+          "2050": 902.49
+        },
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      }
+    ]
+  },
+  "bau": {
+    "anoAlvo": 2036,
+    "vinculos": {
+      "act-diesel": {
+        "driverId": "equip",
+        "factor": 1
+      },
+      "act-gasolina": {
+        "driverId": "equip",
+        "factor": 1
+      },
+      "act-gn": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-glp": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-proc": {
+        "driverId": "prod",
+        "factor": 0.9
+      },
+      "act-energia": {
+        "driverId": "oper",
+        "factor": 1
+      },
+      "act-log": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-viagens": {
+        "driverId": "team",
+        "factor": 1
+      },
+      "act-compras": {
+        "driverId": "rec",
+        "factor": 0.8
+      },
+      "act-embalagens": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "210a3a6a-7dd3-42d6-ab22-f0fb52f83387": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "d3c605af-65c5-435f-bf78-78c11e52c4d2": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "f28a582c-e84e-4b98-bd46-7515641b2ac1": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "f1f308ad-1f60-427c-85fc-ea10ac1c9e80": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "82256609-c7e1-4f2e-84fb-1a073f37ec85": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "ba37f3a2-34a2-469e-861d-a55058427155": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "e537ea94-83c3-4021-814d-85b8273c774f": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "e6dd7de8-56d3-4075-a409-5ea9325cd551": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "b381e4f9-13d3-4a95-a009-45ca4b5f6138": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "2d56f4cd-f8ff-49d6-bee4-7b9d6f9a040e": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "33465a15-8ca1-4cfc-96a4-ad9cb9a163ed": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "6a9fd53c-0558-437a-b101-f29b01c1ac7f": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "0c26f48a-e55a-4d82-a3cc-e9003c5b47d6": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "f8688c26-5740-438e-8add-1deb647a0b77": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "f702d8b7-f1e5-4691-af60-637371e67293": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "19c6d4db-d6e3-42b2-bd6f-2d19801b9633": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "5eca1017-a051-4510-8990-a55d8f18a642": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "14eb8ac8-9be3-4a31-a0cf-642e3a4ce782": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "135ca90f-5982-4841-aaf2-a699c5ab2d52": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "09a7927a-1106-454b-bd6a-c394c513cc5d": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "1de4cbba-9167-4ab9-8150-7be059876fa6": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "536db830-e32b-4586-bec6-0b50883b2cb0": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "a56942ae-dc09-4514-bc83-7a3f48fef9a9": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "40c26727-9ad7-451b-b5d4-7d1dde6e8c6a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "f2622330-fce7-4580-b72c-82378d0e9d8a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "56e27395-cd29-41a3-b66a-1dc1af954c46": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "6050b24b-78bd-4937-8402-767f8b6bf06e": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "59d2a64d-eec5-4009-a786-3cb03c5e2b09": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "cbcb68bf-c896-4fdd-b058-b58ef5421986": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "5edcd294-1e38-45a3-9011-eca201730003": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "9c806f1c-50eb-4560-a02b-6cb947025acf": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "52ad326a-9dbe-4946-a169-4a25c1139bec": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "492e08cf-18c4-4045-a9bc-3d7b9d0641b6": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "39528414-4dbc-45ff-830d-7b1d1d542a4e": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "91af28be-1768-48d2-9674-aada1b6e9d6c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "9bb21a6d-ab5d-4a3c-b515-d6441cb020e8": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "179a1b36-be62-4eb2-91fe-57613323b13b": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "8ab524ef-8eeb-4acb-b622-e8df8ae8e65f": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "c62fa8c5-272c-4dcd-aaf7-772b66a7c134": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "7a8fde47-39d2-41ab-be70-d90388df92dc": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "bcedb582-f2e4-4c06-b438-5aa98218b12a": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "28077d09-3d8b-4ba2-b176-71d71338df40": {
+        "driverId": "__no_growth__",
+        "factor": 1
+      },
+      "cc01f499-58c9-4c9f-8fb2-3ac4cbdcc13b": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "7c6c2360-00de-494d-a555-d9ca58c3c373": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "f9ffb6e6-349a-4871-97fa-03933c5ab6d7": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "8ddf1a36-731e-4ebb-81fb-dfabb49d00d3": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "3d50f117-d5be-46f7-ba56-622f68683295": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "11548460-9094-4550-bc0c-2f22180831ae": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "9eee5ef4-17a3-4d6c-900e-02b9852c5802": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "462263ed-e132-4a63-b47b-d6b4f28dfdb8": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "8ba23640-8d90-4f1b-b78d-703ccd4984b4": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "51f3a10d-32fe-468d-8759-f2c44186ca06": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "e378fac6-36ba-4465-87d7-0b2078d3655d": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "14f0160c-dc55-4b8b-b8ac-067f1ae98d27": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "0c027559-c8a6-408a-a8d4-789fb5a653cd": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "ae3fe72c-6b59-4332-945d-73aaebb6326f": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "b6a002da-17e2-456f-87cf-7de9d8bc0ce2": {
+        "driverId": null,
+        "factor": 1
+      },
+      "cbd90deb-4aa6-423d-8c44-69a7914ffd60": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "c2c948ba-2291-463f-bf27-e3a079f87893": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "48d7548a-e53b-489b-8f41-143a6153a56f": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "7d64f910-c425-4af7-aad0-7fe862caf4fe": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "4aa0e6e3-2ed7-4dc3-822b-20f56dd8666c": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "1682c5f5-c3d4-4997-8c16-b5a277df7a23": {
+        "driverId": null,
+        "factor": 1
+      },
+      "e537e855-2c15-44d0-87b6-74ed0c77469c": {
+        "driverId": null,
+        "factor": 1
+      },
+      "c7d4d0ef-0cb3-4048-83d9-b5160ae20113": {
+        "driverId": null,
+        "factor": 1
+      },
+      "98f4e876-d29a-4218-a999-823e34009bf9": {
+        "driverId": null,
+        "factor": 1
+      },
+      "81b0181e-ce8d-4949-8f3d-a45af91f0da6": {
+        "driverId": null,
+        "factor": 1
+      },
+      "ae1c48e1-5720-42df-959e-b76e4f0737bd": {
+        "driverId": null,
+        "factor": 1
+      },
+      "dc17fc16-0bf6-4f03-9302-85752bb25961": {
+        "driverId": null,
+        "factor": 1
+      },
+      "f15d10d4-d3a5-4cbb-b133-83264cd0579b": {
+        "driverId": null,
+        "factor": 1
+      },
+      "4dd3d5f2-abd7-4738-ad8b-b78119e369e9": {
+        "driverId": null,
+        "factor": 1
+      },
+      "c027e1c6-32ea-4a70-a822-62f292793dd6": {
+        "driverId": null,
+        "factor": 1
+      },
+      "44f0fcf2-fe71-476b-8ba7-f081c1316719": {
+        "driverId": null,
+        "factor": 1
+      },
+      "c98950d2-2b4a-4959-875a-a03a987d6a48": {
+        "driverId": null,
+        "factor": 1
+      },
+      "e68356c6-ee1f-4c9f-b6a6-87fb883380a6": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "d649358c-3efb-4a0f-8396-82fe878e3745": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "40fc829c-58c4-4102-b314-b34fafbc938c": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "223c6f5e-99fd-4e3a-9ae0-6b91ce60eae1": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "d53c4223-75a0-4283-a0ff-7970df9b3fae": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "fd4b55c7-e11a-4f18-b65b-5bf3da13919b": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "144a2ecb-f182-41e9-9f01-695ffd12cebc": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "117a492b-8416-42bd-b144-cd1278a01220": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "48483961-f8e2-46b3-9ec0-3839dfe8e3a8": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "81134d1e-d84a-4cc5-8a04-042dcdac2bd0": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "ec9bc98d-3c45-45cd-929b-482c281ba249": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "d502f6b0-d4a0-4474-b574-5f223b20295a": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "685bf933-d639-4ece-9fde-3be2759a0196": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "a72297f6-9010-455f-b14a-06c3bdc568dd": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "3c84fa4c-414d-457a-97ec-03bdd3cdaa40": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "44a0867d-d419-4454-9160-520ee280960c": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "17f231b4-f3b1-4d04-ad03-cf6667210da7": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "e97570ac-3fc5-4b3d-83a6-117693b6686c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "ff20fb2b-99bc-48f0-8ceb-f7f197239e76": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "87aee7f3-fef4-49c2-8f13-b7fd1b189ebb": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "069ca2c4-9503-431f-8fe7-e494a169ae29": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "e7ef8a48-acec-442f-aa71-d13737856c71": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "70afe702-01b1-44fc-a762-92c69ceace8a": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "77287a86-6d4e-4547-a4a1-d9e280c8212e": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "53d3fb16-f6ba-4127-9d3b-2b4c671f8401": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "40642f16-31d6-4b13-af80-4b294d60b7e0": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "5c430e8e-5ed4-4ecc-a047-6ed323cb6dfe": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "1d092b0a-935d-46b4-8c91-ef5b8be5735f": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "2b621ac6-3a6a-4b10-be8a-5bb50de31f75": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "7ffda0a7-233f-42ba-acbd-79cc62e62a9a": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "0df0f30a-0ad3-41e8-8ebb-421c8e225bde": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "0a90b0d8-2b2c-4b79-bd00-3407852fed27": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "8ab2b0a3-4036-4de1-a45d-abd1e7ef485a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "2d043ea2-3661-4ea2-9c86-ab2ecf7294a7": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "9f650cba-79d4-4661-8d67-d064c4468924": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "257bcd08-f974-4c2e-80ae-789b4306d6b3": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5dc1f0e4-9d73-4244-b3f8-2632ade911fb": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "7bd012ef-9b43-48cf-bbcb-a3894460ae82": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "15367ea1-4a32-479e-aa0f-e7169cf8ccbf": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "8114ab51-5ae7-4a83-bc6b-f59016b8ca61": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "d5c97005-65ee-4c20-a5c0-575364cdfc9c": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "cbf215f4-1d2c-46d7-8699-9c8dbea2a075": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "287e1ca6-5429-4dc9-a486-7a6dbcdd72ca": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "66e1e058-5781-4880-a637-f0423344a73b": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "fb9a2acd-25d6-49b0-bffa-33c77a2e5715": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "5681792b-f391-4f3d-9bf8-7c546a7f0101": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "51289af9-3bd7-4bf1-9302-86c307c39d08": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "b03ef947-026f-4edb-a6b5-b51f1bc768ff": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "4ab09b66-e9ee-48a4-930a-7ce265f6eb9e": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "7c20473e-cd16-4416-a75a-c5677fca7b5c": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "924c3252-71b7-4101-a120-3d7347369bae": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "28b1fee3-ddf6-4658-8e31-e363e9a352e4": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "caf38ea8-7655-4431-8fdc-09e84ca66e65": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "439bed41-3e85-47d4-8a07-5c93c906b694": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "7c0514c4-bebe-4986-aa7b-34f862b5ccb9": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "22ac2a6c-8bfc-4413-ad7d-95ea7cbdd6f3": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "fb70a2e3-f1bb-4565-9ba6-44361d44d85c": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "f30898cd-d89e-48ee-8618-84526dab48ea": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "f20cd8f5-6436-4132-b2ca-4d0f504406ca": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "a0fc5fd5-352d-4160-94d8-25aabc7eae67": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "6a2816fc-645a-417d-b282-1fd3b20f34b6": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "d8973e53-c1dd-4316-b046-19301d2d2af4": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "76ef2a8b-5692-471a-804f-fbf5147736ac": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "f87b52aa-ae8a-44b8-b469-a88a820e139d": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "77fb264b-e585-4002-99ce-1291030158e0": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "6e6beb46-a219-4ea1-8847-ef4b6aa87e9d": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "f140fe6b-6cdb-4ee3-b7e4-e12eb3ae2b06": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "bd8d473c-bc2c-4aa0-a07e-3cd6787166ae": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "6910186c-3435-4175-9b67-4ad0e1c8018d": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "92d4465f-b851-42ea-a379-57910d1626ab": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "734e9314-a976-4338-8010-398fa7b5b85d": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "24e69122-e5d5-4a08-966b-20bd4b64a73c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "5d7a619c-8ef0-4c46-8840-38cdb76a7264": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "44715cfd-630e-44a3-a0f4-695b5d1f08cd": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "b6275dbd-9ca7-40f6-8d93-81f8b89a944c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "175022e1-49d9-4b54-bbce-b222273fde35": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "c6ed3c5a-b778-495e-b1f8-9405438095cf": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "84865346-5e76-4020-86ef-f88e3e56ef9d": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "491611f6-33a2-457c-9781-393a4074eb1a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "b7f30cb1-452a-4598-a0fe-c418929546db": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "181361ae-d62d-4288-91a3-b65231d5debc": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "bfc84aae-26be-4419-bb0d-dc91e5e169f8": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "ae2e48b5-8bcc-43c6-9108-c18aade5f1ea": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "3038a7ac-e1c9-4d67-ae53-0354d5913102": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "8c0153d4-1b10-499d-a321-062e04d4054f": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "b82d70ae-36f9-4f99-9006-5285fce9a5d6": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "fc9815a8-5cf7-4592-9652-08556d55b976": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "09911716-6898-4fd2-9791-2bd6dce6df34": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "13b20f30-7325-4c2f-8acd-48f85fdd20ca": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "e02ca86a-eac6-4460-bb58-c522074d2d48": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "557169db-4e81-4494-9d49-4923e46867e1": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "c275416d-2410-4398-b862-a60713646cfc": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "9040a7f8-532e-45ba-b5bd-725ee3fa205d": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "b31153c4-b1d5-4919-979d-f3df37d6c2e7": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "af90ac1f-03f2-4078-add9-c7053b30db86": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "909c9c0d-55dc-4c51-80af-ee75f6272a04": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "df498785-fbe8-4f5c-bd02-66a5d6bd32d7": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "6a347bcf-b3ac-4928-bce7-111667528f15": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "bfce9b53-5a51-41c2-915c-4accf7a5cec6": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "ecda6baf-7c05-483e-bdf3-113391ece24a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "289e2165-0e3b-4067-81a9-10be81fe0e7a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "d960745e-5aaa-4de0-96db-ea2ad6ce7a11": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "c45f4a19-10f3-4b26-a096-b63281580f09": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "f0987861-8d69-4a36-86f9-8d8151608a3f": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "b3284c25-48d7-496f-b183-5737d8b900f5": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "3cffb8f1-cf93-4277-b137-565827530941": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "b34d78e3-dfe5-4280-934f-2a3766909fcb": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "f22949da-4bef-4c4b-9e34-9c624a13a69c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "b8b61323-be59-486d-825b-c73fe711f493": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "ea05a403-46d0-4daa-b304-38b92f155b50": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "aafb05ac-2376-4ae9-b10b-e20dc1e986ee": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "d2ce4e48-70a1-4757-918d-33bef9774bcf": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "213a99d4-e2d2-42d4-a7bb-fc0f5f2b8f2e": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "8c05ea58-44d0-4458-9252-73d0fc3693ff": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "a24a6114-e388-491b-a340-6cf5d8e3ca5a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "8a94cb2a-e084-45c5-a0a1-4e94eaf5f259": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "c289e723-a33b-4f1c-a1b0-95f9e1207862": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "ce605bf6-a6b5-4d5c-8837-cb42b19c8d41": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "d53182c3-dc8b-4a82-9374-bb65454d811b": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "d8332463-9872-40d6-983c-011ce27f1542": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "69058508-5f1f-43ad-acf1-0d09053afd8a": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "4c9f2e74-86b8-43ec-81d4-9bead24668fb": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "539fbfb8-a8fe-4f28-b9d2-62ae7c0f0263": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "960e3be0-c2f4-4bd9-9419-29462eafe30c": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "dcfdc2d6-6e76-4d7d-916e-a4fe3b7d892f": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "ff4b91b7-4ecd-4cea-90a3-9ae40e082eff": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "927639ff-5212-44f8-9d4c-dacadc534f7b": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "43c5d817-7053-4a36-82ff-4a85d526b668": {
+        "driverId": "2327b230-8d10-4ffd-842e-21d0619c8cf9",
+        "factor": 1
+      },
+      "9af856f8-45d4-4c24-8511-c8842adc0526": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "96f39914-59b1-4558-8360-3278fe3b675e": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "eb730de4-c867-4049-886b-97bf5b89d765": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "f657e0b6-f7fc-43f5-bcb9-3df258a62bed": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "08041ecf-5ce3-440e-af1e-8c66c67787e4": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "e16c2e43-ddf8-4867-9dbd-42499a2c3717": {
+        "driverId": "cbf74501-739c-48e0-aeca-f756358c23ec",
+        "factor": 1
+      },
+      "4d5f38ca-5739-4328-813f-4e4f8b17173f": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "63ae0fe2-05c3-46b7-951e-67adf0070228": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "16fbe61d-540d-4cd1-9c70-3dfa06ec2cbd": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5eb2b3a6-e5db-4322-95ed-1713c40a4728": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "57d69eba-f60b-4bc9-8db2-8ca83a59a81a": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "0dc64d9e-0504-4be1-87db-cc997140082f": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "b32cfe45-3e57-437a-a9d0-a939893f0b82": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "c59e87cd-b85c-4892-bb5c-d532f1b4f7f8": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "487d8332-6fc3-44fa-ba05-afc068a92596": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "1dc5bd74-37b8-4203-9d38-7aa654d86cb5": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "52cf19a6-8d29-49e1-b826-bbe3cac2b2d5": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "3481c584-1d45-4499-9454-1f4d60bd877a": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "157279ef-59eb-4843-8448-aa483835009f": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "d7249c82-f380-40fa-8bf6-e224d18714d1": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "6e58fbc0-de32-4bf4-94d1-4db0964ac84b": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "7f26bd6e-4446-4007-a096-56837c9881dc": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "754f57f8-1e1e-440b-9ce2-295febdc4054": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "3b448f68-d12b-42ff-aa2b-874fbe6db066": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "87c0843a-2f45-49d4-9866-e1e95200bcae": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "9b846c53-f78f-4dc6-8608-0642e44de432": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "eac8aa28-c7a6-4199-a681-6a4bdf42d6be": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5d96e41f-d465-4438-8669-d453abb94224": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5e371a62-7416-411b-9777-b19f42b2a805": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "a562c44c-3651-4288-b8e7-59926e33c5e0": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "242af993-849f-447f-b26c-d159e492bf77": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5543d56d-9560-40a3-adcf-ef1323eebe22": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "7b2456b4-0cda-4fec-a4a9-1e6567f64f3a": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "804cbea6-d677-4772-b5d8-07b0e286d95c": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "06ac41d3-d8a1-49ef-8341-0cca32b12bbb": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "57489cdd-367a-462b-ad27-a0c6468b9709": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "12f57d2d-3d88-442b-83df-64a0d1ece903": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "806428f2-a79d-41ee-9ada-135ba252f80f": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "b5900649-ee24-4923-9592-3eab9e104649": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "bc722fe3-0ac2-4842-8e77-74f0f6bb1861": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "86e34958-0088-45ba-8f88-03bd624744c8": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "bbf4cd01-615b-432b-bb1e-2b1510b90dcb": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "699d6a7b-4c7f-4832-a3bd-acb106c908bf": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "1d08e338-3290-40d6-9604-e3ade8cf9259": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "053e8d98-2332-408d-b72a-27418cb8dc50": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "5507754f-b820-404c-a921-b0a9095f735d": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "80436bca-0410-4a67-9d8d-ed66cfda2a69": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "397c8e57-19fa-4139-a8ae-f2eec79feda9": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "54040450-90fd-4532-965f-2b2bc5388d04": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "7577ff2c-0d68-4f17-9d4e-9799732ec3b0": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "ea8ac05d-3aeb-4089-8b1e-ee7b625e7f90": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "5a6bdb3d-701f-4851-86f5-19c29a299d64": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "c1143d02-f752-4b3e-ab83-e96899d88a6c": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "33813e3a-e0b8-477a-b563-2b13e3eecd7f": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "c527f845-dfcc-4395-9682-80a64ac42bf1": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "75bc6165-13f0-4a25-a2c0-b9333d00b78e": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "be262730-7979-48bd-835f-c6b9907ab01f": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "2cd023ad-25cb-49d0-aafd-742fb4a48f43": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "f3fbf95d-caed-4b28-95c1-61255f466e4b": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "e61259df-0442-42e8-a8bb-00e0d35cec6e": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "ddd1fa21-69d3-4f8d-ae20-bb519dfca2ff": {
+        "driverId": "79a6abfb-36d3-4458-a416-78a68b9e0070",
+        "factor": 1
+      },
+      "850a04e6-8bd4-4808-94d7-ada8d7296c27": {
+        "driverId": "79a6abfb-36d3-4458-a416-78a68b9e0070",
+        "factor": 1
+      },
+      "725f4021-3c81-469e-ae74-6bccb0a8ee41": {
+        "driverId": "319deabb-09c4-4b35-a66c-58604e2629d5",
+        "factor": 1
+      },
+      "9cddc511-1d90-43c5-a00b-ba4bb5eced81": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "c50f1e09-49f8-4ec4-856c-12559a5ff64b": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "c6bcdb82-7ae9-4a1e-856e-4f2913dd9cee": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "c3e6eb87-65a0-43c5-bb8c-0dfc1fd4a788": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "b9cedf4a-b3fd-4aee-ba62-2e38ab61856d": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "46a3a627-8824-4b2f-9763-21a5db00946e": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "543ac5de-c6c9-456c-bcb1-e666ca5129e0": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "6bae8bec-e1f0-48f5-ad7a-ec83064fc7ac": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "25d9b604-e888-40d1-88b1-20f39c1b5ba4": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "ce62d291-2953-4c1e-b7ac-77dcfda4ed06": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "4823ec3a-74a5-414d-b3df-4701fa64df9a": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "bdefd1a5-71d3-4ded-b740-229f1b6b7913": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "09db78d7-8514-454b-b2c4-27838e653a59": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "2d1f6e5b-8f53-4cc9-a9c8-6efcf43ffa85": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "b591bdae-4217-424c-94b6-c4c3334cf4a6": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "e8006247-a6b4-483f-92ba-53205919047b": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "e4c9c10a-5447-4e81-9ff5-48d920d1f04a": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "e2c999cf-79e7-47bb-9a6d-7913a2993017": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "9a5ee5ec-f49e-49f6-83d8-cb507aa40cc4": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "998b112a-844c-45cf-9b77-53cc1b77693a": {
+        "driverId": "d3952a0f-5aef-4397-940f-69891b42360d",
+        "factor": 1
+      },
+      "c3451d2d-d051-409f-8530-d7a519bc5ba1": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "ca3e4a76-c5ea-40f6-9ec6-a9893694503e": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "b6b5f776-7502-43c0-82ae-4ad755794a02": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "84b74fec-4dfb-4153-9adc-dcf767c7305a": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "7cd01064-0c8a-46e4-bd99-9ce2a647dba2": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "1a172bac-07f6-4102-95f8-f0d767ea1b04": {
+        "driverId": "f9e12c39-8b0b-4646-aaad-cc86e128e6aa",
+        "factor": 1
+      },
+      "1e4f638c-546c-4b1c-b9c5-95eab326a6a4": {
+        "driverId": "6bb75c49-d5a4-42c3-b2f3-1a41699e709b",
+        "factor": 1
+      },
+      "0b784358-27b8-4c95-8cb2-9356dd0af49f": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "da20821f-2f54-4fb3-b799-069acae74292": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "28d542b9-a320-47dc-b998-878fce3d7762": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "eb3d4ec0-a2bc-487f-96ac-496c7e7f3a27": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "5a48d0e7-a612-42ae-9aa6-2f402a7ac232": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "d5e906ec-ebc6-4c9c-a01b-72ca5c884b71": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "d341251a-0914-4ab1-8aed-f71e4f7db5a5": {
+        "driverId": "91f0a6c0-fd75-480a-aead-10865f43b603",
+        "factor": 1
+      },
+      "0bf04e98-fd7c-4dfd-83d4-bf6341878df2": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "908dfccc-defa-4e4c-a98e-79677bb9e0e8": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "b1d184fd-136d-4fa1-a487-c68c42778010": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "a403bd9b-021f-4e5e-ab48-0089f30e262c": {
+        "driverId": "663c96fa-bed7-4442-b864-32fe3c5bf442",
+        "factor": 1
+      },
+      "d4a826f6-94e2-47e1-b16f-ad2f4578c3d5": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "7222bd66-a116-4ef3-b12e-fbadb8cd6e26": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "1479e8c8-296c-423d-821f-897e48471eae": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "026ec7a7-7b58-41b4-a195-ee45257bcc4d": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "699dfa11-ae5f-4ec6-a8c7-31b55c254741": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "cb82a487-3aba-44a6-8865-96d607ceefdf": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "57f21c88-d9a2-4303-9bfc-14c789351602": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "1ce1c26a-9d9c-48d6-af17-1cc5f4331ce8": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "9806751e-0922-45a4-bd40-d4b2103f9d15": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "18e00f56-a062-4be3-a162-cd811affa774": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "0dd056f8-82b0-4f3e-837f-921373213657": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "fe2f9c5c-1b00-4486-83dc-f66aa01d33ba": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "0ca06faf-8c62-4e86-87a6-1a6234d033f6": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "394b26e6-08c9-47eb-a484-6bdf70aa3ffd": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "ee81f7eb-fc11-4658-ac94-263463f7c4b4": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "2ec24fa9-0a13-4630-94a3-1b822355a3b0": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "826f8f45-0cd4-4888-82da-6d315b040b38": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "29914b30-1924-4cf3-a0cb-55848b33c10d": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "05c4c5f2-5950-4b64-85a0-e0ec81525482": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "e2593c7e-517e-4707-bec1-c2936031f15f": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "bf52e6a2-133d-4e5f-ac37-9d95d85218c9": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "cfb81aa2-917b-49b5-b468-ba0f5c340705": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "d5b15c82-63cb-437f-85aa-0beda76d3c94": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "e912afc1-ada2-4a3e-8b51-2649dbc6d040": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "0a8dabea-e98e-4bb1-aa5a-e56d7621921a": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "3328892f-301f-4d33-a317-a591dd7b0831": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "d928d954-f231-4c36-8d18-7800f1f2f71c": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "0dbc40dc-e268-4194-8ded-3c4c6a6ac259": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "c20eebbc-1578-403e-a3d2-b26583ad7fed": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      },
+      "bc873798-00dd-465a-917e-abab0833635a": {
+        "driverId": "cd73b833-7fe3-4e88-b92d-e5306a1d66e3",
+        "factor": 1
+      }
+    }
+  },
+  "bancoIniciativas": {
+    "iniciativas": [
+      {
+        "id": "init-etanol",
+        "name": "Veículo flex: gasolina → etanol",
+        "description": "Conversão do uso de gasolina para etanol na frota flex.",
+        "fullDescription": "Programa de troca de combustível da frota flex de gasolina para etanol, com treinamento de motoristas e monitoramento de consumo.",
+        "efficacy": 80,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão da atividade × abrangência adotada × eficácia (80%). A eficácia reflete a menor intensidade de carbono do etanol vs. gasolina (well-to-wheel).",
+        "finance": {
+          "capex": 0,
+          "opex": 120000,
+          "revenues": 0,
+          "savings": 80000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "init-eletrificacao",
+        "name": "Eletrificação de veículos leves",
+        "description": "Substituição de veículos leves a combustão por elétricos.",
+        "fullDescription": "Eletrificação gradual da frota leve, com instalação de infraestrutura de recarga e energia renovável associada.",
+        "efficacy": 99,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 99%. Resíduo associado a perdas e energia de recarga não renovável.",
+        "finance": {
+          "capex": 1800000,
+          "opex": 60000,
+          "revenues": 0,
+          "savings": 150000,
+          "currency": "BRL",
+          "lifetimeYears": 12
+        }
+      },
+      {
+        "id": "init-biodiesel",
+        "name": "Biodiesel (B20+) na frota pesada",
+        "description": "Adoção de biodiesel B20 ou superior.",
+        "fullDescription": "Uso de biodiesel em veículos pesados e combustão móvel a diesel, com adaptações e monitoramento.",
+        "efficacy": 18,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 18% (fração renovável da mistura).",
+        "finance": {
+          "capex": 0,
+          "opex": 90000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 8
+        }
+      },
+      {
+        "id": "init-ecodriving",
+        "name": "Direção econômica",
+        "description": "Treinamento em direção eficiente.",
+        "fullDescription": "Capacitação de motoristas em técnicas de economia de combustível e manutenção preventiva.",
+        "efficacy": 12,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel",
+            "Combustão estacionária"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 12% (economia média observada).",
+        "finance": {
+          "capex": 0,
+          "opex": 30000,
+          "revenues": 0,
+          "savings": 50000,
+          "currency": "BRL",
+          "lifetimeYears": 5
+        }
+      },
+      {
+        "id": "init-irec",
+        "name": "Eletricidade renovável (I-RECs)",
+        "description": "Certificados de energia renovável.",
+        "fullDescription": "Aquisição de I-RECs para cobrir o consumo elétrico, zerando as emissões de Escopo 2 (market-based).",
+        "efficacy": 100,
+        "applicability": {
+          "scopes": [
+            "Escopo 2"
+          ],
+          "categories": [
+            "Energia elétrica - Método baseado na Localização",
+            "Energia elétrica - Método baseado no mercado"
+          ]
+        },
+        "memorial": "Abatimento = emissão de Escopo 2 × abrangência × 100% (market-based).",
+        "finance": {
+          "capex": 0,
+          "opex": 200000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      }
+    ]
+  },
+  "projetos": {
+    "projetos": [
+      {
+        "id": "ac13e7e3-c5e3-4adf-abf3-fbe49dd04d49",
+        "name": "Substituição do Gás refrigerante (ar condicionado) nas máquinas - R134A para R1234yf",
+        "initiativeId": "tech-104a6acfd9584f4abfc389926ee95e80",
+        "memberActivityIds": [
+          "c2c948ba-2291-463f-bf27-e3a079f87893",
+          "11548460-9094-4550-bc0c-2f22180831ae"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "54a0e0e8-9c18-4844-966e-b35582afaf07",
+        "name": "Uso de HVO (diesel verde) em caminhões a diesel",
+        "initiativeId": "tech-2",
+        "memberActivityIds": [
+          "59d2a64d-eec5-4009-a786-3cb03c5e2b09",
+          "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee",
+          "52ad326a-9dbe-4946-a169-4a25c1139bec"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2028,
+            "pct": 10
+          },
+          {
+            "year": 2030,
+            "pct": 50
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "dc552b7b-b442-49f4-9999-53958a843af6",
+        "name": "Uso de etanol em veículos leves a diesel - Pesados",
+        "initiativeId": "tech-3",
+        "memberActivityIds": [
+          "492e08cf-18c4-4045-a9bc-3d7b9d0641b6",
+          "cbcb68bf-c896-4fdd-b058-b58ef5421986"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "e8c09d83-410d-4041-898f-dbcf121497c7",
+        "name": "Uso de etanol em veículos leves a diesel - Leves",
+        "initiativeId": "tech-3",
+        "memberActivityIds": [
+          "a56942ae-dc09-4514-bc83-7a3f48fef9a9"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "08549e17-bd45-4994-98df-9b22e2652083",
+        "name": "Uso de etanol em veículos leves a gasolina - Leves",
+        "initiativeId": "tech-eeb6963f5ea74aaa911651341bb46d2b",
+        "memberActivityIds": [
+          "f2622330-fce7-4580-b72c-82378d0e9d8a"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "81746803-a069-4aad-864e-d4cf44d0b3c9",
+        "name": "Uso de etanol em veículos leves a gasolina - Intralogística",
+        "initiativeId": "tech-eeb6963f5ea74aaa911651341bb46d2b",
+        "memberActivityIds": [
+          "1de4cbba-9167-4ab9-8150-7be059876fa6"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "23b29323-3ea5-4183-84fd-d5ccdd972a11",
+        "name": "Uso de etanol em veículos leves a diesel - Intralogística",
+        "initiativeId": "tech-3",
+        "memberActivityIds": [
+          "135ca90f-5982-4841-aaf2-a699c5ab2d52"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "297c1619-514f-4e80-b727-e09543d0a828",
+        "name": "Uso de etanol em veículos leves a gasolina - F&E",
+        "initiativeId": "tech-eeb6963f5ea74aaa911651341bb46d2b",
+        "memberActivityIds": [
+          "f8688c26-5740-438e-8add-1deb647a0b77"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "a2982714-1ddc-43f1-95bb-d2638a628e1e",
+        "name": "Cenário Biodiesel BR",
+        "initiativeId": "tech-42934aa8cc534a51a83d856729f40cc5",
+        "memberActivityIds": [
+          "f1f308ad-1f60-427c-85fc-ea10ac1c9e80",
+          "82256609-c7e1-4f2e-84fb-1a073f37ec85",
+          "ba37f3a2-34a2-469e-861d-a55058427155",
+          "e6dd7de8-56d3-4075-a409-5ea9325cd551",
+          "6a9fd53c-0558-437a-b101-f29b01c1ac7f",
+          "5eca1017-a051-4510-8990-a55d8f18a642",
+          "135ca90f-5982-4841-aaf2-a699c5ab2d52",
+          "a56942ae-dc09-4514-bc83-7a3f48fef9a9",
+          "59d2a64d-eec5-4009-a786-3cb03c5e2b09",
+          "cbcb68bf-c896-4fdd-b058-b58ef5421986",
+          "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee",
+          "52ad326a-9dbe-4946-a169-4a25c1139bec",
+          "492e08cf-18c4-4045-a9bc-3d7b9d0641b6"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "2e187441-c421-4ca9-9892-b841b5af4e15",
+        "name": "Direção Econômica e Eficiência Operacional da Frota",
+        "initiativeId": "tech-5",
+        "memberActivityIds": [
+          "135ca90f-5982-4841-aaf2-a699c5ab2d52",
+          "a56942ae-dc09-4514-bc83-7a3f48fef9a9",
+          "59d2a64d-eec5-4009-a786-3cb03c5e2b09",
+          "cbcb68bf-c896-4fdd-b058-b58ef5421986",
+          "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee",
+          "492e08cf-18c4-4045-a9bc-3d7b9d0641b6"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "9c9101f3-6ac6-44c3-ba9d-1a4129a7277a",
+        "name": "Substituição empilhadeiras GLP para Elétricas",
+        "initiativeId": "tech-35849e8876ee40edb188b67c93283c17",
+        "memberActivityIds": [
+          "f702d8b7-f1e5-4691-af60-637371e67293",
+          "14eb8ac8-9be3-4a31-a0cf-642e3a4ce782",
+          "56e27395-cd29-41a3-b66a-1dc1af954c46",
+          "9bb21a6d-ab5d-4a3c-b515-d6441cb020e8"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 10
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "feb58db2-dd6d-4632-be62-c47b9a527444",
+        "name": "Diesel comercial para BeVant - Consumo Combustível no cliente por conta da Mills",
+        "initiativeId": "tech-6",
+        "memberActivityIds": [
+          "52ad326a-9dbe-4946-a169-4a25c1139bec",
+          "1bbc94b1-2698-4cc4-93d9-8cfa60c499ee",
+          "492e08cf-18c4-4045-a9bc-3d7b9d0641b6"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 50
+          },
+          {
+            "year": 2028,
+            "pct": 10
+          },
+          {
+            "year": 2029,
+            "pct": 50
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      },
+      {
+        "id": "cc08989f-7aa5-4ca9-a1d1-9872de86fcda",
+        "name": "Substituição do Gás refrigerante HFC-134A para R-513A",
+        "initiativeId": "tech-4",
+        "memberActivityIds": [
+          "c2c948ba-2291-463f-bf27-e3a079f87893",
+          "11548460-9094-4550-bc0c-2f22180831ae"
+        ],
+        "startYear": 2026,
+        "endYear": 2050,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 50
+          },
+          {
+            "year": 2036,
+            "pct": 100
+          }
+        ],
+        "finance": {
+          "capex": 0,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        },
+        "scenarioOverrides": {}
+      }
+    ]
+  },
+  "cenarios": {
+    "cenarios": [
+      {
+        "id": "253ce4a9-32b2-4ac4-b77f-dc9f01dbfb27",
+        "name": "Cenário 1 - Otimista",
+        "items": [
+          {
+            "projetoId": "ac13e7e3-c5e3-4adf-abf3-fbe49dd04d49",
+            "included": true
+          },
+          {
+            "projetoId": "dc552b7b-b442-49f4-9999-53958a843af6",
+            "included": true
+          },
+          {
+            "projetoId": "08549e17-bd45-4994-98df-9b22e2652083",
+            "included": true
+          },
+          {
+            "projetoId": "54a0e0e8-9c18-4844-966e-b35582afaf07",
+            "included": true
+          },
+          {
+            "projetoId": "e8c09d83-410d-4041-898f-dbcf121497c7",
+            "included": true
+          },
+          {
+            "projetoId": "81746803-a069-4aad-864e-d4cf44d0b3c9",
+            "included": true
+          },
+          {
+            "projetoId": "23b29323-3ea5-4183-84fd-d5ccdd972a11",
+            "included": true
+          },
+          {
+            "projetoId": "297c1619-514f-4e80-b727-e09543d0a828",
+            "included": true
+          },
+          {
+            "projetoId": "2e187441-c421-4ca9-9892-b841b5af4e15",
+            "included": true
+          },
+          {
+            "projetoId": "a2982714-1ddc-43f1-95bb-d2638a628e1e",
+            "included": true
+          },
+          {
+            "projetoId": "9c9101f3-6ac6-44c3-ba9d-1a4129a7277a",
+            "included": true
+          }
+        ],
+        "additive": true
+      },
+      {
+        "id": "d51603b7-86fd-4d8d-bec3-9dd495b946d8",
+        "name": "Cenário 2",
+        "items": [
+          {
+            "projetoId": "54a0e0e8-9c18-4844-966e-b35582afaf07",
+            "included": true,
+            "overrides": {
+              "startYear": 2026,
+              "endYear": 2050,
+              "coveragePoints": [
+                {
+                  "year": 2028,
+                  "pct": 10
+                },
+                {
+                  "year": 2030,
+                  "pct": 50
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "a2982714-1ddc-43f1-95bb-d2638a628e1e",
+            "included": true
+          },
+          {
+            "projetoId": "ac13e7e3-c5e3-4adf-abf3-fbe49dd04d49",
+            "included": false
+          },
+          {
+            "projetoId": "23b29323-3ea5-4183-84fd-d5ccdd972a11",
+            "included": true
+          },
+          {
+            "projetoId": "2e187441-c421-4ca9-9892-b841b5af4e15",
+            "included": true
+          },
+          {
+            "projetoId": "297c1619-514f-4e80-b727-e09543d0a828",
+            "included": true
+          },
+          {
+            "projetoId": "9c9101f3-6ac6-44c3-ba9d-1a4129a7277a",
+            "included": true
+          },
+          {
+            "projetoId": "feb58db2-dd6d-4632-be62-c47b9a527444",
+            "included": true
+          },
+          {
+            "projetoId": "dc552b7b-b442-49f4-9999-53958a843af6",
+            "included": true
+          },
+          {
+            "projetoId": "81746803-a069-4aad-864e-d4cf44d0b3c9",
+            "included": true
+          },
+          {
+            "projetoId": "e8c09d83-410d-4041-898f-dbcf121497c7",
+            "included": true
+          },
+          {
+            "projetoId": "08549e17-bd45-4994-98df-9b22e2652083",
+            "included": true
+          },
+          {
+            "projetoId": "cc08989f-7aa5-4ca9-a1d1-9872de86fcda",
+            "included": true
+          }
+        ]
+      }
+    ],
+    "cenarioAtivoId": "253ce4a9-32b2-4ac4-b77f-dc9f01dbfb27"
+  }
+}

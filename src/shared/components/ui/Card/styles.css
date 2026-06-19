@@ -1,0 +1,40 @@
+.ant-card {
+    background-color: #FFF;
+    border-radius: 8px;
+    border: none;
+    box-shadow: rgba(112, 144, 176, 0.12) 4px 4px 8px;
+    transition: all 0.3s ease;
+}
+
+.ant-card:hover {
+    box-shadow: rgba(112, 144, 176, 0.12) 4px 4px 8px;
+}
+
+.ant-card .ant-card-body {
+    padding: 16px;
+    border-radius: 0 0 8px 8px;
+}
+
+.stat-card .stat-icon {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.05);
+}
+
+.ant-card-loading-content {
+    padding: 16px;
+}
+
+.ant-card.ant-card-hoverable:hover {
+    border-color: transparent;
+}
+
+.ant-card.ant-card-small>.ant-card-body {
+    padding: 12px;
+}
+
+.ant-card.ant-card-large>.ant-card-body {
+    padding: 24px;
+}

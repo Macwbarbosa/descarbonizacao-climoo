@@ -1,0 +1,41 @@
+{
+  "name": "climoo-descarbonizacao",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Ferramenta standalone do módulo de Plano de Descarbonização da Climoo (Inventário → Metas → Drivers → BAU → Projetos → Cenários). Persiste dados por CNPJ em decarbonization-data/<cnpj>.json via dev middleware do Vite.",
+  "scripts": {
+    "dev": "vite --host --port 5174",
+    "build": "vite build",
+    "preview": "vite preview --port 5174"
+  },
+  "dependencies": {
+    "@ant-design/charts": "^2.6.7",
+    "@ant-design/icons": "^5.4.0",
+    "@antv/g2plot": "^2.4.31",
+    "@phosphor-icons/react": "^2.1.7",
+    "@supabase/supabase-js": "^2.108.2",
+    "antd": "^5.22.2",
+    "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
+    "exceljs": "^4.4.0",
+    "i18next": "^23.12.2",
+    "papaparse": "^5.5.3",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.0.0",
+    "react-number-format": "^5.4.3",
+    "react-router-dom": "^6.26.0",
+    "uuid": "^11.0.5",
+    "xlsx": "^0.18.5",
+    "zustand": "^5.0.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "vite": "^5.3.4"
+  }
+}

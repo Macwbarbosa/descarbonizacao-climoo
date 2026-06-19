@@ -1,0 +1,1111 @@
+{
+  "modulo": "descarbonizacao",
+  "cnpj": "99999999000101",
+  "empresa": "Climoo - Fake",
+  "exportadoEm": "2026-06-19T00:52:54.997Z",
+  "atualizadoEm": "2026-06-19T00:48:01.226Z",
+  "metasPeriodo": {
+    "params": {
+      "baseYear": 2024,
+      "recentYear": 2024,
+      "netZeroYear": 2050,
+      "inventoryDone": true
+    },
+    "metas": [
+      {
+        "id": "m-e12",
+        "scopes": {
+          "scope1": true,
+          "scope2": true,
+          "scope3": false
+        },
+        "type": "absoluta",
+        "denominatorDriverId": null,
+        "ambition": "1p5",
+        "submissionYear": 2025,
+        "nearTermYear": 2035,
+        "netZeroYear": 2050,
+        "name": "Escopo 1+2 · 1,5°C (absoluta)",
+        "autoName": false
+      },
+      {
+        "id": "m-e3",
+        "scopes": {
+          "scope1": false,
+          "scope2": false,
+          "scope3": true
+        },
+        "type": "absoluta",
+        "denominatorDriverId": null,
+        "ambition": "wb2",
+        "submissionYear": 2025,
+        "nearTermYear": 2030,
+        "netZeroYear": null,
+        "name": "Escopo 3 · WB2°C (absoluta)",
+        "autoName": false
+      }
+    ]
+  },
+  "inventario": {
+    "atividades": [
+      {
+        "id": "act-diesel",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Diesel – frota pesada",
+        "emission": 36000
+      },
+      {
+        "id": "act-gasolina",
+        "scope": "Escopo 1",
+        "category": "Combustão móvel",
+        "name": "Gasolina – frota leve",
+        "emission": 5000
+      },
+      {
+        "id": "act-gn",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "Gás natural – caldeiras",
+        "emission": 26000
+      },
+      {
+        "id": "act-glp",
+        "scope": "Escopo 1",
+        "category": "Combustão estacionária",
+        "name": "GLP – fornos",
+        "emission": 8000
+      },
+      {
+        "id": "act-proc",
+        "scope": "Escopo 1",
+        "category": "Processos industriais",
+        "name": "Emissões de processo",
+        "emission": 20000
+      },
+      {
+        "id": "act-energia",
+        "scope": "Escopo 2",
+        "category": "Energia elétrica - Método baseado na Localização",
+        "name": "Energia elétrica – rede",
+        "emission": 48000
+      },
+      {
+        "id": "act-compras",
+        "scope": "Escopo 3",
+        "category": "Compra de bens e serviços",
+        "name": "Compra de bens e serviços",
+        "emission": 38000
+      },
+      {
+        "id": "act-td",
+        "scope": "Escopo 3",
+        "category": "Transporte e Distribuição (upstream)",
+        "name": "Transporte e distribuição (upstream)",
+        "emission": 20000
+      },
+      {
+        "id": "act-capital",
+        "scope": "Escopo 3",
+        "category": "Bens de capital",
+        "name": "Bens de capital",
+        "emission": 9000
+      },
+      {
+        "id": "act-uso",
+        "scope": "Escopo 3",
+        "category": "Uso de bens e serviços vendidos",
+        "name": "Uso de produtos vendidos",
+        "emission": 12000
+      },
+      {
+        "id": "act-desloc",
+        "scope": "Escopo 3",
+        "category": "Deslocamento de funcionários",
+        "name": "Deslocamento de funcionários",
+        "emission": 8000
+      },
+      {
+        "id": "act-viagens",
+        "scope": "Escopo 3",
+        "category": "Viagens a negócios",
+        "name": "Viagens a negócio",
+        "emission": 6000
+      },
+      {
+        "id": "act-residuos",
+        "scope": "Escopo 3",
+        "category": "Resíduos",
+        "name": "Resíduos",
+        "emission": 4000
+      }
+    ]
+  },
+  "variaveisCrescimento": {
+    "drivers": [
+      {
+        "id": "prod",
+        "name": "Produção",
+        "unit": "ton/ano",
+        "type": "Físico",
+        "note": "Plano de negócios 2024–2030; expansão da linha em 2028.",
+        "baseValue": 150000,
+        "method": "period",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2024,
+            "to": 2027,
+            "g": 3
+          },
+          {
+            "from": 2028,
+            "to": 2028,
+            "g": 8
+          },
+          {
+            "from": 2029,
+            "to": 2050,
+            "g": 2.5
+          }
+        ],
+        "yearly": {},
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "rec",
+        "name": "Receita bruta",
+        "unit": "R$ MM",
+        "type": "Financeiro",
+        "note": "Projeção comercial.",
+        "baseValue": 600,
+        "method": "avg",
+        "avgRate": 3.5,
+        "segments": [
+          {
+            "from": 2024,
+            "to": 2050,
+            "g": 3.5
+          }
+        ],
+        "yearly": {},
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "equip",
+        "name": "Nº de veículos",
+        "unit": "un.",
+        "type": "Físico",
+        "note": "Plano de frota/CAPEX.",
+        "baseValue": 180,
+        "method": "avg",
+        "avgRate": 3,
+        "segments": [
+          {
+            "from": 2024,
+            "to": 2050,
+            "g": 3
+          }
+        ],
+        "yearly": {},
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "oper",
+        "name": "Horas de operação",
+        "unit": "h/ano",
+        "type": "Operacional",
+        "note": "Utilização industrial.",
+        "baseValue": 7000,
+        "method": "avg",
+        "avgRate": 2.5,
+        "segments": [
+          {
+            "from": 2024,
+            "to": 2050,
+            "g": 2.5
+          }
+        ],
+        "yearly": {},
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      },
+      {
+        "id": "team",
+        "name": "Headcount",
+        "unit": "pessoas",
+        "type": "Operacional",
+        "note": "Plano de pessoas.",
+        "baseValue": 1200,
+        "method": "avg",
+        "avgRate": 2,
+        "segments": [
+          {
+            "from": 2024,
+            "to": 2050,
+            "g": 2
+          }
+        ],
+        "yearly": {},
+        "history": {},
+        "usedBy": [],
+        "siteId": null
+      }
+    ]
+  },
+  "bau": {
+    "anoAlvo": 2030,
+    "vinculos": {
+      "act-diesel": {
+        "driverId": "equip",
+        "factor": 1
+      },
+      "act-gasolina": {
+        "driverId": "equip",
+        "factor": 1
+      },
+      "act-gn": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-glp": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-proc": {
+        "driverId": "prod",
+        "factor": 0.95
+      },
+      "act-energia": {
+        "driverId": "oper",
+        "factor": 1
+      },
+      "act-compras": {
+        "driverId": "rec",
+        "factor": 0.8
+      },
+      "act-td": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-capital": {
+        "driverId": "rec",
+        "factor": 0.6
+      },
+      "act-uso": {
+        "driverId": "prod",
+        "factor": 1
+      },
+      "act-desloc": {
+        "driverId": "team",
+        "factor": 1
+      },
+      "act-viagens": {
+        "driverId": "team",
+        "factor": 1
+      },
+      "act-residuos": {
+        "driverId": "prod",
+        "factor": 0.5
+      }
+    }
+  },
+  "bancoIniciativas": {
+    "iniciativas": [
+      {
+        "id": "init-etanol",
+        "name": "Veículos leves: gasolina → etanol",
+        "description": "Troca de combustível na frota flex.",
+        "fullDescription": "Conversão do uso de gasolina para etanol na frota flex, com treinamento de motoristas.",
+        "efficacy": 80,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 80% (menor intensidade do etanol well-to-wheel).",
+        "finance": {
+          "capex": 0,
+          "opex": 120000,
+          "revenues": 0,
+          "savings": 90000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "init-eletrificacao",
+        "name": "Eletrificação da frota pesada",
+        "description": "Caminhões elétricos substituindo diesel.",
+        "fullDescription": "Substituição gradual da frota pesada a diesel por veículos elétricos, com infraestrutura de recarga dedicada.",
+        "efficacy": 90,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 90% (resíduo da energia de recarga não renovável).",
+        "finance": {
+          "capex": 4500000,
+          "opex": 100000,
+          "revenues": 0,
+          "savings": 700000,
+          "currency": "BRL",
+          "lifetimeYears": 12
+        }
+      },
+      {
+        "id": "init-biodiesel",
+        "name": "Biodiesel/HVO na frota pesada",
+        "description": "Mistura B30+/HVO no diesel.",
+        "fullDescription": "Uso de biodiesel B30+ e diesel renovável (HVO) na frota pesada remanescente.",
+        "efficacy": 25,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão móvel"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 25% (fração renovável da mistura).",
+        "finance": {
+          "capex": 0,
+          "opex": 250000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 8
+        }
+      },
+      {
+        "id": "init-eficiencia",
+        "name": "Eficiência energética térmica",
+        "description": "Caldeiras, fornos e processos.",
+        "fullDescription": "Modernização de caldeiras/fornos, recuperação de calor e otimização de processos.",
+        "efficacy": 30,
+        "applicability": {
+          "scopes": [
+            "Escopo 1"
+          ],
+          "categories": [
+            "Combustão estacionária",
+            "Processos industriais"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 30%. Economia de combustível supera o CAPEX (medida win-win).",
+        "finance": {
+          "capex": 800000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 1500000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "init-irec",
+        "name": "Eletricidade renovável (I-RECs)",
+        "description": "Certificados de energia renovável.",
+        "fullDescription": "Aquisição de I-RECs para zerar Escopo 2 (market-based).",
+        "efficacy": 100,
+        "applicability": {
+          "scopes": [
+            "Escopo 2"
+          ],
+          "categories": [
+            "Energia elétrica - Método baseado na Localização"
+          ]
+        },
+        "memorial": "Abatimento = emissão de E2 × abrangência × 100% (market-based).",
+        "finance": {
+          "capex": 0,
+          "opex": 250000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "init-solar",
+        "name": "Geração solar on-site",
+        "description": "Usina solar própria.",
+        "fullDescription": "Geração solar distribuída para autoconsumo, reduzindo a compra da rede.",
+        "efficacy": 60,
+        "applicability": {
+          "scopes": [
+            "Escopo 2"
+          ],
+          "categories": [
+            "Energia elétrica - Método baseado na Localização"
+          ]
+        },
+        "memorial": "Abatimento = emissão de E2 × abrangência × 60% (fração autoconsumida).",
+        "finance": {
+          "capex": 3000000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 500000,
+          "currency": "BRL",
+          "lifetimeYears": 20
+        }
+      },
+      {
+        "id": "init-fornecedores",
+        "name": "Engajamento de fornecedores",
+        "description": "Metas SBTi na cadeia de suprimentos.",
+        "fullDescription": "Programa de engajamento da cadeia: critérios de carbono em compras, bens de capital e design de produto (uso).",
+        "efficacy": 45,
+        "applicability": {
+          "scopes": [
+            "Escopo 3"
+          ],
+          "categories": [
+            "Compra de bens e serviços",
+            "Bens de capital",
+            "Uso de bens e serviços vendidos"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 45% (fornecedores com meta SBTi + redesign de produto).",
+        "finance": {
+          "capex": 0,
+          "opex": 200000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "init-logistica",
+        "name": "Logística e mobilidade de baixo carbono",
+        "description": "Transporte, deslocamento e viagens.",
+        "fullDescription": "Roteirização e modais limpos no transporte, mobilidade corporativa elétrica e política de viagens.",
+        "efficacy": 40,
+        "applicability": {
+          "scopes": [
+            "Escopo 3"
+          ],
+          "categories": [
+            "Transporte e Distribuição (upstream)",
+            "Deslocamento de funcionários",
+            "Viagens a negócios"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 40% (medida win-win, economia > custo).",
+        "finance": {
+          "capex": 200000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 900000,
+          "currency": "BRL",
+          "lifetimeYears": 8
+        }
+      },
+      {
+        "id": "init-residuos",
+        "name": "Economia circular (resíduos)",
+        "description": "Reciclagem e reaproveitamento.",
+        "fullDescription": "Redução, reuso e reciclagem de resíduos, com desvio de aterro.",
+        "efficacy": 50,
+        "applicability": {
+          "scopes": [
+            "Escopo 3"
+          ],
+          "categories": [
+            "Resíduos"
+          ]
+        },
+        "memorial": "Abatimento = emissão × abrangência × 50% (receita de reciclagem supera o custo).",
+        "finance": {
+          "capex": 150000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 400000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      }
+    ]
+  },
+  "projetos": {
+    "projetos": [
+      {
+        "id": "proj-etanol",
+        "name": "Frota leve: gasolina → etanol",
+        "initiativeId": "init-etanol",
+        "memberActivityIds": [
+          "act-gasolina"
+        ],
+        "startYear": 2025,
+        "endYear": 2035,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 60
+          },
+          {
+            "year": 2030,
+            "pct": 85
+          },
+          {
+            "year": 2035,
+            "pct": 100
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 0,
+          "opex": 120000,
+          "revenues": 0,
+          "savings": 90000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "proj-eletrificacao",
+        "name": "Eletrificação da frota pesada",
+        "initiativeId": "init-eletrificacao",
+        "memberActivityIds": [
+          "act-diesel"
+        ],
+        "startYear": 2026,
+        "endYear": 2040,
+        "coveragePoints": [
+          {
+            "year": 2030,
+            "pct": 35
+          },
+          {
+            "year": 2035,
+            "pct": 70
+          },
+          {
+            "year": 2040,
+            "pct": 90
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 4500000,
+          "opex": 100000,
+          "revenues": 0,
+          "savings": 700000,
+          "currency": "BRL",
+          "lifetimeYears": 12
+        }
+      },
+      {
+        "id": "proj-biodiesel",
+        "name": "Biodiesel/HVO na frota pesada",
+        "initiativeId": "init-biodiesel",
+        "memberActivityIds": [
+          "act-diesel"
+        ],
+        "startYear": 2025,
+        "endYear": 2035,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 40
+          },
+          {
+            "year": 2030,
+            "pct": 70
+          },
+          {
+            "year": 2035,
+            "pct": 100
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 0,
+          "opex": 250000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 8
+        }
+      },
+      {
+        "id": "proj-eficiencia",
+        "name": "Eficiência energética térmica",
+        "initiativeId": "init-eficiencia",
+        "memberActivityIds": [
+          "act-gn",
+          "act-glp",
+          "act-proc"
+        ],
+        "startYear": 2025,
+        "endYear": 2032,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 50
+          },
+          {
+            "year": 2030,
+            "pct": 85
+          },
+          {
+            "year": 2032,
+            "pct": 90
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 800000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 1500000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "proj-irec",
+        "name": "Energia renovável (I-REC)",
+        "initiativeId": "init-irec",
+        "memberActivityIds": [
+          "act-energia"
+        ],
+        "startYear": 2025,
+        "endYear": 2030,
+        "coveragePoints": [
+          {
+            "year": 2026,
+            "pct": 60
+          },
+          {
+            "year": 2028,
+            "pct": 100
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 0,
+          "opex": 250000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "proj-solar",
+        "name": "Geração solar on-site",
+        "initiativeId": "init-solar",
+        "memberActivityIds": [
+          "act-energia"
+        ],
+        "startYear": 2026,
+        "endYear": 2035,
+        "coveragePoints": [
+          {
+            "year": 2030,
+            "pct": 30
+          },
+          {
+            "year": 2035,
+            "pct": 55
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 3000000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 500000,
+          "currency": "BRL",
+          "lifetimeYears": 20
+        }
+      },
+      {
+        "id": "proj-fornecedores",
+        "name": "Engajamento de fornecedores",
+        "initiativeId": "init-fornecedores",
+        "memberActivityIds": [
+          "act-compras",
+          "act-capital",
+          "act-uso"
+        ],
+        "startYear": 2025,
+        "endYear": 2040,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 40
+          },
+          {
+            "year": 2030,
+            "pct": 88
+          },
+          {
+            "year": 2040,
+            "pct": 95
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 0,
+          "opex": 200000,
+          "revenues": 0,
+          "savings": 0,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      },
+      {
+        "id": "proj-logistica",
+        "name": "Logística e mobilidade de baixo carbono",
+        "initiativeId": "init-logistica",
+        "memberActivityIds": [
+          "act-td",
+          "act-desloc",
+          "act-viagens"
+        ],
+        "startYear": 2025,
+        "endYear": 2035,
+        "coveragePoints": [
+          {
+            "year": 2027,
+            "pct": 40
+          },
+          {
+            "year": 2030,
+            "pct": 90
+          },
+          {
+            "year": 2035,
+            "pct": 95
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 200000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 900000,
+          "currency": "BRL",
+          "lifetimeYears": 8
+        }
+      },
+      {
+        "id": "proj-residuos",
+        "name": "Economia circular (resíduos)",
+        "initiativeId": "init-residuos",
+        "memberActivityIds": [
+          "act-residuos"
+        ],
+        "startYear": 2025,
+        "endYear": 2035,
+        "coveragePoints": [
+          {
+            "year": 2028,
+            "pct": 60
+          },
+          {
+            "year": 2030,
+            "pct": 85
+          },
+          {
+            "year": 2035,
+            "pct": 95
+          }
+        ],
+        "scenarioOverrides": {},
+        "finance": {
+          "capex": 150000,
+          "opex": 0,
+          "revenues": 0,
+          "savings": 400000,
+          "currency": "BRL",
+          "lifetimeYears": 10
+        }
+      }
+    ]
+  },
+  "cenarios": {
+    "cenarios": [
+      {
+        "id": "scn-conservador",
+        "name": "Conservador",
+        "items": [
+          {
+            "projetoId": "proj-etanol",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 60
+                },
+                {
+                  "year": 2035,
+                  "pct": 70
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-eletrificacao",
+            "included": true
+          },
+          {
+            "projetoId": "proj-biodiesel",
+            "included": false
+          },
+          {
+            "projetoId": "proj-eficiencia",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 45
+                },
+                {
+                  "year": 2032,
+                  "pct": 55
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-irec",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2028,
+                  "pct": 50
+                },
+                {
+                  "year": 2030,
+                  "pct": 50
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-solar",
+            "included": false
+          },
+          {
+            "projetoId": "proj-fornecedores",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 35
+                },
+                {
+                  "year": 2040,
+                  "pct": 45
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-logistica",
+            "included": false
+          },
+          {
+            "projetoId": "proj-residuos",
+            "included": false
+          }
+        ]
+      },
+      {
+        "id": "scn-ambicioso",
+        "name": "Ambicioso",
+        "items": [
+          {
+            "projetoId": "proj-etanol",
+            "included": true
+          },
+          {
+            "projetoId": "proj-eletrificacao",
+            "included": true
+          },
+          {
+            "projetoId": "proj-biodiesel",
+            "included": true
+          },
+          {
+            "projetoId": "proj-eficiencia",
+            "included": true
+          },
+          {
+            "projetoId": "proj-irec",
+            "included": true
+          },
+          {
+            "projetoId": "proj-solar",
+            "included": false
+          },
+          {
+            "projetoId": "proj-fornecedores",
+            "included": true
+          },
+          {
+            "projetoId": "proj-logistica",
+            "included": true
+          },
+          {
+            "projetoId": "proj-residuos",
+            "included": true
+          }
+        ]
+      },
+      {
+        "id": "scn-netzero",
+        "name": "Net-zero",
+        "items": [
+          {
+            "projetoId": "proj-etanol",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 95
+                },
+                {
+                  "year": 2035,
+                  "pct": 100
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-eletrificacao",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 50
+                },
+                {
+                  "year": 2035,
+                  "pct": 85
+                },
+                {
+                  "year": 2040,
+                  "pct": 100
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-biodiesel",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 85
+                },
+                {
+                  "year": 2035,
+                  "pct": 100
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-eficiencia",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 90
+                },
+                {
+                  "year": 2032,
+                  "pct": 95
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-irec",
+            "included": true
+          },
+          {
+            "projetoId": "proj-solar",
+            "included": true
+          },
+          {
+            "projetoId": "proj-fornecedores",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 95
+                },
+                {
+                  "year": 2040,
+                  "pct": 100
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-logistica",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 90
+                },
+                {
+                  "year": 2035,
+                  "pct": 95
+                }
+              ]
+            }
+          },
+          {
+            "projetoId": "proj-residuos",
+            "included": true,
+            "overrides": {
+              "coveragePoints": [
+                {
+                  "year": 2030,
+                  "pct": 95
+                },
+                {
+                  "year": 2035,
+                  "pct": 100
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "cenarioAtivoId": "scn-conservador"
+  }
+}

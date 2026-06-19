@@ -1,0 +1,12 @@
+node_modules
+dist
+*.local
+.DS_Store
+
+# Variáveis de ambiente (segredos do Supabase) — nunca versionar
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
