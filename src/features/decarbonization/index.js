@@ -1,7 +1,7 @@
 // Decarbonization module exports
 export { InventoryPage } from './inventory';
 export { TargetsTimeframePage } from './targets-timeframe';
-export { DriversPage } from './drivers';
+export { DriversPage, DriverDetailPage } from './drivers';
 export { BauProjectionPage } from './bau';
 export { ProjectsPage } from './projects';
 export { ScenariosPage } from './scenarios';

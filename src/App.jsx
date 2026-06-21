@@ -23,6 +23,7 @@ import {
   InventoryPage,
   TargetsTimeframePage,
   DriversPage,
+  DriverDetailPage,
   BauProjectionPage,
   ProjectsPage,
   ScenariosPage,
@@ -215,6 +216,7 @@ export default function App() {
             {NAV.map((n) => (
               <Route key={n.key} path={n.key} element={n.element} />
             ))}
+            <Route path="/drivers/:id" element={<DriverDetailPage />} />
             <Route path="*" element={<Navigate to="/inventory" replace />} />
           </Routes>
         </Content>
