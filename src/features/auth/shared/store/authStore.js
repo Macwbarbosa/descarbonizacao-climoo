@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { checkCredentials } from '../credentials';
 
 /**
  * authStore (shim standalone)
@@ -21,16 +22,31 @@ export const useAuthStore = create(
     (set) => ({
       user: { selectedCompany: null }, // { cnpj: string, company: string }
       token: null,
+      authEmail: null, // e-mail logado no gate de acesso (login "fake")
 
       /** Define a empresa ativa. company = { cnpj, company } */
       setSelectedCompany: (company) =>
         set((state) => ({ user: { ...state.user, selectedCompany: company } })),
 
-      clearAuth: () => set({ user: { selectedCompany: null }, token: null }),
+      /**
+       * Valida o login do gate de acesso. Retorna `true` se autenticou.
+       * @param {string} email
+       * @param {string} password
+       */
+      login: (email, password) => {
+        const ok = checkCredentials(email, password);
+        if (ok) set({ authEmail: ok });
+        return Boolean(ok);
+      },
+
+      /** Sai do gate de acesso (mantém os dados por CNPJ no localStorage). */
+      logout: () => set({ authEmail: null }),
+
+      clearAuth: () => set({ user: { selectedCompany: null }, token: null, authEmail: null }),
     }),
     {
       name: 'climoo-descarb-auth',
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ user: state.user, authEmail: state.authEmail }),
     }
   )
 );

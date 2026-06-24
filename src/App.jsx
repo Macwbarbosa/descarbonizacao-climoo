@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, message } from 'antd';
+import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, message } from 'antd';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import {
   DatabaseOutlined,
@@ -13,9 +13,12 @@ import {
   PlusOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
+import LoginPage from '@/features/auth/LoginPage';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
 import { listCompanyFiles, readCompanyFile } from '@/features/decarbonization/shared/decarbonizationFile';
 
@@ -145,10 +148,35 @@ function CompanyPicker() {
   );
 }
 
+/** Menu do usuário logado: mostra o e-mail e permite sair. */
+function UserMenu() {
+  const authEmail = useAuthStore((s) => s.authEmail);
+  const logout = useAuthStore((s) => s.logout);
+
+  const items = [
+    { key: 'email', label: <span className="text-xs text-gray-500">{authEmail}</span>, disabled: true },
+    { type: 'divider' },
+    { key: 'logout', icon: <LogoutOutlined />, label: 'Sair', onClick: logout },
+  ];
+
+  return (
+    <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']}>
+      <button type="button" className="flex items-center gap-2 cursor-pointer border-0 bg-transparent">
+        <Avatar size="small" style={{ background: '#210856' }} icon={<UserOutlined />} />
+        <span className="hidden sm:inline text-sm text-gray-600 max-w-[180px] truncate">{authEmail}</span>
+      </button>
+    </Dropdown>
+  );
+}
+
 export default function App() {
   const location = useLocation();
   const selectedKey = NAV.find((n) => location.pathname.startsWith(n.key))?.key || '/inventory';
   const [collapsed, setCollapsed] = useState(false);
+  const authEmail = useAuthStore((s) => s.authEmail);
+
+  // Gate de acesso: sem login, mostra a tela de login.
+  if (!authEmail) return <LoginPage />;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -206,7 +234,10 @@ export default function App() {
               Ferramenta de Descarbonização
             </Text>
           </div>
-          <CompanyPicker />
+          <div className="flex items-center gap-4">
+            <CompanyPicker />
+            <UserMenu />
+          </div>
         </Header>
         <div className="climoo-accent-bar" />
 
