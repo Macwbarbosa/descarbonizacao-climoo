@@ -171,6 +171,29 @@ export const coveredEmissions = (scopes, baselineByScope) => {
     return out;
 };
 
+const SCOPE_LABEL_TO_KEY = { 'Escopo 1': 'scope1', 'Escopo 2': 'scope2', 'Escopo 3': 'scope3' };
+
+/**
+ * Emissões por escopo (ano-base) considerando a COBERTURA da meta no nível de
+ * ATIVIDADE: soma só as atividades nos escopos cobertos e fora da lista de
+ * exclusão (`meta.excludedActivityIds`). Substitui `coveredEmissions` quando há
+ * inventário do ano-base disponível.
+ * @param {Meta} meta
+ * @param {Array<{id:string, scope:string, emission:number}>} baseActivities atividades do ano-base
+ * @returns {{ scope1:number, scope2:number, scope3:number }}
+ */
+export const coveredBaselineByScope = (meta, baseActivities) => {
+    const excluded = new Set(meta?.excludedActivityIds || []);
+    const out = { scope1: 0, scope2: 0, scope3: 0 };
+    (baseActivities || []).forEach((a) => {
+        const k = SCOPE_LABEL_TO_KEY[a.scope];
+        if (!k || !meta?.scopes?.[k]) return; // fora dos escopos da meta
+        if (excluded.has(a.id)) return; // excluída da cobertura
+        out[k] += Number(a.emission) || 0;
+    });
+    return out;
+};
+
 const interpolateYears = (fromYear, fromValue, toYear, toValue) => {
     const pts = [];
     const span = toYear - fromYear;
@@ -322,7 +345,11 @@ export const computeSbtiTarget = ({
  * @returns {Object} resultado de `computeSbtiTarget` + `metaId`.
  */
 export const computeMetaTarget = (meta, ctx) => {
-    const emissoesPorEscopo = coveredEmissions(meta.scopes, ctx.baselineByScope);
+    // Se houver inventário do ano-base, respeita a COBERTURA por atividade
+    // (escopos + exclusões da meta); senão, usa os totais por escopo.
+    const emissoesPorEscopo = ctx.baseActivities
+        ? coveredBaselineByScope(meta, ctx.baseActivities)
+        : coveredEmissions(meta.scopes, ctx.baselineByScope);
     const denominadorPorAno =
         needsDenominator(meta.type) && meta.denominatorDriverId && ctx.getDenominatorProjection
             ? ctx.getDenominatorProjection(meta.denominatorDriverId)
@@ -373,6 +400,7 @@ export default {
     acaNearTermReduction,
     buildTargetTrajectory,
     coveredEmissions,
+    coveredBaselineByScope,
     isIntensityType,
     needsDenominator,
     autoMetaName,

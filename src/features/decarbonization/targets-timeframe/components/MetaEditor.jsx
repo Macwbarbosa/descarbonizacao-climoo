@@ -9,6 +9,8 @@ import {
     SCOPE_KEYS,
 } from '../services/sbtiTargetService';
 import TargetResultPanel from './TargetResultPanel';
+import MetaCoverageTree from './MetaCoverageTree';
+import { metaScopeLabels } from '../../shared/metaScopes';
 
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-500 block mb-1';
 const SCOPE_NAME = { scope1: 'Escopo 1', scope2: 'Escopo 2', scope3: 'Escopo 3' };
@@ -18,11 +20,17 @@ const fmt = (v) => Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 
  * Editor de UMA meta: escopos, tipo, denominador (se intensidade), ambição,
  * horizonte e a meta resultante (resumo + KPIs + trajetória). Recálculo ao vivo.
  */
-function MetaEditor({ meta, params, baselineByScope, drivers, target, issues, onPatch, onRemove }) {
+function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, target, issues, onPatch, onRemove }) {
     const total = useMemo(
         () => SCOPE_KEYS.reduce((sum, k) => sum + (baselineByScope[k] || 0), 0),
         [baselineByScope]
     );
+
+    // Atividades do ano-base dentro dos escopos cobertos pela meta — universo da cobertura.
+    const coverageActivities = useMemo(() => {
+        const scopes = metaScopeLabels(meta);
+        return (baseActivities || []).filter((a) => scopes.includes(a.scope));
+    }, [baseActivities, meta]);
 
     const intensity = needsDenominator(meta.type);
     const submissionYear = meta.submissionYear ?? new Date().getFullYear();
@@ -38,7 +46,15 @@ function MetaEditor({ meta, params, baselineByScope, drivers, target, issues, on
     const typeLabel = TARGET_TYPE_OPTIONS.find((o) => o.value === meta.type)?.label || '';
     const scopesLabel = SCOPE_KEYS.filter((k) => meta.scopes[k]).map((k) => `E${k.slice(-1)}`).join('+');
 
-    const toggleScope = (k) => onPatch({ scopes: { ...meta.scopes, [k]: !meta.scopes[k] } });
+    const toggleScope = (k) => {
+        const scopes = { ...meta.scopes, [k]: !meta.scopes[k] };
+        // Poda exclusões fora dos escopos resultantes — evita "estado fantasma"
+        // (atividade reaparecer já desmarcada ao re-marcar um escopo).
+        const validScopes = metaScopeLabels({ scopes });
+        const validIds = new Set((baseActivities || []).filter((a) => validScopes.includes(a.scope)).map((a) => a.id));
+        const excludedActivityIds = (meta.excludedActivityIds || []).filter((id) => validIds.has(id));
+        onPatch({ scopes, excludedActivityIds });
+    };
 
     return (
         <div>
@@ -83,6 +99,20 @@ function MetaEditor({ meta, params, baselineByScope, drivers, target, issues, on
                         );
                     })}
                 </Row>
+            </div>
+
+            {/* Cobertura da meta — quais atividades entram (default 100%) */}
+            <div className="mt-4">
+                <span className={labelCls}>Cobertura da meta (atividades incluídas)</span>
+                <div className="text-[11px] text-gray-400 mb-2">
+                    Por padrão 100% das atividades dos escopos cobertos. Desmarque para desconsiderar
+                    atividades ou categorias inteiras — a baseline e a trajetória se ajustam.
+                </div>
+                <MetaCoverageTree
+                    activities={coverageActivities}
+                    excludedIds={meta.excludedActivityIds || []}
+                    onChange={(excludedActivityIds) => onPatch({ excludedActivityIds })}
+                />
             </div>
 
             {/* Tipo + denominador */}
@@ -213,6 +243,7 @@ MetaEditor.propTypes = {
     params: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     baselineByScope: PropTypes.object.isRequired,
+    baseActivities: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line react/forbid-prop-types
     // eslint-disable-next-line react/forbid-prop-types
     drivers: PropTypes.arrayOf(PropTypes.object).isRequired,
     // eslint-disable-next-line react/forbid-prop-types
@@ -224,6 +255,7 @@ MetaEditor.propTypes = {
 
 MetaEditor.defaultProps = {
     target: null,
+    baseActivities: [],
 };
 
 export default MetaEditor;

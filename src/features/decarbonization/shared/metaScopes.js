@@ -45,6 +45,23 @@ export const activitiesForProject = (activities, project, metasById) => {
     return activities.filter((a) => allowed.includes(a.scope) || members.has(a.id));
 };
 
+/** Atividades EXCLUÍDAS da cobertura de uma meta (Set). */
+export const metaExcludedSet = (meta) => new Set(meta?.excludedActivityIds || []);
+
+/**
+ * Uma atividade é COBERTA por uma meta quando seu escopo está nos escopos da
+ * meta E ela não está na lista de exclusão. Default (sem exclusões) = 100%.
+ */
+export const metaCoversActivity = (meta, activity, excluded = metaExcludedSet(meta)) =>
+    metaScopeLabels(meta).includes(activity?.scope) && !excluded.has(activity?.id);
+
+/** Atividades cobertas por uma meta (dentro dos escopos e não excluídas). */
+export const metaCoveredActivities = (meta, activities) => {
+    const excluded = metaExcludedSet(meta);
+    const scopes = metaScopeLabels(meta);
+    return (activities || []).filter((a) => scopes.includes(a.scope) && !excluded.has(a.id));
+};
+
 export default {
     SCOPES,
     metaScopeLabels,
@@ -52,4 +69,7 @@ export default {
     metaNamesOf,
     allowedScopesForProject,
     activitiesForProject,
+    metaExcludedSet,
+    metaCoversActivity,
+    metaCoveredActivities,
 };

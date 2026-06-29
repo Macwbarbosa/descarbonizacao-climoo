@@ -36,6 +36,9 @@ const makeMeta = (overrides = {}) => {
     const base = {
         id: uuidv4(),
         scopes: { scope1: true, scope2: true, scope3: false },
+        // Cobertura da meta: atividades EXCLUÍDAS da cobertura (vazio = 100% dos
+        // escopos cobertos). Permite desconsiderar categorias/atividades.
+        excludedActivityIds: [],
         type: 'absoluta',
         denominatorDriverId: null,
         ambition: '1p5',

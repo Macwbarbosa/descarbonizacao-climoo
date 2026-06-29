@@ -26,6 +26,7 @@ import {
 } from './utils/scenarioCalc';
 import DecarbonizationDataBar from '../shared/DecarbonizationDataBar';
 import { saveCompanyToProject } from '../shared/decarbonizationExport';
+import { metaCoveredActivities } from '../shared/metaScopes';
 import ScenarioKpis from './components/ScenarioKpis';
 import ScenarioProjectsColumn from './components/ScenarioProjectsColumn';
 import WaterfallChart from './components/WaterfallChart';
@@ -65,10 +66,11 @@ function ScenariosPage() {
     const loadPlanData = usePlanTargetsStore((s) => s.loadPlanData);
     const inventoryActivities = useInventoryStore((s) => s.activities);
     // Só o inventário do ano-base alimenta a baseline dos cenários.
-    const baselineByScope = useMemo(
-        () => aggregateByScope(activitiesForYear(inventoryActivities, planParams.baseYear, planParams.baseYear)),
+    const baseActivities = useMemo(
+        () => activitiesForYear(inventoryActivities, planParams.baseYear, planParams.baseYear),
         [inventoryActivities, planParams.baseYear]
     );
+    const baselineByScope = useMemo(() => aggregateByScope(baseActivities), [baseActivities]);
     // Catálogo global compartilhado — para resolver iniciativas `tech-*` dos projetos.
     const technologies = useTechnologyBankStore((s) => s.technologies);
 
@@ -93,15 +95,43 @@ function ScenariosPage() {
     const { baseYear, netZeroYear } = planParams;
     const endYear = netZeroYear;
 
+    // Meta em foco (só o objeto da meta — independe dos cálculos de target).
+    const focusMetaObj = useMemo(
+        () => metas.find((m) => m.id === focusMetaId) || metas[0] || null,
+        [metas, focusMetaId]
+    );
+    // Atividades do cenário restritas à COBERTURA da meta em foco (escopos +
+    // exclusões). Sem meta → todas. Assim BAU, cascata, linhas e gap respeitam
+    // a cobertura definida na meta, ficando consistentes com a trajetória.
+    const scenarioActivities = useMemo(
+        () =>
+            focusMetaObj && metaScopeLabels(focusMetaObj).length
+                ? metaCoveredActivities(focusMetaObj, activities)
+                : activities,
+        [focusMetaObj, activities]
+    );
+
     const ctx = useMemo(
+        () => ({
+            baseYear,
+            endYear,
+            activities: scenarioActivities,
+            activitiesById: Object.fromEntries(scenarioActivities.map((a) => [a.id, a])),
+            driversById: Object.fromEntries(drivers.map((d) => [d.id, d])),
+        }),
+        [baseYear, endYear, scenarioActivities, drivers]
+    );
+    // ctx COMPLETO (todas as atividades) — para exibições DESCRITIVAS do projeto
+    // (tags de escopo e potencial standalone na coluna), independente da meta.
+    const displayCtx = useMemo(
         () => ({
             baseYear,
             endYear,
             activities,
             activitiesById: Object.fromEntries(activities.map((a) => [a.id, a])),
-            driversById: Object.fromEntries(drivers.map((d) => [d.id, d])),
+            driversById: ctx.driversById,
         }),
-        [baseYear, endYear, activities, drivers]
+        [baseYear, endYear, activities, ctx.driversById]
     );
     const projectsById = useMemo(() => Object.fromEntries(projects.map((p) => [p.id, p])), [projects]);
     const initiativesById = useMemo(() => mergedInitiativesById(bank, technologies), [bank, technologies]);
@@ -113,6 +143,7 @@ function ScenariosPage() {
             recentYear: planParams.recentYear,
             planNetZeroYear: netZeroYear,
             baselineByScope,
+            baseActivities,
             getDenominatorProjection: (driverId) => {
                 const driver = drivers.find((d) => d.id === driverId);
                 if (!driver) return null;
@@ -122,7 +153,7 @@ function ScenariosPage() {
                 }));
             },
         }),
-        [baseYear, planParams.recentYear, netZeroYear, baselineByScope, drivers]
+        [baseYear, planParams.recentYear, netZeroYear, baselineByScope, baseActivities, drivers]
     );
     const metaTargets = useMemo(() => metas.map((m) => ({ meta: m, target: computeMetaTarget(m, metaCtx) })), [metas, metaCtx]);
     const focusMeta = metaTargets.find((mt) => mt.meta.id === focusMetaId) || metaTargets[0] || null;
@@ -286,7 +317,7 @@ function ScenariosPage() {
                     metas={metas}
                     focusMeta={focusMeta?.meta || null}
                     initiativesById={initiativesById}
-                    ctx={ctx}
+                    ctx={displayCtx}
                     targetYear={targetYear}
                     onToggle={(pid, included) => upsertItem(activeScenarioId, pid, { included })}
                     onUpsertItem={(pid, patch) => upsertItem(activeScenarioId, pid, patch)}

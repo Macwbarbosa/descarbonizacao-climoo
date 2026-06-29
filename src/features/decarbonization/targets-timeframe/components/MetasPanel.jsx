@@ -20,6 +20,7 @@ function MetasPanel({
     issuesByMeta,
     params,
     baselineByScope,
+    baseActivities,
     drivers,
     onSelect,
     onAdd,
@@ -91,6 +92,7 @@ function MetasPanel({
                     meta={selectedMeta}
                     params={params}
                     baselineByScope={baselineByScope}
+                    baseActivities={baseActivities}
                     drivers={drivers}
                     target={targets[selectedMeta.id]}
                     issues={issuesByMeta[selectedMeta.id] || []}
@@ -118,6 +120,7 @@ MetasPanel.propTypes = {
     params: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     baselineByScope: PropTypes.object.isRequired,
+    baseActivities: PropTypes.arrayOf(PropTypes.object), // eslint-disable-line react/forbid-prop-types
     // eslint-disable-next-line react/forbid-prop-types
     drivers: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelect: PropTypes.func.isRequired,
@@ -129,6 +132,7 @@ MetasPanel.propTypes = {
 
 MetasPanel.defaultProps = {
     selectedMetaId: null,
+    baseActivities: [],
 };
 
 export default MetasPanel;

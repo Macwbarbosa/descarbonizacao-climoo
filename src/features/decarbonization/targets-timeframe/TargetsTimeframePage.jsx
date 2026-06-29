@@ -41,10 +41,11 @@ function TargetsTimeframePage() {
     const inventoryActivities = useInventoryStore((s) => s.activities);
     const loadInventory = useInventoryStore((s) => s.loadInventory);
     // Só o inventário do ano-base alimenta a cobertura das metas.
-    const baselineByScope = useMemo(
-        () => aggregateByScope(activitiesForYear(inventoryActivities, params.baseYear, params.baseYear)),
+    const baseActivities = useMemo(
+        () => activitiesForYear(inventoryActivities, params.baseYear, params.baseYear),
         [inventoryActivities, params.baseYear]
     );
+    const baselineByScope = useMemo(() => aggregateByScope(baseActivities), [baseActivities]);
 
     useEffect(() => {
         loadPlanData().catch(() => message.error('Erro ao carregar dados do plano de descarbonização.'));
@@ -59,6 +60,7 @@ function TargetsTimeframePage() {
             recentYear: params.recentYear,
             planNetZeroYear: params.netZeroYear,
             baselineByScope,
+            baseActivities,
             getDenominatorProjection: (driverId) => {
                 const driver = drivers.find((d) => d.id === driverId);
                 if (!driver) return null;
@@ -68,7 +70,7 @@ function TargetsTimeframePage() {
                 }));
             },
         }),
-        [params.baseYear, params.recentYear, params.netZeroYear, baselineByScope, drivers]
+        [params.baseYear, params.recentYear, params.netZeroYear, baselineByScope, baseActivities, drivers]
     );
 
     // Trajetória derivada POR META (mapa id → target). Recalcula ao vivo.
@@ -137,6 +139,7 @@ function TargetsTimeframePage() {
                     issuesByMeta={validation.metaIssues}
                     params={params}
                     baselineByScope={baselineByScope}
+                    baseActivities={baseActivities}
                     drivers={drivers}
                     onSelect={selectMeta}
                     onAdd={addMeta}
