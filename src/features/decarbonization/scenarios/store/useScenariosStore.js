@@ -9,7 +9,8 @@ import { cnpjScopedStorage } from '../../shared/decarbonizationStorage';
  * JSON do módulo. Emissão/abatimento/gap são derivados (`utils/scenarioCalc`).
  */
 
-const makeScenario = (overrides = {}) => ({ id: uuidv4(), name: 'Novo cenário', items: [], ...overrides });
+// Cada cenário pertence a UMA meta (metaId). Trocou a meta → vê só os seus cenários.
+const makeScenario = (overrides = {}) => ({ id: uuidv4(), name: 'Novo cenário', metaId: null, items: [], ...overrides });
 
 const useScenariosStore = create(
     persist(
@@ -41,8 +42,8 @@ const useScenariosStore = create(
             setActive: (id) => set({ activeScenarioId: id }),
             setCompare: (compare) => set({ compare }),
 
-            addScenario: () => {
-                const scenario = makeScenario();
+            addScenario: (metaId = null) => {
+                const scenario = makeScenario({ metaId });
                 set((s) => ({ scenarios: [...s.scenarios, scenario], activeScenarioId: scenario.id }));
                 return scenario.id;
             },
@@ -50,10 +51,22 @@ const useScenariosStore = create(
                 set((s) => ({ scenarios: s.scenarios.map((sc) => (sc.id === id ? { ...sc, ...patch } : sc)) })),
             removeScenario: (id) =>
                 set((s) => {
+                    const removed = s.scenarios.find((sc) => sc.id === id);
                     const scenarios = s.scenarios.filter((sc) => sc.id !== id);
-                    const activeScenarioId = s.activeScenarioId === id ? scenarios[0]?.id ?? null : s.activeScenarioId;
+                    let activeScenarioId = s.activeScenarioId;
+                    if (s.activeScenarioId === id) {
+                        // Escolhe o próximo da MESMA meta (não vaza para outra meta).
+                        const sameMeta = scenarios.filter((sc) => sc.metaId === removed?.metaId);
+                        activeScenarioId = sameMeta[0]?.id ?? scenarios[0]?.id ?? null;
+                    }
                     return { scenarios, activeScenarioId };
                 }),
+
+            /** Migração one-shot: vincula cenários sem meta à meta informada. */
+            assignOrphanScenarios: (metaId) => {
+                if (!metaId || !get().scenarios.some((sc) => !sc.metaId)) return;
+                set((s) => ({ scenarios: s.scenarios.map((sc) => (sc.metaId ? sc : { ...sc, metaId })) }));
+            },
 
             /** Atualiza um item (projeto) do cenário; cria se não existir. */
             upsertItem: (scenarioId, projetoId, patch) =>

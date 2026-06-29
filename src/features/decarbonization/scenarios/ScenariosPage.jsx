@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Button, Spin, Alert, Select, Switch, Segmented, Row, Col, Tooltip, Modal, Input, message } from 'antd';
+import { Button, Spin, Alert, Select, Switch, Segmented, Row, Col, Tooltip, Modal, Input, Empty, message } from 'antd';
 import { SaveOutlined, PlusOutlined, CloseOutlined, FullscreenOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Card } from '@/shared/components/ui/Card';
 import useScenariosStore from './store/useScenariosStore';
@@ -52,6 +52,7 @@ function ScenariosPage() {
     const removeScenario = useScenariosStore((s) => s.removeScenario);
     const upsertItem = useScenariosStore((s) => s.upsertItem);
     const removeItem = useScenariosStore((s) => s.removeItem);
+    const assignOrphanScenarios = useScenariosStore((s) => s.assignOrphanScenarios);
 
     const projects = useProjectsStore((s) => s.projects);
     const bank = useProjectsStore((s) => s.bank);
@@ -161,7 +162,30 @@ function ScenariosPage() {
     // (definido na tela de Metas). Sem meta, cai num horizonte padrão do plano.
     const targetYear = focusMeta?.meta.nearTermYear || Math.min(endYear, baseYear + 6);
 
-    const activeScenario = scenarios.find((s) => s.id === activeScenarioId) || null;
+    // Cenários DESTA meta. Cenários sem meta (legados/seed) contam para a meta
+    // PRINCIPAL já na exibição — evita "piscar vazio" enquanto a migração persiste.
+    const primaryMetaId = metas[0]?.id || null;
+    const scenariosOfMeta = useMemo(() => {
+        if (!focusMetaObj) return [];
+        return scenarios.filter(
+            (s) => s.metaId === focusMetaObj.id || (!s.metaId && focusMetaObj.id === primaryMetaId)
+        );
+    }, [scenarios, focusMetaObj, primaryMetaId]);
+    const activeScenario = scenariosOfMeta.find((s) => s.id === activeScenarioId) || null;
+
+    // Migração one-shot: cenários antigos sem meta vinculam-se à meta principal.
+    useEffect(() => {
+        if (primaryMetaId) assignOrphanScenarios(primaryMetaId);
+    }, [primaryMetaId, scenarios, assignOrphanScenarios]);
+
+    // Mantém o cenário ativo dentro da meta selecionada.
+    useEffect(() => {
+        if (!focusMetaObj) return;
+        const ofMeta = scenarios.filter((s) => s.metaId === focusMetaObj.id);
+        if (!ofMeta.some((s) => s.id === activeScenarioId)) {
+            setActive(ofMeta[0]?.id ?? null);
+        }
+    }, [focusMetaObj, scenarios, activeScenarioId, setActive]);
 
     // Escopos da meta em foco — TODA a comparação (BAU, cascata, linhas, KPIs) é
     // restrita a esses escopos. Sem meta, cai no total (todos os escopos).
@@ -213,7 +237,7 @@ function ScenariosPage() {
             kinds[serie] = 'meta';
         }
         if (compare) {
-            scenarios.filter((s) => s.id !== activeScenarioId).forEach((s) => {
+            scenariosOfMeta.filter((s) => s.id !== activeScenarioId).forEach((s) => {
                 for (let y = baseYear; y <= endYear; y += 1) {
                     data.push({ serie: s.name, year: String(y), value: scenarioScopeEmissionInYear(s, scopeSet, y, ctx, projectsById, initiativesById) });
                 }
@@ -221,7 +245,7 @@ function ScenariosPage() {
             });
         }
         return { lineData: data, serieKinds: kinds };
-    }, [baseYear, endYear, ctx, scopeSet, activeScenario, focusMeta, compare, scenarios, activeScenarioId, projectsById, initiativesById]);
+    }, [baseYear, endYear, ctx, scopeSet, activeScenario, focusMeta, compare, scenariosOfMeta, activeScenarioId, projectsById, initiativesById]);
 
     // Horizonte do gráfico de linhas: curto prazo (até o ano da meta near-term em
     // foco) ou longo prazo (até o net-zero / fim do plano).
@@ -235,7 +259,7 @@ function ScenariosPage() {
 
     const comparisonRows = useMemo(
         () =>
-            scenarios.map((s) => {
+            scenariosOfMeta.map((s) => {
                 const emission = scenarioScopeEmissionInYear(s, scopeSet, targetYear, ctx, projectsById, initiativesById);
                 // % de redução SOBRE O BAU (não sobre o ano-base): (BAU − cenário)/BAU.
                 const reductionPct = bauTarget > 0 ? ((emission - bauTarget) / bauTarget) * 100 : 0;
@@ -243,7 +267,7 @@ function ScenariosPage() {
                 const gap = focusMeta ? metaGapInYear(s, focusMeta.meta, focusMeta.target, targetYear, ctx, projectsById, initiativesById).gap : null;
                 return { id: s.id, name: s.name, active: s.id === activeScenarioId, emission, reductionPct, gap, custoBruto: fin.custoBruto, savings: fin.savings };
             }),
-        [scenarios, scopeSet, targetYear, ctx, projectsById, initiativesById, bauTarget, focusMeta, activeScenarioId]
+        [scenariosOfMeta, scopeSet, targetYear, ctx, projectsById, initiativesById, bauTarget, focusMeta, activeScenarioId]
     );
 
     const handleSave = async () => {
@@ -271,7 +295,8 @@ function ScenariosPage() {
         setEditingId(null);
     };
     const handleAddScenario = () => {
-        const id = addScenario();
+        if (!focusMetaObj) return;
+        const id = addScenario(focusMetaObj.id);
         const created = useScenariosStore.getState().scenarios.find((s) => s.id === id);
         if (created) startEdit(created); // já abre em edição para nomear
     };
@@ -387,19 +412,18 @@ function ScenariosPage() {
                         Ano-alvo <span className="font-medium text-[#210856]">{targetYear}</span>
                     </span>
                     {metaTargets.length > 0 && (
-                        <span className="text-xs text-gray-500">
-                            Meta em foco{' '}
+                        <span className="text-sm text-gray-600 flex items-center gap-2">
+                            <span className="font-medium text-[#210856]">Meta</span>
                             <Select
                                 value={focusMeta?.meta.id}
                                 onChange={setFocusMetaId}
                                 options={metaTargets.map((mt) => ({ value: mt.meta.id, label: mt.meta.name }))}
-                                size="small"
-                                style={{ width: 200 }}
+                                style={{ width: 240 }}
                             />
                         </span>
                     )}
                     <span className="text-xs text-gray-500 flex items-center gap-1">
-                        Comparar <Switch size="small" checked={compare} onChange={setCompare} />
+                        Comparar cenários <Switch size="small" checked={compare} onChange={setCompare} />
                     </span>
                     <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} loading={saving} className="bg-[#210856] border-[#210856] hover:bg-[#2d0a6b] h-10 px-6" size="large">
                         Salvar no projeto (JSON)
@@ -410,9 +434,21 @@ function ScenariosPage() {
             {error && <Alert className="mb-4" type="error" showIcon message={error} />}
 
             <Spin spinning={loading}>
-                {/* Seletor de cenários (chips) */}
-                <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {scenarios.map((s) => {
+                {metaTargets.length === 0 ? (
+                    <Alert
+                        type="info"
+                        showIcon
+                        message="Crie uma meta primeiro"
+                        description="Os cenários são organizados por meta. Vá em Metas & Período e crie ao menos uma meta para montar cenários."
+                    />
+                ) : (
+                  <>
+                    {/* Cenários DESTA meta (chips) */}
+                    <div className="text-[11px] uppercase tracking-wide text-gray-500 font-semibold mb-2">
+                        Cenários da meta · <span className="text-[#210856]">{focusMeta?.meta.name}</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                    {scenariosOfMeta.map((s) => {
                         const active = s.id === activeScenarioId;
                         return (
                             <div
@@ -452,7 +488,7 @@ function ScenariosPage() {
                                                 <EditOutlined style={{ fontSize: 12 }} />
                                             </button>
                                         </Tooltip>
-                                        {scenarios.length > 1 && (
+                                        {scenariosOfMeta.length > 1 && (
                                             <Tooltip title="Remover cenário">
                                                 <button
                                                     type="button"
@@ -473,18 +509,29 @@ function ScenariosPage() {
                     </Button>
                 </div>
 
-                <ScenarioKpis
-                    bauTarget={bauTarget}
-                    scenarioTarget={scenarioTarget}
-                    metaTarget={focusMetaTarget}
-                    gap={focusGap.gap}
-                    targetYear={targetYear}
-                    metaName={focusMeta?.meta.name || ''}
-                />
+                {activeScenario ? (
+                  <>
+                    <ScenarioKpis
+                        bauTarget={bauTarget}
+                        scenarioTarget={scenarioTarget}
+                        metaTarget={focusMetaTarget}
+                        gap={focusGap.gap}
+                        targetYear={targetYear}
+                        metaName={focusMeta?.meta.name || ''}
+                    />
 
-                {dashboard}
+                    {dashboard}
 
-                {compare && <ScenarioComparisonTable rows={comparisonRows} targetYear={targetYear} metaName={focusMeta?.meta.name || ''} />}
+                    {compare && <ScenarioComparisonTable rows={comparisonRows} targetYear={targetYear} metaName={focusMeta?.meta.name || ''} />}
+                  </>
+                ) : (
+                    <Empty
+                        className="py-12"
+                        description="Nenhum cenário nesta meta. Clique em “Novo cenário” para começar."
+                    />
+                )}
+                  </>
+                )}
             </Spin>
 
             {zoomModal}

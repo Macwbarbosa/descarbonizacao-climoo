@@ -25,21 +25,11 @@ function ScenarioProjectsColumn({ scenario, projects, metas, focusMeta, initiati
         .filter((x) => x.project);
     const availableToAdd = projects.filter((p) => !(scenario?.items || []).some((it) => it.projetoId === p.id));
 
-    // Opções de "adicionar projeto" agrupadas por meta (meta em foco primeiro;
-    // depois as demais; por fim "Sem meta"). Cada projeto aparece uma vez.
-    const addOptions = (() => {
-        const ordered = focusMeta ? [focusMeta, ...(metas || []).filter((m) => m.id !== focusMeta.id)] : metas || [];
-        const used = new Set();
-        const groups = [];
-        ordered.forEach((m) => {
-            const opts = availableToAdd.filter((p) => !used.has(p.id) && projectMetaIds(p).includes(m.id));
-            opts.forEach((p) => used.add(p.id));
-            if (opts.length) groups.push({ label: m.name, options: opts.map((p) => ({ value: p.id, label: p.name })) });
-        });
-        const semMeta = availableToAdd.filter((p) => !used.has(p.id));
-        if (semMeta.length) groups.push({ label: 'Sem meta', options: semMeta.map((p) => ({ value: p.id, label: p.name })) });
-        return groups;
-    })();
+    // Opções de "adicionar projeto": SÓ os projetos vinculados à meta deste
+    // cenário (projetos sem meta ou de outras metas ficam ocultos).
+    const addOptions = (focusMeta ? availableToAdd.filter((p) => projectMetaIds(p).includes(focusMeta.id)) : []).map(
+        (p) => ({ value: p.id, label: p.name })
+    );
 
     const overrideProject = overrideFor ? projectsById[overrideFor] : null;
     const overrideItem = overrideFor ? (scenario.items || []).find((it) => it.projetoId === overrideFor) : null;
@@ -89,10 +79,10 @@ function ScenarioProjectsColumn({ scenario, projects, metas, focusMeta, initiati
 
             <div className="mt-3">
                 <Select
-                    placeholder="+ adicionar projeto (agrupado por meta)"
+                    placeholder="+ adicionar projeto desta meta"
                     value={null}
                     style={{ width: '100%' }}
-                    disabled={availableToAdd.length === 0}
+                    disabled={addOptions.length === 0}
                     options={addOptions}
                     showSearch
                     optionFilterProp="label"
