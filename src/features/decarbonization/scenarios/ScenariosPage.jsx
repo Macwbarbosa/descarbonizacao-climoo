@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Button, Spin, Alert, Select, Switch, Segmented, Row, Col, Tooltip, Modal, Input, Empty, message } from 'antd';
+import { Button, Spin, Alert, Switch, Segmented, Tabs, Tag, Row, Col, Tooltip, Modal, Input, Empty, message } from 'antd';
 import { PlusOutlined, CloseOutlined, FullscreenOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Card } from '@/shared/components/ui/Card';
 import useScenariosStore from './store/useScenariosStore';
@@ -31,6 +31,8 @@ import WaterfallChart from './components/WaterfallChart';
 import ScenarioLinesChart from './components/ScenarioLinesChart';
 import MaccChart from './components/MaccChart';
 import ScenarioComparisonTable from './components/ScenarioComparisonTable';
+
+const fmt0 = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 
 /**
  * Etapa 6 — Cenários. Combina Projetos (Etapa 5) em cenários e compara a
@@ -386,33 +388,14 @@ function ScenariosPage() {
 
     return (
         <div className="px-2 min-h-[calc(100vh-106px)]">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-3 gap-3">
-                <div>
-                    <div className="text-xs text-gray-500">
-                        Plano de Descarbonização &nbsp;›&nbsp; <span className="text-[#210856] font-medium">Cenários</span>
-                    </div>
-                    <h2 className="text-xl font-semibold text-[#210856] mt-1">Cenários</h2>
-                    <p className="text-sm text-gray-500">Combine projetos e compare a trajetória com o BAU e as metas SBTi.</p>
+            <div className="mb-4">
+                <div className="text-xs text-gray-500">
+                    Plano de Descarbonização &nbsp;›&nbsp; <span className="text-[#210856] font-medium">Cenários</span>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-xs text-gray-500">
-                        Ano-alvo <span className="font-medium text-[#210856]">{targetYear}</span>
-                    </span>
-                    {metaTargets.length > 0 && (
-                        <span className="text-sm text-gray-600 flex items-center gap-2">
-                            <span className="font-medium text-[#210856]">Meta</span>
-                            <Select
-                                value={focusMeta?.meta.id}
-                                onChange={setFocusMetaId}
-                                options={metaTargets.map((mt) => ({ value: mt.meta.id, label: mt.meta.name }))}
-                                style={{ width: 240 }}
-                            />
-                        </span>
-                    )}
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
-                        Comparar cenários <Switch size="small" checked={compare} onChange={setCompare} />
-                    </span>
-                </div>
+                <h2 className="text-xl font-semibold text-[#210856] mt-1">Cenários</h2>
+                <p className="text-sm text-gray-500">
+                    Escolha a meta, monte cenários de projetos e compare a trajetória com o BAU.
+                </p>
             </div>
 
             {error && <Alert className="mb-4" type="error" showIcon message={error} />}
@@ -427,9 +410,57 @@ function ScenariosPage() {
                     />
                 ) : (
                   <>
-                    {/* Cenários DESTA meta (chips) */}
-                    <div className="text-[11px] uppercase tracking-wide text-gray-500 font-semibold mb-2">
-                        Cenários da meta · <span className="text-[#210856]">{focusMeta?.meta.name}</span>
+                    {/* Nível 1 — META em abas */}
+                    <Tabs
+                        type="card"
+                        activeKey={focusMeta?.meta.id}
+                        onChange={setFocusMetaId}
+                        items={metaTargets.map((mt) => ({ key: mt.meta.id, label: mt.meta.name }))}
+                        className="mb-3"
+                    />
+
+                    {/* Card de contexto da meta selecionada */}
+                    {focusMeta && (
+                        <Card className="mb-4">
+                            <div className="flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <div className="climoo-heading text-base font-bold text-[#210856]">{focusMeta.meta.name}</div>
+                                    <div className="mt-1 flex items-center gap-1 flex-wrap">
+                                        {metaScopeLabels(focusMeta.meta).map((s) => (
+                                            <Tag key={s} className="rounded-full m-0 text-[11px]">{s}</Tag>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-6 text-sm">
+                                    <div>
+                                        <div className="text-[10px] uppercase tracking-wide text-gray-500">Ano-alvo</div>
+                                        <div className="font-semibold text-[#210856] tabular-nums">{targetYear}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] uppercase tracking-wide text-gray-500">Baseline</div>
+                                        <div className="font-semibold tabular-nums">{fmt0(focusMeta.target?.valorBase)} tCO2e</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] uppercase tracking-wide text-gray-500">Alvo {targetYear}</div>
+                                        <div className="font-semibold tabular-nums">{fmt0(focusMeta.target?.valorNearTerm)} tCO2e</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] uppercase tracking-wide text-gray-500">Redução</div>
+                                        <div className="font-semibold text-[#2F6F5E]">−{Math.round(focusMeta.target?.reducaoNearTermPct || 0)}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    )}
+
+                    {/* Nível 2 — Cenários DESTA meta + comparar */}
+                    <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                        <div className="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Cenários desta meta
+                        </div>
+                        <span className="text-xs text-gray-500 flex items-center gap-1">
+                            Comparar cenários <Switch size="small" checked={compare} onChange={setCompare} />
+                        </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                     {scenariosOfMeta.map((s) => {
