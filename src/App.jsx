@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, message } from 'antd';
+import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, Tooltip, message } from 'antd';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import {
   DatabaseOutlined,
@@ -15,10 +15,14 @@ import {
   MenuUnfoldOutlined,
   LogoutOutlined,
   UserOutlined,
+  LoadingOutlined,
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import LoginPage from '@/features/auth/LoginPage';
+import useCompanyPersistence from '@/features/decarbonization/shared/useCompanyPersistence';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
 import { listCompanyFiles, readCompanyFile } from '@/features/decarbonization/shared/decarbonizationFile';
 
@@ -149,6 +153,37 @@ function CompanyPicker() {
   );
 }
 
+/** Indicador discreto de auto-save no banco (Supabase). */
+function AutoSaveIndicator({ status, enabled }) {
+  if (!enabled) return null;
+  if (status === 'saving') {
+    return (
+      <span className="hidden sm:inline-flex items-center gap-1 text-xs text-gray-500">
+        <LoadingOutlined spin /> Salvando…
+      </span>
+    );
+  }
+  if (status === 'saved') {
+    return (
+      <Tooltip title="Tudo salvo no banco — disponível em qualquer lugar.">
+        <span className="hidden sm:inline-flex items-center gap-1 text-xs text-emerald-600">
+          <CheckCircleOutlined /> Salvo
+        </span>
+      </Tooltip>
+    );
+  }
+  if (status === 'error') {
+    return (
+      <Tooltip title="Falha ao salvar no banco. Vamos tentar de novo na próxima alteração (seus dados seguem no navegador).">
+        <span className="inline-flex items-center gap-1 text-xs text-[#b9462f]">
+          <ExclamationCircleOutlined /> Erro ao salvar
+        </span>
+      </Tooltip>
+    );
+  }
+  return null;
+}
+
 /** Menu do usuário logado: mostra o e-mail e permite sair. */
 function UserMenu() {
   const authEmail = useAuthStore((s) => s.authEmail);
@@ -175,6 +210,8 @@ export default function App() {
   const selectedKey = NAV.find((n) => location.pathname.startsWith(n.key))?.key || '/inventory';
   const [collapsed, setCollapsed] = useState(false);
   const authEmail = useAuthStore((s) => s.authEmail);
+  // Carga por empresa + auto-save no banco (Supabase), global a todas as telas.
+  const persistence = useCompanyPersistence();
 
   // Gate de acesso: sem login, mostra a tela de login.
   if (!authEmail) return <LoginPage />;
@@ -236,6 +273,7 @@ export default function App() {
             </Text>
           </div>
           <div className="flex items-center gap-4">
+            <AutoSaveIndicator status={persistence.status} enabled={persistence.enabled} />
             <CompanyPicker />
             <UserMenu />
           </div>

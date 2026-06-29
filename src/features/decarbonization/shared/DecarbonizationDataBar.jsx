@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Tag, Tooltip, message } from 'antd';
 import { SaveOutlined, CloudUploadOutlined, DownloadOutlined, BankOutlined } from '@ant-design/icons';
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
-import { formatCnpj, NO_CNPJ, readRoot } from './decarbonizationStorage';
-import { saveCompanyToProject, saveAllToProject, loadCompanyFromProject, reloadActive } from './decarbonizationExport';
+import { formatCnpj, NO_CNPJ } from './decarbonizationStorage';
+import { saveCompanyToProject, saveAllToProject, loadCompanyFromProject } from './decarbonizationExport';
 
 /**
  * Barra de dados do módulo de Descarbonização. Mostra a empresa/CNPJ ativo e
@@ -22,28 +22,8 @@ function DecarbonizationDataBar() {
     const [saving, setSaving] = useState(false);
     const [loadingFile, setLoadingFile] = useState(false);
 
-    // Carrega os dados do CNPJ ativo na montagem e sempre que a empresa muda.
-    // Se ainda não há dados desta empresa no navegador (localStorage), busca do
-    // banco (Supabase) / arquivo do projeto antes de re-hidratar — assim a
-    // empresa selecionada já aparece preenchida sem precisar clicar em
-    // "Carregar do projeto". Mantém a separação por CNPJ.
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            if (cnpj !== NO_CNPJ) {
-                const local = readRoot().companies[cnpj];
-                const hasLocalData = local?.stores && Object.keys(local.stores).length > 0;
-                if (!hasLocalData) {
-                    const applied = await loadCompanyFromProject(cnpj).catch(() => null);
-                    if (applied) return; // loadCompanyFromProject já re-hidrata os stores
-                }
-            }
-            if (!cancelled) await reloadActive().catch(() => {});
-        })();
-        return () => {
-            cancelled = true;
-        };
-    }, [cnpj]);
+    // A carga por CNPJ (re-hidratação ao trocar de empresa) é feita globalmente
+    // em `useCompanyPersistence` (App), valendo também nas telas de detalhe.
 
     const handleSave = async () => {
         setSaving(true);
