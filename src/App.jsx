@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, Tooltip, message } from 'antd';
-import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   DatabaseOutlined,
   FlagOutlined,
@@ -23,7 +23,7 @@ import {
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import LoginPage from '@/features/auth/LoginPage';
-import AuditLogModal from '@/features/auth/AuditLogModal';
+import AuditLogPage from '@/features/auth/AuditLogPage';
 import useCompanyPersistence from '@/features/decarbonization/shared/useCompanyPersistence';
 import { ADMIN_EMAIL } from '@/features/decarbonization/shared/decarbonizationAudit';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
@@ -215,8 +215,8 @@ function UserMenu({ onOpenAudit }) {
 export default function App() {
   const location = useLocation();
   const selectedKey = NAV.find((n) => location.pathname.startsWith(n.key))?.key || '/inventory';
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const [auditOpen, setAuditOpen] = useState(false);
   const authEmail = useAuthStore((s) => s.authEmail);
   // Carga por empresa + auto-save no banco (Supabase), global a todas as telas.
   const persistence = useCompanyPersistence();
@@ -283,7 +283,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <AutoSaveIndicator status={persistence.status} enabled={persistence.enabled} />
             <CompanyPicker />
-            <UserMenu onOpenAudit={() => setAuditOpen(true)} />
+            <UserMenu onOpenAudit={() => navigate('/historico')} />
           </div>
         </Header>
         <div className="climoo-accent-bar" />
@@ -296,14 +296,14 @@ export default function App() {
             ))}
             <Route path="/drivers/:id" element={<DriverDetailPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
+            <Route
+              path="/historico"
+              element={authEmail === ADMIN_EMAIL ? <AuditLogPage /> : <Navigate to="/inventory" replace />}
+            />
             <Route path="*" element={<Navigate to="/inventory" replace />} />
           </Routes>
         </Content>
       </Layout>
-
-      {authEmail === ADMIN_EMAIL && (
-        <AuditLogModal open={auditOpen} onClose={() => setAuditOpen(false)} />
-      )}
     </Layout>
   );
 }

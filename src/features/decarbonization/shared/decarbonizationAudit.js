@@ -3,9 +3,9 @@
  * --------------------
  * Log de ALTERAÇÕES no Supabase. A cada salvamento (auto-save) compara o estado
  * anterior com o novo e registra QUEM, QUAL empresa, QUANDO e — o principal —
- * O QUE mudou, em frases legíveis (ex.: "Projeto X: Abrangência no tempo —
- * ano 2031 alterado para 60%"). Apenas leitura na UI (sem restaurar versões);
- * a consulta é liberada só para o ADMIN_EMAIL.
+ * O QUE mudou, em frases legíveis e ESPECÍFICAS, nomeando as entidades
+ * (ex.: 'Projeto X: Abrangência no tempo — ano 2031 alterado para 60%';
+ * 'Cenário Y: projeto "HVO em caminhões" desativado'). Apenas leitura na UI.
  */
 import { supabase, hasSupabase } from '@/lib/supabaseClient';
 
@@ -14,13 +14,21 @@ const TABLE = 'decarbonization_audit';
 /** E-mail autorizado a VISUALIZAR o log na interface. */
 export const ADMIN_EMAIL = 'mac@climoo.com.br';
 
-// ─── Diff semântico do JSON da empresa (buildCompanyExport) ──────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const byId = (arr) => Object.fromEntries((arr || []).map((x) => [x.id, x]));
 const byKey = (arr, key) => Object.fromEntries((arr || []).map((x) => [x[key], x]));
 const num = (v) => Number(v) || 0;
 const fmtPct = (v) => `${Math.round(num(v))}%`;
 const fmtNum = (v) => num(v).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+
+/** Mapa id→nome combinando arrays (o último vence). */
+const nameMap = (...arrays) => {
+    const map = {};
+    arrays.forEach((arr) => (arr || []).forEach((x) => { if (x && x.id != null) map[x.id] = x.name || String(x.id); }));
+    return map;
+};
+
 const setDiff = (a, b) => {
     const as = new Set(a || []);
     const bs = new Set(b || []);
@@ -30,7 +38,16 @@ const setDiff = (a, b) => {
     };
 };
 
-const diffMetas = (prev, next, out) => {
+/** Lista de nomes resolvidos, com limite (ex.: "A", "B", "C" … (+N)). */
+const joinNames = (ids, resolve, max = 10) => {
+    const names = ids.map((id) => `"${resolve(id)}"`);
+    if (names.length <= max) return names.join(', ');
+    return `${names.slice(0, max).join(', ')} … (+${names.length - max})`;
+};
+
+// ─── Diffs por seção (usam `ctx` com mapas id→nome) ──────────────────────────
+
+const diffMetas = (prev, next, out, ctx) => {
     const aById = byId(prev?.metasPeriodo?.metas);
     const b = next?.metasPeriodo?.metas || [];
     const bById = byId(b);
@@ -46,8 +63,10 @@ const diffMetas = (prev, next, out) => {
         if (om.ambition !== nm.ambition) out.push(`Meta "${name}": ambição alterada para ${nm.ambition}`);
         if (om.nearTermYear !== nm.nearTermYear) out.push(`Meta "${name}": ano near-term alterado para ${nm.nearTermYear}`);
         if (om.netZeroYear !== nm.netZeroYear) out.push(`Meta "${name}": ano net-zero alterado para ${nm.netZeroYear ?? '—'}`);
+        // Cobertura: excludedActivityIds (adicionar à exclusão = remover da cobertura).
         const cd = setDiff(om.excludedActivityIds, nm.excludedActivityIds);
-        if (cd.added.length || cd.removed.length) out.push(`Meta "${name}": cobertura de atividades alterada`);
+        if (cd.added.length) out.push(`Meta "${name}": removida(s) da cobertura — ${joinNames(cd.added, (id) => ctx.act[id] || 'atividade')}`);
+        if (cd.removed.length) out.push(`Meta "${name}": incluída(s) na cobertura — ${joinNames(cd.removed, (id) => ctx.act[id] || 'atividade')}`);
     });
     const pa = prev?.metasPeriodo?.params || {};
     const pb = next?.metasPeriodo?.params || {};
@@ -61,15 +80,15 @@ const diffInventory = (prev, next, out) => {
     const b = next?.inventario?.atividades || [];
     const aById = byId(a);
     const bById = byId(b);
-    const added = b.filter((x) => !aById[x.id]).length;
-    const removed = a.filter((x) => !bById[x.id]).length;
-    if (added) out.push(`Inventário: ${added} atividade(s) adicionada(s)`);
-    if (removed) out.push(`Inventário: ${removed} atividade(s) removida(s)`);
+    const added = b.filter((x) => !aById[x.id]);
+    const removed = a.filter((x) => !bById[x.id]);
+    if (added.length) out.push(`Inventário: atividade(s) adicionada(s) — ${joinNames(added.map((x) => x.id), (id) => bById[id]?.name || 'atividade')}`);
+    if (removed.length) out.push(`Inventário: atividade(s) removida(s) — ${joinNames(removed.map((x) => x.id), (id) => aById[id]?.name || 'atividade')}`);
     b.forEach((nx) => {
         const ox = aById[nx.id];
         if (!ox) return;
         if (num(ox.emission) !== num(nx.emission)) out.push(`Inventário: "${nx.name}" — emissão alterada para ${fmtNum(nx.emission)} tCO2e`);
-        if (ox.name !== nx.name) out.push(`Inventário: atividade renomeada para "${nx.name}"`);
+        if (ox.name !== nx.name) out.push(`Inventário: atividade "${ox.name}" renomeada para "${nx.name}"`);
         if (ox.scope !== nx.scope) out.push(`Inventário: "${nx.name}" — escopo alterado para ${nx.scope}`);
         if (ox.category !== nx.category) out.push(`Inventário: "${nx.name}" — categoria alterada para ${nx.category}`);
     });
@@ -89,21 +108,36 @@ const diffDrivers = (prev, next, out) => {
         if (od.method !== nd.method) out.push(`Variável "${name}": método de projeção alterado`);
         if (num(od.baseValue) !== num(nd.baseValue)) out.push(`Variável "${name}": valor base alterado para ${fmtNum(nd.baseValue)}`);
         if (num(od.avgRate) !== num(nd.avgRate)) out.push(`Variável "${name}": taxa média alterada para ${fmtNum(nd.avgRate)}%`);
-        if (JSON.stringify(od.yearly) !== JSON.stringify(nd.yearly)) out.push(`Variável "${name}": valores ano-a-ano alterados`);
+        // Valores ano-a-ano: lista os anos alterados (com o novo valor).
+        const oy = od.yearly || {};
+        const ny = nd.yearly || {};
+        const years = [...new Set([...Object.keys(oy), ...Object.keys(ny)])].filter((y) => num(oy[y]) !== num(ny[y]));
+        if (years.length) {
+            const desc = years.slice(0, 6).map((y) => `${y}=${fmtNum(ny[y])}`).join(', ');
+            out.push(`Variável "${name}": valores ano-a-ano alterados (${desc}${years.length > 6 ? ` … (+${years.length - 6})` : ''})`);
+        }
         if (JSON.stringify(od.segments) !== JSON.stringify(nd.segments)) out.push(`Variável "${name}": segmentos de crescimento alterados`);
     });
 };
 
-const diffBau = (prev, next, out) => {
+const diffBau = (prev, next, out, ctx) => {
     const a = prev?.bau || {};
     const b = next?.bau || {};
     if (a.anoAlvo !== b.anoAlvo) out.push(`Projeção BAU: ano-alvo alterado para ${b.anoAlvo}`);
     const av = a.vinculos || {};
     const bv = b.vinculos || {};
-    const keys = new Set([...Object.keys(av), ...Object.keys(bv)]);
-    let changed = 0;
-    keys.forEach((k) => { if (JSON.stringify(av[k]) !== JSON.stringify(bv[k])) changed += 1; });
-    if (changed) out.push(`Projeção BAU: ${changed} vínculo(s) atividade↔driver alterado(s)`);
+    const keys = [...new Set([...Object.keys(av), ...Object.keys(bv)])];
+    keys.forEach((k) => {
+        if (JSON.stringify(av[k]) === JSON.stringify(bv[k])) return;
+        const aName = ctx.act[k] || 'atividade';
+        const link = bv[k];
+        if (!link || link.driverId == null) out.push(`BAU: atividade "${aName}" — vínculo de driver removido`);
+        else {
+            const dName = ctx.drv[link.driverId] || 'driver';
+            const factor = link.factor != null && Number(link.factor) !== 1 ? ` (fator ${fmtNum(link.factor)})` : '';
+            out.push(`BAU: atividade "${aName}" vinculada ao driver "${dName}"${factor}`);
+        }
+    });
 };
 
 const FIN_LABELS = { capex: 'CAPEX', opex: 'OPEX (a.a.)', revenues: 'Receitas', savings: 'Economias', lifetimeYears: 'Vida útil (anos)', currency: 'Moeda' };
@@ -132,7 +166,7 @@ const diffFinance = (a, b, projName, out) => {
     });
 };
 
-const diffProjects = (prev, next, out) => {
+const diffProjects = (prev, next, out, ctx) => {
     const a = prev?.projetos?.projetos || [];
     const b = next?.projetos?.projetos || [];
     const aById = byId(a);
@@ -147,16 +181,17 @@ const diffProjects = (prev, next, out) => {
         if (op.initiativeId !== np.initiativeId) out.push(`Projeto "${name}": iniciativa alterada`);
         if (op.startYear !== np.startYear || op.endYear !== np.endYear) out.push(`Projeto "${name}": período alterado para ${np.startYear}–${np.endYear}`);
         const md = setDiff(op.metaIds, np.metaIds);
-        if (md.added.length || md.removed.length) out.push(`Projeto "${name}": metas vinculadas alteradas`);
+        md.added.forEach((id) => out.push(`Projeto "${name}": vinculado à meta "${ctx.meta[id] || 'meta'}"`));
+        md.removed.forEach((id) => out.push(`Projeto "${name}": desvinculado da meta "${ctx.meta[id] || 'meta'}"`));
         const ad = setDiff(op.memberActivityIds, np.memberActivityIds);
-        if (ad.added.length) out.push(`Projeto "${name}": ${ad.added.length} atividade(s) adicionada(s) ao grupo`);
-        if (ad.removed.length) out.push(`Projeto "${name}": ${ad.removed.length} atividade(s) removida(s) do grupo`);
+        if (ad.added.length) out.push(`Projeto "${name}": atividade(s) adicionada(s) ao grupo — ${joinNames(ad.added, (id) => ctx.act[id] || 'atividade')}`);
+        if (ad.removed.length) out.push(`Projeto "${name}": atividade(s) removida(s) do grupo — ${joinNames(ad.removed, (id) => ctx.act[id] || 'atividade')}`);
         diffCoverage(op.coveragePoints, np.coveragePoints, name, out);
         diffFinance(op.finance, np.finance, name, out);
     });
 };
 
-const diffScenarios = (prev, next, out) => {
+const diffScenarios = (prev, next, out, ctx) => {
     const a = prev?.cenarios?.cenarios || [];
     const b = next?.cenarios?.cenarios || [];
     const aById = byId(a);
@@ -170,36 +205,47 @@ const diffScenarios = (prev, next, out) => {
         if (os.name !== ns.name) out.push(`Cenário "${os.name}" renomeado para "${ns.name}"`);
         const oItems = byKey(os.items, 'projetoId');
         const nItems = byKey(ns.items, 'projetoId');
-        Object.keys(nItems).forEach((pid) => { if (!oItems[pid]) out.push(`Cenário "${name}": projeto adicionado`); });
-        Object.keys(oItems).forEach((pid) => { if (!nItems[pid]) out.push(`Cenário "${name}": projeto removido`); });
+        const pName = (pid) => ctx.proj[pid] || 'projeto';
+        Object.keys(nItems).forEach((pid) => { if (!oItems[pid]) out.push(`Cenário "${name}": projeto "${pName(pid)}" adicionado`); });
+        Object.keys(oItems).forEach((pid) => { if (!nItems[pid]) out.push(`Cenário "${name}": projeto "${pName(pid)}" removido`); });
         Object.keys(nItems).forEach((pid) => {
-            if (oItems[pid] && oItems[pid].included !== nItems[pid].included) {
-                out.push(`Cenário "${name}": projeto ${nItems[pid].included ? 'ativado' : 'desativado'}`);
+            if (!oItems[pid]) return;
+            if (oItems[pid].included !== nItems[pid].included) {
+                out.push(`Cenário "${name}": projeto "${pName(pid)}" ${nItems[pid].included ? 'ativado' : 'desativado'}`);
+            }
+            if (JSON.stringify(oItems[pid].overrides) !== JSON.stringify(nItems[pid].overrides)) {
+                out.push(`Cenário "${name}": projeto "${pName(pid)}" — override de abrangência alterado`);
             }
         });
     });
 };
 
 /**
- * Lista de frases legíveis descrevendo o que mudou entre dois snapshots da
- * empresa (objetos de buildCompanyExport, sem timestamps). Limitado para não
- * gerar registros gigantes.
+ * Lista de frases legíveis e específicas descrevendo o que mudou entre dois
+ * snapshots da empresa (objetos de buildCompanyExport, sem timestamps).
  * @returns {string[]}
  */
 export const describeChanges = (prev, next) => {
     if (!prev || !next) return [];
     const out = [];
     try {
-        diffMetas(prev, next, out);
-        diffInventory(prev, next, out);
-        diffDrivers(prev, next, out);
-        diffBau(prev, next, out);
-        diffProjects(prev, next, out);
-        diffScenarios(prev, next, out);
+        // Mapas id→nome (combinando anterior + novo, para nomear removidos também).
+        const ctx = {
+            act: nameMap(prev?.inventario?.atividades, next?.inventario?.atividades),
+            proj: nameMap(prev?.projetos?.projetos, next?.projetos?.projetos),
+            meta: nameMap(prev?.metasPeriodo?.metas, next?.metasPeriodo?.metas),
+            drv: nameMap(prev?.variaveisCrescimento?.drivers, next?.variaveisCrescimento?.drivers),
+        };
+        diffMetas(prev, next, out, ctx);
+        diffInventory(prev, next, out, ctx);
+        diffDrivers(prev, next, out, ctx);
+        diffBau(prev, next, out, ctx);
+        diffProjects(prev, next, out, ctx);
+        diffScenarios(prev, next, out, ctx);
     } catch (e) {
         /* diff best-effort — nunca quebra o salvamento */
     }
-    const MAX = 60;
+    const MAX = 80;
     if (out.length > MAX) return [...out.slice(0, MAX), `… e mais ${out.length - MAX} alteração(ões)`];
     return out;
 };
@@ -223,7 +269,7 @@ export const logSave = async ({ cnpj, empresa, email, changes }) => {
 };
 
 /** Lê os eventos mais recentes (opcionalmente filtrando por CNPJ). */
-export const fetchAudit = async ({ cnpj, limit = 300 } = {}) => {
+export const fetchAudit = async ({ cnpj, limit = 500 } = {}) => {
     if (!hasSupabase) return [];
     try {
         let q = supabase.from(TABLE).select('*').order('created_at', { ascending: false }).limit(limit);
