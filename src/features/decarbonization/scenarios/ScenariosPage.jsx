@@ -527,17 +527,15 @@ function ScenariosPage() {
                                                 <EditOutlined style={{ fontSize: 12 }} />
                                             </button>
                                         </Tooltip>
-                                        {scenariosOfMeta.length > 1 && (
-                                            <Tooltip title="Remover cenário">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeScenario(s.id)}
-                                                    className={`pr-3 pl-1 py-1.5 ${active ? 'text-white/70 hover:text-white' : 'text-gray-400 hover:text-[#b9462f]'}`}
-                                                >
-                                                    <CloseOutlined style={{ fontSize: 11 }} />
-                                                </button>
-                                            </Tooltip>
-                                        )}
+                                        <Tooltip title="Remover cenário">
+                                            <button
+                                                type="button"
+                                                onClick={() => removeScenario(s.id)}
+                                                className={`pr-3 pl-1 py-1.5 ${active ? 'text-white/70 hover:text-white' : 'text-gray-400 hover:text-[#b9462f]'}`}
+                                            >
+                                                <CloseOutlined style={{ fontSize: 11 }} />
+                                            </button>
+                                        </Tooltip>
                                     </>
                                 )}
                             </div>
