@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import { hasSupabase } from '@/lib/supabaseClient';
-import { NO_CNPJ } from './decarbonizationStorage';
+import { NO_CNPJ, ROOT_KEY } from './decarbonizationStorage';
 import {
     buildCompanyExport,
     saveCompanyToProject,
@@ -56,7 +56,7 @@ const snapshot = (cnpj) => {
     }
 };
 
-export default function useCompanyPersistence() {
+export default function useCompanyPersistence(skipLoad = false) {
     const cnpjRaw = useAuthStore((s) => s.user?.selectedCompany?.cnpj);
     const cnpj = cnpjRaw ? String(cnpjRaw).replace(/\D/g, '') : NO_CNPJ;
 
@@ -68,6 +68,12 @@ export default function useCompanyPersistence() {
     const rehydratingRef = useRef(false);
 
     useEffect(() => {
+        // Modo recuperação (rota /recuperar): NÃO carrega e NÃO salva nada, para
+        // não sobrescrever os dados locais do navegador.
+        if (skipLoad) {
+            setStatus('idle');
+            return undefined;
+        }
         if (cnpj === NO_CNPJ) {
             setStatus('idle');
             return undefined;
@@ -119,6 +125,19 @@ export default function useCompanyPersistence() {
             timerRef.current = setTimeout(flush, DEBOUNCE_MS);
         };
 
+        // SEGURANÇA (rede contra perda): antes de carregar do banco, preserva UMA
+        // cópia do estado local do navegador (a primeira, mais completa). Se a
+        // versão do banco for mais pobre (ex.: sobrescrita por outro usuário), os
+        // dados locais continuam recuperáveis pela rota /recuperar.
+        try {
+            const raw = localStorage.getItem(ROOT_KEY);
+            if (raw && !localStorage.getItem(`${ROOT_KEY}__bkp`)) {
+                localStorage.setItem(`${ROOT_KEY}__bkp`, raw);
+            }
+        } catch (e) {
+            /* localStorage indisponível — ignora */
+        }
+
         (async () => {
             // 1) Carrega a empresa ativa SEMPRE do banco (fonte da verdade
             //    compartilhada) — assim cada usuário vê a última versão salva por
@@ -158,7 +177,7 @@ export default function useCompanyPersistence() {
             }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cnpj]);
+    }, [cnpj, skipLoad]);
 
     return { status, enabled: hasSupabase && cnpj !== NO_CNPJ };
 }

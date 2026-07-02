@@ -23,6 +23,7 @@ import {
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import LoginPage from '@/features/auth/LoginPage';
+import RecoveryPage from '@/RecoveryPage';
 import AuditLogPage from '@/features/auth/AuditLogPage';
 import useCompanyPersistence from '@/features/decarbonization/shared/useCompanyPersistence';
 import { ADMIN_EMAIL } from '@/features/decarbonization/shared/decarbonizationAudit';
@@ -218,8 +219,14 @@ export default function App() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const authEmail = useAuthStore((s) => s.authEmail);
+  // Rota de recuperação: página isolada que NÃO carrega/salva nada (evita
+  // sobrescrever os dados do navegador). Detectada pela URL /recuperar.
+  const recovery = typeof window !== 'undefined' && window.location.pathname.startsWith('/recuperar');
   // Carga por empresa + auto-save no banco (Supabase), global a todas as telas.
-  const persistence = useCompanyPersistence();
+  // Em modo recuperação, o hook fica desligado (skipLoad).
+  const persistence = useCompanyPersistence(recovery);
+
+  if (recovery) return <RecoveryPage />;
 
   // Gate de acesso: sem login, mostra a tela de login.
   if (!authEmail) return <LoginPage />;
