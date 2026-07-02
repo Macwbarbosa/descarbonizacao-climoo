@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import { hasSupabase } from '@/lib/supabaseClient';
-import { NO_CNPJ, readRoot } from './decarbonizationStorage';
+import { NO_CNPJ } from './decarbonizationStorage';
 import {
     buildCompanyExport,
     saveCompanyToProject,
@@ -120,19 +120,18 @@ export default function useCompanyPersistence() {
         };
 
         (async () => {
-            // 1) Carrega a empresa ativa (banco/projeto ou localStorage).
+            // 1) Carrega a empresa ativa SEMPRE do banco (fonte da verdade
+            //    compartilhada) — assim cada usuário vê a última versão salva por
+            //    qualquer outro. Só cai no cache local (localStorage) se o banco
+            //    não tiver a empresa ou estiver indisponível.
+            let loadedFromDb = false;
             try {
-                const local = readRoot().companies[cnpj];
-                const hasLocalData = local?.stores && Object.keys(local.stores).length > 0;
-                if (!hasLocalData) {
-                    const applied = await loadCompanyFromProject(cnpj).catch(() => null);
-                    if (!applied) await reloadActive().catch(() => {});
-                } else {
-                    await reloadActive().catch(() => {});
-                }
+                const applied = await loadCompanyFromProject(cnpj);
+                loadedFromDb = !!applied;
             } catch (e) {
-                /* ignora — segue com o que houver em memória */
+                loadedFromDb = false; // banco indisponível → usa o cache local
             }
+            if (!loadedFromDb) await reloadActive().catch(() => {});
             if (cancelled) return;
 
             // 2) Baseline DEPOIS da carga; só então liga o auto-save.
