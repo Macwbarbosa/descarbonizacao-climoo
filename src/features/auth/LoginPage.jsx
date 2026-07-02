@@ -43,6 +43,9 @@ function LoginPage() {
                 {/* Centro: formulário */}
                 <div className="flex-1 flex flex-col justify-center">
                     <div className="w-full max-w-[420px] mx-auto">
+                        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#9354e0] mb-2">
+                            Plano de Descarbonização
+                        </span>
                         <h1 className="climoo-heading text-3xl font-bold text-[#210856] mb-1">Bem-vindo de volta</h1>
                         <p className="text-gray-500 mb-8">Acesse sua conta</p>
 
