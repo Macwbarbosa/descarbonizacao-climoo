@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, Button, Tooltip, Select, ColorPicker, Divider } from 'antd';
 import { SettingOutlined, DownloadOutlined, FileExcelOutlined, FullscreenOutlined, UndoOutlined } from '@ant-design/icons';
@@ -17,6 +17,14 @@ function ChartConfig({ onDownloadPng, onDownloadXlsx, onExpand }) {
     const setColor = useChartTheme((s) => s.setColor);
     const setPalette = useChartTheme((s) => s.setPalette);
     const reset = useChartTheme((s) => s.reset);
+    // Popover CONTROLADO: as ações (expandir/baixar) fecham o popover antes de
+    // executar — senão ele fica aberto por cima do modal do gráfico expandido.
+    const [open, setOpen] = useState(false);
+
+    const runAndClose = (fn) => () => {
+        setOpen(false);
+        if (fn) fn();
+    };
 
     const currentPreset = PALETTE_PRESETS.find((p) => KEYS.every((k) => p.palette[k] === palette[k]));
 
@@ -24,14 +32,14 @@ function ChartConfig({ onDownloadPng, onDownloadXlsx, onExpand }) {
         <div style={{ width: 268 }}>
             <div className="text-[11px] uppercase tracking-wide text-gray-500 font-semibold mb-2">Exportar</div>
             <div className="flex flex-col gap-1.5">
-                <Button size="small" icon={<DownloadOutlined />} onClick={onDownloadPng} block className="justify-start">
+                <Button size="small" icon={<DownloadOutlined />} onClick={runAndClose(onDownloadPng)} block className="justify-start">
                     Baixar imagem (PNG)
                 </Button>
-                <Button size="small" icon={<FileExcelOutlined />} onClick={onDownloadXlsx} block className="justify-start">
+                <Button size="small" icon={<FileExcelOutlined />} onClick={runAndClose(onDownloadXlsx)} block className="justify-start">
                     Baixar dados (Excel .xlsx)
                 </Button>
                 {onExpand && (
-                    <Button size="small" icon={<FullscreenOutlined />} onClick={onExpand} block className="justify-start">
+                    <Button size="small" icon={<FullscreenOutlined />} onClick={runAndClose(onExpand)} block className="justify-start">
                         Expandir gráfico
                     </Button>
                 )}
@@ -79,7 +87,14 @@ function ChartConfig({ onDownloadPng, onDownloadXlsx, onExpand }) {
     );
 
     return (
-        <Popover content={content} trigger="click" placement="bottomRight" title={null}>
+        <Popover
+            content={content}
+            trigger="click"
+            placement="bottomRight"
+            title={null}
+            open={open}
+            onOpenChange={setOpen}
+        >
             <Tooltip title="Configurar gráfico (baixar / cores)">
                 <Button type="text" size="small" icon={<SettingOutlined />} aria-label="Configurar gráfico" />
             </Tooltip>
