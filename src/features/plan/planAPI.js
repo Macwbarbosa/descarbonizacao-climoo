@@ -7,44 +7,76 @@
  *   {
  *     kickoff: '2026-07',                       // mês de início (YYYY-MM) ou null
  *     stages: [
- *       { id, title, status, note, startQuarter, endQuarter }
+ *       { id, title, status, note, startMonth, endMonth,
+ *         tasks: [{ id, title, done }] }
  *     ]
  *   }
  *   status ∈ 'nao_iniciado' | 'andamento' | 'concluido'
- *   startQuarter/endQuarter: 'YYYY-Qn' (ex.: '2026-Q3') ou null
+ *   startMonth/endMonth: 'YYYY-MM' (ex.: '2026-07') ou null
+ *
+ * Quando a etapa TEM tarefas, o status é DERIVADO delas (todas marcadas =
+ * concluído; alguma marcada = em andamento; nenhuma = não iniciado).
  */
-import { supabase, hasSupabase } from '@/lib/supabaseClient';
+import { supabase, hasSupabase, } from '@/lib/supabaseClient';
+import { quarterToStartMonth, quarterToEndMonth } from './months';
 
 const NOT_CONFIGURED = 'Banco não configurado (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).';
 
+/** Status derivado das tarefas de uma etapa. */
+export const deriveStatus = (tasks) => {
+    const list = Array.isArray(tasks) ? tasks : [];
+    if (!list.length) return null; // sem tarefas → status é manual
+    const done = list.filter((t) => t.done).length;
+    if (done === 0) return 'nao_iniciado';
+    if (done === list.length) return 'concluido';
+    return 'andamento';
+};
+
+/** Status efetivo de uma etapa (derivado das tarefas, se houver; senão o manual). */
+export const effectiveStatus = (stage) => deriveStatus(stage.tasks) || stage.status || 'nao_iniciado';
+
 /** Etapas padrão do método Climoo (usadas quando a empresa ainda não tem plano). */
 export const DEFAULT_STAGES = [
-    { id: 'inventario', title: 'Diagnóstico do inventário', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'metas', title: 'Definição das metas SBTi', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'bau', title: 'Projeção de crescimento (BAU)', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'iniciativas', title: 'Levantamento de iniciativas', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'oportunidades', title: 'Quantificação das oportunidades', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'cenarios', title: 'Construção dos cenários', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'validacao', title: 'Validação com a diretoria', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-    { id: 'submissao', title: 'Submissão e validação SBTi', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
-];
+    { id: 'inventario', title: 'Diagnóstico do inventário' },
+    { id: 'metas', title: 'Definição das metas SBTi' },
+    { id: 'bau', title: 'Projeção de crescimento (BAU)' },
+    { id: 'iniciativas', title: 'Levantamento de iniciativas' },
+    { id: 'oportunidades', title: 'Quantificação das oportunidades' },
+    { id: 'cenarios', title: 'Construção dos cenários' },
+    { id: 'validacao', title: 'Validação com a diretoria' },
+    { id: 'submissao', title: 'Submissão e validação SBTi' },
+].map((s) => ({ ...s, status: 'nao_iniciado', note: '', startMonth: null, endMonth: null, tasks: [] }));
 
 /** Plano vazio (com as etapas padrão) para uma empresa recém-criada. */
-export const emptyPlan = () => ({ kickoff: null, stages: DEFAULT_STAGES.map((s) => ({ ...s })) });
+export const emptyPlan = () => ({ kickoff: null, stages: DEFAULT_STAGES.map((s) => ({ ...s, tasks: [] })) });
 
-/** Normaliza o plano lido do banco (garante array de stages e campos esperados). */
+const normalizeTasks = (tasks) =>
+    (Array.isArray(tasks) ? tasks : []).map((t, j) => ({
+        id: t.id || `t-${j + 1}`,
+        title: t.title || `Tarefa ${j + 1}`,
+        done: !!t.done,
+    }));
+
+/** Normaliza o plano lido do banco (migra trimestres antigos e deriva status). */
 const normalize = (plan) => {
     if (!plan || !Array.isArray(plan.stages) || plan.stages.length === 0) return emptyPlan();
     return {
         kickoff: plan.kickoff || null,
-        stages: plan.stages.map((s, i) => ({
-            id: s.id || `etapa-${i + 1}`,
-            title: s.title || `Etapa ${i + 1}`,
-            status: ['nao_iniciado', 'andamento', 'concluido'].includes(s.status) ? s.status : 'nao_iniciado',
-            note: s.note || '',
-            startQuarter: s.startQuarter || null,
-            endQuarter: s.endQuarter || null,
-        })),
+        stages: plan.stages.map((s, i) => {
+            const tasks = normalizeTasks(s.tasks);
+            const startMonth = s.startMonth || quarterToStartMonth(s.startQuarter) || null;
+            const endMonth = s.endMonth || quarterToEndMonth(s.endQuarter) || null;
+            const manual = ['nao_iniciado', 'andamento', 'concluido'].includes(s.status) ? s.status : 'nao_iniciado';
+            return {
+                id: s.id || `etapa-${i + 1}`,
+                title: s.title || `Etapa ${i + 1}`,
+                status: deriveStatus(tasks) || manual,
+                note: s.note || '',
+                startMonth,
+                endMonth,
+                tasks,
+            };
+        }),
     };
 };
 
@@ -75,4 +107,4 @@ export const savePlan = async (companyId, plan) => {
     return true;
 };
 
-export default { DEFAULT_STAGES, emptyPlan, getPlan, savePlan };
+export default { DEFAULT_STAGES, emptyPlan, getPlan, savePlan, deriveStatus, effectiveStatus };

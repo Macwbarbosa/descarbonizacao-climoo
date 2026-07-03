@@ -4,9 +4,9 @@ import {
     Avatar,
     Button,
     Card,
+    Checkbox,
     DatePicker,
     Empty,
-    Form,
     Input,
     Modal,
     Progress,
@@ -20,6 +20,7 @@ import {
 import {
     CalendarOutlined,
     CheckCircleFilled,
+    CheckSquareOutlined,
     DeleteOutlined,
     EditOutlined,
     PlusOutlined,
@@ -33,9 +34,9 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
 import { listCompanyUsers } from '@/features/admin/companiesAPI';
-import { getPlan, savePlan, emptyPlan } from './planAPI';
+import { getPlan, savePlan, emptyPlan, deriveStatus, effectiveStatus } from './planAPI';
 import { statusMeta, STATUS_OPTIONS } from './status';
-import { QUARTER_OPTIONS, quarterLabel } from './quarters';
+import { monthLabel } from './months';
 import PlanGantt from './components/PlanGantt';
 
 const { Title, Text, Paragraph } = Typography;
@@ -48,6 +49,8 @@ const kickoffLabel = (ym) => {
     if (!m) return '';
     return `${MONTHS_PT[Number(m[2]) - 1]} de ${m[1]}`;
 };
+
+const uid = () => `t-${Math.random().toString(36).slice(2, 9)}`;
 
 /** Chip de status (Concluído / Em andamento / Não iniciado). */
 function StatusChip({ status }) {
@@ -63,36 +66,43 @@ function StatusChip({ status }) {
     );
 }
 
-/** Card de uma etapa (número, título, status, prazo). Clicável quando editável. */
-function StageCard({ index, stage, canEdit, onEdit }) {
-    const done = stage.status === 'concluido';
-    const active = stage.status === 'andamento';
+/** Card de uma etapa (número, título, status, tarefas, prazo). */
+function StageCard({ index, stage, onOpen }) {
+    const status = effectiveStatus(stage);
+    const done = status === 'concluido';
+    const active = status === 'andamento';
     const bg = done ? '#210856' : active ? '#f4effd' : '#f1f2f6';
     const numColor = done ? '#fff' : '#210856';
     const titleColor = done ? '#fff' : '#210856';
     const period =
-        stage.startQuarter || stage.endQuarter
-            ? [stage.startQuarter, stage.endQuarter].filter(Boolean).map(quarterLabel).join(' → ')
+        stage.startMonth || stage.endMonth
+            ? [stage.startMonth, stage.endMonth].filter(Boolean).map(monthLabel).join(' → ')
             : null;
+    const tasksDone = stage.tasks.filter((t) => t.done).length;
 
     return (
         <button
             type="button"
-            onClick={canEdit ? () => onEdit(index) : undefined}
-            className={`text-left rounded-2xl p-4 h-full w-full border-0 transition-shadow ${canEdit ? 'cursor-pointer hover:shadow-md' : 'cursor-default'}`}
+            onClick={() => onOpen(index)}
+            className="text-left rounded-2xl p-4 h-full w-full border-0 cursor-pointer hover:shadow-md transition-shadow"
             style={{ background: bg }}
         >
             <div className="flex items-start justify-between">
                 <span className="text-2xl font-bold" style={{ color: numColor }}>
                     {String(index + 1).padStart(2, '0')}
                 </span>
-                {canEdit && <EditOutlined style={{ color: done ? '#c9bdf0' : '#9385c4' }} />}
+                <EditOutlined style={{ color: done ? '#c9bdf0' : '#9385c4' }} />
             </div>
             <div className="mt-2 font-semibold leading-snug" style={{ color: titleColor }}>
                 {stage.title}
             </div>
             <div className="mt-2 flex flex-col gap-1">
-                <StatusChip status={stage.status} />
+                <StatusChip status={status} />
+                {stage.tasks.length > 0 && (
+                    <span className="text-[11px] flex items-center gap-1" style={{ color: done ? '#d7cef2' : '#7c6bb0' }}>
+                        <CheckSquareOutlined /> {tasksDone}/{stage.tasks.length} tarefas
+                    </span>
+                )}
                 {stage.note && (
                     <span className="text-[11px]" style={{ color: done ? '#d7cef2' : '#7c6bb0' }}>
                         {stage.note}
@@ -120,8 +130,9 @@ export default function PlanTrackingPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [dirty, setDirty] = useState(false);
-    const [editingIdx, setEditingIdx] = useState(null); // índice da etapa em edição
-    const [form] = Form.useForm();
+    const [editingIdx, setEditingIdx] = useState(null);
+    const [draft, setDraft] = useState(null); // cópia editável da etapa aberta
+    const [newTask, setNewTask] = useState('');
 
     useEffect(() => {
         let cancelled = false;
@@ -150,7 +161,7 @@ export default function PlanTrackingPage() {
 
     const progress = useMemo(() => {
         const total = plan.stages.length || 1;
-        const done = plan.stages.filter((s) => s.status === 'concluido').length;
+        const done = plan.stages.filter((s) => effectiveStatus(s) === 'concluido').length;
         return { done, total, pct: Math.round((done / total) * 100) };
     }, [plan]);
 
@@ -173,51 +184,54 @@ export default function PlanTrackingPage() {
     };
 
     const openEdit = (idx) => {
-        const s = plan.stages[idx];
-        form.setFieldsValue({
-            title: s.title,
-            status: s.status,
-            note: s.note,
-            startQuarter: s.startQuarter || undefined,
-            endQuarter: s.endQuarter || undefined,
-        });
+        setDraft(JSON.parse(JSON.stringify(plan.stages[idx])));
+        setNewTask('');
         setEditingIdx(idx);
     };
 
-    const applyEdit = async () => {
-        const v = await form.validateFields();
-        const stages = plan.stages.map((s, i) =>
-            i === editingIdx
-                ? {
-                      ...s,
-                      title: v.title.trim(),
-                      status: v.status,
-                      note: (v.note || '').trim(),
-                      startQuarter: v.startQuarter || null,
-                      endQuarter: v.endQuarter || null,
-                  }
-                : s
-        );
-        mutate({ ...plan, stages });
+    const closeEdit = () => {
         setEditingIdx(null);
+        setDraft(null);
+    };
+
+    const applyEdit = () => {
+        if (!draft.title.trim()) {
+            message.error('Informe o nome da etapa.');
+            return;
+        }
+        const status = deriveStatus(draft.tasks) || draft.status;
+        const stage = { ...draft, title: draft.title.trim(), note: (draft.note || '').trim(), status };
+        mutate({ ...plan, stages: plan.stages.map((s, i) => (i === editingIdx ? stage : s)) });
+        closeEdit();
     };
 
     const removeStage = () => {
-        const stages = plan.stages.filter((_, i) => i !== editingIdx);
-        mutate({ ...plan, stages });
-        setEditingIdx(null);
+        mutate({ ...plan, stages: plan.stages.filter((_, i) => i !== editingIdx) });
+        closeEdit();
     };
 
     const addStage = () => {
         const stages = [
             ...plan.stages,
-            { id: `etapa-${Date.now()}`, title: 'Nova etapa', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
+            { id: `etapa-${Date.now()}`, title: 'Nova etapa', status: 'nao_iniciado', note: '', startMonth: null, endMonth: null, tasks: [] },
         ];
-        mutate({ ...plan, stages });
-        openEdit(stages.length - 1);
+        setPlan({ ...plan, stages });
+        setDirty(true);
+        setTimeout(() => openEdit(stages.length - 1), 0);
     };
 
     const setKickoff = (d) => mutate({ ...plan, kickoff: d ? d.format('YYYY-MM') : null });
+
+    // Operações de tarefa dentro do modal (mexem no draft).
+    const addTask = () => {
+        const title = newTask.trim();
+        if (!title) return;
+        setDraft({ ...draft, tasks: [...draft.tasks, { id: uid(), title, done: false }] });
+        setNewTask('');
+    };
+    const toggleTask = (id) =>
+        setDraft({ ...draft, tasks: draft.tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t)) });
+    const removeTask = (id) => setDraft({ ...draft, tasks: draft.tasks.filter((t) => t.id !== id) });
 
     if (!companyId) {
         return (
@@ -244,7 +258,8 @@ export default function PlanTrackingPage() {
         );
     }
 
-    const editing = editingIdx != null ? plan.stages[editingIdx] : null;
+    const draftTasksDone = draft ? draft.tasks.filter((t) => t.done).length : 0;
+    const draftStatus = draft ? effectiveStatus(draft) : 'nao_iniciado';
 
     return (
         <div className="w-full">
@@ -271,13 +286,7 @@ export default function PlanTrackingPage() {
                         />
                     )}
                     {canEdit && (
-                        <Button
-                            type="primary"
-                            icon={<SaveOutlined />}
-                            loading={saving}
-                            disabled={!dirty}
-                            onClick={handleSave}
-                        >
+                        <Button type="primary" icon={<SaveOutlined />} loading={saving} disabled={!dirty} onClick={handleSave}>
                             {dirty ? 'Salvar alterações' : 'Salvo'}
                         </Button>
                     )}
@@ -327,19 +336,16 @@ export default function PlanTrackingPage() {
             </div>
             <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 {plan.stages.map((s, i) => (
-                    <StageCard key={s.id} index={i} stage={s} canEdit={canEdit} onEdit={openEdit} />
+                    <StageCard key={s.id} index={i} stage={s} onOpen={openEdit} />
                 ))}
             </div>
 
             {/* Cronograma */}
-            <Card
-                className="mt-6"
-                title={<span className="text-[#210856] font-semibold">Cronograma de implementação</span>}
-            >
+            <Card className="mt-6" title={<span className="text-[#210856] font-semibold">Cronograma de implementação</span>}>
                 <PlanGantt stages={plan.stages} />
                 {canEdit && (
                     <Text type="secondary" className="text-xs">
-                        Defina os trimestres de cada etapa clicando no card correspondente.
+                        Defina o mês de início e fim de cada etapa clicando no card correspondente.
                     </Text>
                 )}
             </Card>
@@ -381,45 +387,153 @@ export default function PlanTrackingPage() {
 
             {/* Modal de edição de etapa */}
             <Modal
-                title={editing ? `Etapa — ${editing.title}` : 'Etapa'}
+                title={draft ? `Etapa ${editingIdx != null ? editingIdx + 1 : ''}` : 'Etapa'}
                 open={editingIdx != null}
-                onOk={applyEdit}
-                onCancel={() => setEditingIdx(null)}
-                okText="Aplicar"
-                footer={[
-                    plan.stages.length > 1 && (
-                        <Button key="del" danger icon={<DeleteOutlined />} onClick={removeStage} className="!float-left">
-                            Remover etapa
-                        </Button>
-                    ),
-                    <Button key="cancel" onClick={() => setEditingIdx(null)}>
-                        Cancelar
-                    </Button>,
-                    <Button key="ok" type="primary" onClick={applyEdit}>
-                        Aplicar
-                    </Button>,
-                ]}
+                onCancel={closeEdit}
+                width={560}
+                footer={
+                    canEdit
+                        ? [
+                              plan.stages.length > 1 && (
+                                  <Button key="del" danger icon={<DeleteOutlined />} onClick={removeStage} className="!float-left">
+                                      Remover etapa
+                                  </Button>
+                              ),
+                              <Button key="cancel" onClick={closeEdit}>
+                                  Cancelar
+                              </Button>,
+                              <Button key="ok" type="primary" onClick={applyEdit}>
+                                  Aplicar
+                              </Button>,
+                          ]
+                        : [
+                              <Button key="close" onClick={closeEdit}>
+                                  Fechar
+                              </Button>,
+                          ]
+                }
                 destroyOnClose
             >
-                <Form form={form} layout="vertical" requiredMark={false} className="mt-2">
-                    <Form.Item name="title" label="Nome da etapa" rules={[{ required: true, message: 'Informe o nome.' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-                        <Select options={STATUS_OPTIONS} />
-                    </Form.Item>
-                    <Form.Item name="note" label="Observação (opcional)" extra="Ex.: “Ainda em 2026”, responsável, marco.">
-                        <Input placeholder="Nota curta exibida no card e na barra do cronograma" />
-                    </Form.Item>
-                    <div className="flex gap-3">
-                        <Form.Item name="startQuarter" label="Trimestre inicial" className="flex-1">
-                            <Select allowClear placeholder="—" options={QUARTER_OPTIONS} />
-                        </Form.Item>
-                        <Form.Item name="endQuarter" label="Trimestre final" className="flex-1">
-                            <Select allowClear placeholder="—" options={QUARTER_OPTIONS} />
-                        </Form.Item>
+                {draft && (
+                    <div className="flex flex-col gap-4 mt-2">
+                        <div>
+                            <label className="block text-xs text-gray-500 mb-1">Nome da etapa</label>
+                            <Input
+                                value={draft.title}
+                                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                                disabled={!canEdit}
+                            />
+                        </div>
+
+                        {/* Status: derivado das tarefas, ou manual se não houver tarefas */}
+                        <div>
+                            <label className="block text-xs text-gray-500 mb-1">Status</label>
+                            {draft.tasks.length > 0 ? (
+                                <div className="flex items-center gap-2">
+                                    <StatusChip status={draftStatus} />
+                                    <Text type="secondary" className="text-xs">
+                                        definido pelas tarefas ({draftTasksDone}/{draft.tasks.length})
+                                    </Text>
+                                </div>
+                            ) : (
+                                <Select
+                                    value={draft.status}
+                                    onChange={(v) => setDraft({ ...draft, status: v })}
+                                    options={STATUS_OPTIONS}
+                                    disabled={!canEdit}
+                                    style={{ width: '100%' }}
+                                />
+                            )}
+                        </div>
+
+                        {/* Tarefas (checklist) */}
+                        <div>
+                            <label className="block text-xs text-gray-500 mb-1">
+                                Tarefas — marque para concluir a etapa
+                            </label>
+                            {draft.tasks.length > 0 && (
+                                <div className="flex flex-col gap-1 mb-2">
+                                    {draft.tasks.map((t) => (
+                                        <div key={t.id} className="flex items-center gap-2 group">
+                                            <Checkbox
+                                                checked={t.done}
+                                                disabled={!canEdit}
+                                                onChange={() => toggleTask(t.id)}
+                                            >
+                                                <span className={t.done ? 'line-through text-gray-400' : ''}>{t.title}</span>
+                                            </Checkbox>
+                                            {canEdit && (
+                                                <Button
+                                                    type="text"
+                                                    size="small"
+                                                    danger
+                                                    icon={<DeleteOutlined />}
+                                                    className="ml-auto opacity-0 group-hover:opacity-100"
+                                                    onClick={() => removeTask(t.id)}
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {canEdit && (
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Nova tarefa (ex.: Coletar dados de energia)"
+                                        value={newTask}
+                                        onChange={(e) => setNewTask(e.target.value)}
+                                        onPressEnter={addTask}
+                                    />
+                                    <Button icon={<PlusOutlined />} onClick={addTask}>
+                                        Adicionar
+                                    </Button>
+                                </div>
+                            )}
+                            {!draft.tasks.length && !canEdit && (
+                                <Text type="secondary" className="text-xs">
+                                    Nenhuma tarefa cadastrada.
+                                </Text>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-xs text-gray-500 mb-1">Observação (opcional)</label>
+                            <Input
+                                placeholder="Ex.: “Ainda em 2026”, responsável, marco"
+                                value={draft.note}
+                                onChange={(e) => setDraft({ ...draft, note: e.target.value })}
+                                disabled={!canEdit}
+                            />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <div className="flex-1">
+                                <label className="block text-xs text-gray-500 mb-1">Mês de início</label>
+                                <DatePicker
+                                    picker="month"
+                                    allowClear
+                                    className="w-full"
+                                    placeholder="—"
+                                    disabled={!canEdit}
+                                    value={draft.startMonth ? dayjs(`${draft.startMonth}-01`) : null}
+                                    onChange={(d) => setDraft({ ...draft, startMonth: d ? d.format('YYYY-MM') : null })}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="block text-xs text-gray-500 mb-1">Mês de fim</label>
+                                <DatePicker
+                                    picker="month"
+                                    allowClear
+                                    className="w-full"
+                                    placeholder="—"
+                                    disabled={!canEdit}
+                                    value={draft.endMonth ? dayjs(`${draft.endMonth}-01`) : null}
+                                    onChange={(d) => setDraft({ ...draft, endMonth: d ? d.format('YYYY-MM') : null })}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </Form>
+                )}
             </Modal>
         </div>
     );
