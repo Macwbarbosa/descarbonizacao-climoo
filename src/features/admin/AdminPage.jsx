@@ -9,6 +9,7 @@ import {
     Popconfirm,
     Select,
     Space,
+    Switch,
     Table,
     Tabs,
     Tag,
@@ -17,6 +18,7 @@ import {
     message,
 } from 'antd';
 import {
+    ArrowRightOutlined,
     BankOutlined,
     DeleteOutlined,
     EditOutlined,
@@ -26,7 +28,9 @@ import {
     TeamOutlined,
     ThunderboltOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
+import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
 import { listCompanies, createCompany, updateCompany, deleteCompany } from './companiesAPI';
 import { listUsers, createUser, updateUser, deleteUser, generatePassword } from './adminUsersAPI';
@@ -154,6 +158,7 @@ function UsersTab({ companies, reloadCompanies }) {
                 password: values.password,
                 name: values.name,
                 companyId: values.companyId,
+                canEditPlan: !!values.canEditPlan,
             });
             setCreds({ email: values.email.trim().toLowerCase(), password: values.password });
             setCreating(false);
@@ -170,7 +175,12 @@ function UsersTab({ companies, reloadCompanies }) {
         const values = await editForm.validateFields();
         setSaving(true);
         try {
-            await updateUser({ id: editing.id, name: values.name, companyId: values.companyId || null });
+            await updateUser({
+                id: editing.id,
+                name: values.name,
+                companyId: values.companyId || null,
+                canEditPlan: !!values.canEditPlan,
+            });
             message.success('Usuário atualizado.');
             setEditing(null);
             load();
@@ -229,9 +239,20 @@ function UsersTab({ companies, reloadCompanies }) {
         {
             title: 'Perfil',
             dataIndex: 'role',
-            width: 110,
-            render: (role) =>
-                role === 'admin' ? <Tag color="#210856">admin</Tag> : <Tag>usuário</Tag>,
+            width: 160,
+            render: (role, u) =>
+                role === 'admin' ? (
+                    <Tag color="#210856">admin</Tag>
+                ) : (
+                    <Space size={4} wrap>
+                        <Tag>usuário</Tag>
+                        {u.can_edit_plan && (
+                            <Tooltip title="Pode editar o acompanhamento do plano da empresa">
+                                <Tag color="purple">edita plano</Tag>
+                            </Tooltip>
+                        )}
+                    </Space>
+                ),
         },
         {
             title: 'Ações',
@@ -245,7 +266,11 @@ function UsersTab({ companies, reloadCompanies }) {
                             icon={<EditOutlined />}
                             onClick={() => {
                                 setEditing(u);
-                                editForm.setFieldsValue({ name: u.name, companyId: u.company?.id || undefined });
+                                editForm.setFieldsValue({
+                                    name: u.name,
+                                    companyId: u.company?.id || undefined,
+                                    canEditPlan: !!u.can_edit_plan,
+                                });
                             }}
                         />
                     </Tooltip>
@@ -346,6 +371,14 @@ function UsersTab({ companies, reloadCompanies }) {
                         />
                     </Form.Item>
                     <PasswordField form={createForm} />
+                    <Form.Item
+                        name="canEditPlan"
+                        label="Pode editar o acompanhamento do plano"
+                        valuePropName="checked"
+                        extra="Se ligado, este usuário pode alterar etapas, prazos e cronograma da empresa dele."
+                    >
+                        <Switch />
+                    </Form.Item>
                 </Form>
             </Modal>
 
@@ -364,15 +397,25 @@ function UsersTab({ companies, reloadCompanies }) {
                         <Input />
                     </Form.Item>
                     {editing?.role !== 'admin' && (
-                        <Form.Item name="companyId" label="Empresa">
-                            <Select
-                                placeholder="Selecione a empresa"
-                                options={companyOptions}
-                                showSearch
-                                optionFilterProp="label"
-                                allowClear
-                            />
-                        </Form.Item>
+                        <>
+                            <Form.Item name="companyId" label="Empresa">
+                                <Select
+                                    placeholder="Selecione a empresa"
+                                    options={companyOptions}
+                                    showSearch
+                                    optionFilterProp="label"
+                                    allowClear
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name="canEditPlan"
+                                label="Pode editar o acompanhamento do plano"
+                                valuePropName="checked"
+                                extra="Se ligado, este usuário pode alterar etapas, prazos e cronograma da empresa dele."
+                            >
+                                <Switch />
+                            </Form.Item>
+                        </>
                     )}
                 </Form>
             </Modal>
@@ -399,7 +442,7 @@ function UsersTab({ companies, reloadCompanies }) {
 
 // ─── Aba: Empresas ────────────────────────────────────────────────────────────
 
-function CompaniesTab({ companies, loading, reload }) {
+function CompaniesTab({ companies, loading, reload, onOpen }) {
     const [editing, setEditing] = useState(null); // null | 'new' | empresa
     const [saving, setSaving] = useState(false);
     const [form] = Form.useForm();
@@ -441,14 +484,27 @@ function CompaniesTab({ companies, loading, reload }) {
         {
             title: 'Ações',
             key: 'actions',
-            width: 140,
+            width: 240,
             render: (_, c) => (
                 <Space size={4}>
+                    <Button
+                        type="link"
+                        size="small"
+                        icon={<ArrowRightOutlined />}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onOpen?.(c);
+                        }}
+                        className="!px-1"
+                    >
+                        Abrir ambiente
+                    </Button>
                     <Tooltip title="Editar">
                         <Button
                             type="text"
                             icon={<EditOutlined />}
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 setEditing(c);
                                 form.setFieldsValue({ name: c.name, cnpj: formatCnpj(c.cnpj) });
                             }}
@@ -461,7 +517,7 @@ function CompaniesTab({ companies, loading, reload }) {
                         okButtonProps={{ danger: true }}
                         onConfirm={() => handleDelete(c)}
                     >
-                        <Button type="text" danger icon={<DeleteOutlined />} />
+                        <Button type="text" danger icon={<DeleteOutlined />} onClick={(e) => e.stopPropagation()} />
                     </Popconfirm>
                 </Space>
             ),
@@ -472,8 +528,8 @@ function CompaniesTab({ companies, loading, reload }) {
         <>
             <div className="flex items-center justify-between mb-4">
                 <Text type="secondary">
-                    Cada empresa é identificada pelo CNPJ — os dados do plano de descarbonização ficam
-                    isolados por CNPJ.
+                    Clique em uma empresa para abrir o ambiente dela (etapas, cronograma e usuários). Os
+                    dados do plano ficam isolados por CNPJ.
                 </Text>
                 <Space>
                     <Button icon={<ReloadOutlined />} onClick={reload} loading={loading}>
@@ -492,7 +548,17 @@ function CompaniesTab({ companies, loading, reload }) {
                 </Space>
             </div>
 
-            <Table rowKey="id" columns={columns} dataSource={companies} loading={loading} pagination={false} />
+            <Table
+                rowKey="id"
+                columns={columns}
+                dataSource={companies}
+                loading={loading}
+                pagination={false}
+                onRow={(c) => ({
+                    onClick: () => onOpen?.(c),
+                    style: { cursor: 'pointer' },
+                })}
+            />
 
             <Modal
                 title={editing === 'new' ? 'Nova empresa' : `Editar — ${editing?.name || ''}`}
@@ -537,6 +603,8 @@ function CompaniesTab({ companies, loading, reload }) {
 export default function AdminPage() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const setSelectedCompany = useAuthStore((s) => s.setSelectedCompany);
 
     const reload = async () => {
         setLoading(true);
@@ -553,8 +621,14 @@ export default function AdminPage() {
         reload();
     }, []);
 
+    /** Abre o ambiente da empresa: ativa a empresa e vai para o acompanhamento. */
+    const openCompany = (c) => {
+        setSelectedCompany({ id: c.id, cnpj: c.cnpj, company: c.name });
+        navigate('/plano');
+    };
+
     return (
-        <div className="max-w-[1100px]">
+        <div className="w-full">
             <Title level={3} className="!mb-1 climoo-heading !text-[#210856]">
                 Administração
             </Title>
@@ -583,7 +657,14 @@ export default function AdminPage() {
                                     <BankOutlined /> Empresas
                                 </span>
                             ),
-                            children: <CompaniesTab companies={companies} loading={loading} reload={reload} />,
+                            children: (
+                                <CompaniesTab
+                                    companies={companies}
+                                    loading={loading}
+                                    reload={reload}
+                                    onOpen={openCompany}
+                                />
+                            ),
                         },
                     ]}
                 />

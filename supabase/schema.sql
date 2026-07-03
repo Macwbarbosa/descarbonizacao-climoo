@@ -33,13 +33,18 @@ create table if not exists public.companies (
 -- Perfis (1 por usuário do Supabase Auth)
 -- ──────────────────────────────────────────────────────────────────────
 create table if not exists public.profiles (
-  id          uuid primary key references auth.users (id) on delete cascade,
-  email       text not null unique,
-  name        text,
-  role        text not null default 'user' check (role in ('admin', 'user')),
-  company_id  uuid references public.companies (id) on delete set null,
-  created_at  timestamptz not null default now()
+  id            uuid primary key references auth.users (id) on delete cascade,
+  email         text not null unique,
+  name          text,
+  role          text not null default 'user' check (role in ('admin', 'user')),
+  company_id    uuid references public.companies (id) on delete set null,
+  can_edit_plan boolean not null default false,  -- admin concede: editar o acompanhamento
+  created_at    timestamptz not null default now()
 );
+
+-- Se a tabela profiles já existia sem a coluna, adiciona-a:
+alter table public.profiles
+  add column if not exists can_edit_plan boolean not null default false;
 
 -- Cria o perfil automaticamente quando um usuário é criado no Auth.
 -- mac@climoo.com.br entra como administrador.
@@ -99,6 +104,15 @@ as $$
   where p.id = auth.uid();
 $$;
 
+-- true se o usuário logado pode editar o acompanhamento do plano da sua empresa.
+create or replace function public.may_edit_plan()
+returns boolean
+language sql stable security definer
+set search_path = public
+as $$
+  select coalesce((select can_edit_plan from profiles where id = auth.uid()), false);
+$$;
+
 -- ──────────────────────────────────────────────────────────────────────
 -- RLS: companies e profiles
 -- ──────────────────────────────────────────────────────────────────────
@@ -127,10 +141,17 @@ create policy "companies admin delete"
 
 alter table public.profiles enable row level security;
 
+-- Leitura: o próprio usuário, o admin, ou colegas da MESMA empresa (para a
+-- lista de usuários no ambiente da empresa). my_company_id() é security definer,
+-- então não recai nesta policy (sem recursão).
 drop policy if exists "profiles select" on public.profiles;
 create policy "profiles select"
   on public.profiles for select to authenticated
-  using (id = auth.uid() or public.is_admin());
+  using (
+    id = auth.uid()
+    or public.is_admin()
+    or (company_id is not null and company_id = public.my_company_id())
+  );
 
 -- Escritas em profiles acontecem só pela API de administração (service role,
 -- que ignora RLS) e pelo trigger acima — nenhuma policy de escrita necessária.
@@ -208,6 +229,44 @@ drop policy if exists "audit admin select" on public.decarbonization_audit;
 create policy "audit admin select"
   on public.decarbonization_audit for select to authenticated
   using (public.is_admin());
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Acompanhamento do plano (etapas, prazos, cronograma) — 1 linha por empresa
+-- ──────────────────────────────────────────────────────────────────────
+create table if not exists public.company_plans (
+  company_id  uuid primary key references public.companies (id) on delete cascade,
+  plan        jsonb       not null default '{}'::jsonb,  -- { kickoff, stages: [...] }
+  updated_at  timestamptz not null default now()
+);
+
+alter table public.company_plans enable row level security;
+
+-- Leitura: admin ou usuário da própria empresa.
+drop policy if exists "plans select" on public.company_plans;
+create policy "plans select"
+  on public.company_plans for select to authenticated
+  using (public.is_admin() or company_id = public.my_company_id());
+
+-- Escrita: admin sempre; usuário da empresa apenas se o admin concedeu a permissão.
+drop policy if exists "plans insert" on public.company_plans;
+create policy "plans insert"
+  on public.company_plans for insert to authenticated
+  with check (
+    public.is_admin()
+    or (company_id = public.my_company_id() and public.may_edit_plan())
+  );
+
+drop policy if exists "plans update" on public.company_plans;
+create policy "plans update"
+  on public.company_plans for update to authenticated
+  using (
+    public.is_admin()
+    or (company_id = public.my_company_id() and public.may_edit_plan())
+  )
+  with check (
+    public.is_admin()
+    or (company_id = public.my_company_id() and public.may_edit_plan())
+  );
 
 -- ──────────────────────────────────────────────────────────────────────
 -- Seeds / migração de dados já existentes

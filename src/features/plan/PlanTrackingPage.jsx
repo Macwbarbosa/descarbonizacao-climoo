@@ -1,0 +1,426 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+    Alert,
+    Avatar,
+    Button,
+    Card,
+    DatePicker,
+    Empty,
+    Form,
+    Input,
+    Modal,
+    Progress,
+    Select,
+    Spin,
+    Tag,
+    Tooltip,
+    Typography,
+    message,
+} from 'antd';
+import {
+    CalendarOutlined,
+    CheckCircleFilled,
+    DeleteOutlined,
+    EditOutlined,
+    PlusOutlined,
+    SaveOutlined,
+    TeamOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
+
+import { useAuthStore } from '@/features/auth/shared/store/authStore';
+import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
+import { listCompanyUsers } from '@/features/admin/companiesAPI';
+import { getPlan, savePlan, emptyPlan } from './planAPI';
+import { statusMeta, STATUS_OPTIONS } from './status';
+import { QUARTER_OPTIONS, quarterLabel } from './quarters';
+import PlanGantt from './components/PlanGantt';
+
+const { Title, Text, Paragraph } = Typography;
+
+const MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+/** 'YYYY-MM' → 'julho de 2026'. */
+const kickoffLabel = (ym) => {
+    const m = /^(\d{4})-(\d{2})$/.exec(String(ym || ''));
+    if (!m) return '';
+    return `${MONTHS_PT[Number(m[2]) - 1]} de ${m[1]}`;
+};
+
+/** Chip de status (Concluído / Em andamento / Não iniciado). */
+function StatusChip({ status }) {
+    const meta = statusMeta(status);
+    return (
+        <span
+            className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+            style={{ background: meta.chipBg, color: meta.chipText }}
+        >
+            {status === 'concluido' && <CheckCircleFilled />}
+            {meta.label}
+        </span>
+    );
+}
+
+/** Card de uma etapa (número, título, status, prazo). Clicável quando editável. */
+function StageCard({ index, stage, canEdit, onEdit }) {
+    const done = stage.status === 'concluido';
+    const active = stage.status === 'andamento';
+    const bg = done ? '#210856' : active ? '#f4effd' : '#f1f2f6';
+    const numColor = done ? '#fff' : '#210856';
+    const titleColor = done ? '#fff' : '#210856';
+    const period =
+        stage.startQuarter || stage.endQuarter
+            ? [stage.startQuarter, stage.endQuarter].filter(Boolean).map(quarterLabel).join(' → ')
+            : null;
+
+    return (
+        <button
+            type="button"
+            onClick={canEdit ? () => onEdit(index) : undefined}
+            className={`text-left rounded-2xl p-4 h-full w-full border-0 transition-shadow ${canEdit ? 'cursor-pointer hover:shadow-md' : 'cursor-default'}`}
+            style={{ background: bg }}
+        >
+            <div className="flex items-start justify-between">
+                <span className="text-2xl font-bold" style={{ color: numColor }}>
+                    {String(index + 1).padStart(2, '0')}
+                </span>
+                {canEdit && <EditOutlined style={{ color: done ? '#c9bdf0' : '#9385c4' }} />}
+            </div>
+            <div className="mt-2 font-semibold leading-snug" style={{ color: titleColor }}>
+                {stage.title}
+            </div>
+            <div className="mt-2 flex flex-col gap-1">
+                <StatusChip status={stage.status} />
+                {stage.note && (
+                    <span className="text-[11px]" style={{ color: done ? '#d7cef2' : '#7c6bb0' }}>
+                        {stage.note}
+                    </span>
+                )}
+                {period && (
+                    <span className="text-[11px] flex items-center gap-1" style={{ color: done ? '#c9bdf0' : '#8a7bbf' }}>
+                        <CalendarOutlined /> {period}
+                    </span>
+                )}
+            </div>
+        </button>
+    );
+}
+
+export default function PlanTrackingPage() {
+    const isAdmin = useAuthStore((s) => s.role === 'admin');
+    const canEditFlag = useAuthStore((s) => Boolean(s.profile?.can_edit_plan));
+    const selectedCompany = useAuthStore((s) => s.user?.selectedCompany);
+    const companyId = selectedCompany?.id || null;
+    const canEdit = isAdmin || canEditFlag;
+
+    const [plan, setPlan] = useState(emptyPlan());
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [dirty, setDirty] = useState(false);
+    const [editingIdx, setEditingIdx] = useState(null); // índice da etapa em edição
+    const [form] = Form.useForm();
+
+    useEffect(() => {
+        let cancelled = false;
+        if (!companyId) {
+            setLoading(false);
+            return undefined;
+        }
+        setLoading(true);
+        (async () => {
+            try {
+                const [p, u] = await Promise.all([getPlan(companyId), listCompanyUsers(companyId)]);
+                if (cancelled) return;
+                setPlan(p);
+                setUsers(u);
+                setDirty(false);
+            } catch (e) {
+                if (!cancelled) message.error(e.message);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [companyId]);
+
+    const progress = useMemo(() => {
+        const total = plan.stages.length || 1;
+        const done = plan.stages.filter((s) => s.status === 'concluido').length;
+        return { done, total, pct: Math.round((done / total) * 100) };
+    }, [plan]);
+
+    const mutate = (next) => {
+        setPlan(next);
+        setDirty(true);
+    };
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await savePlan(companyId, plan);
+            setDirty(false);
+            message.success('Acompanhamento salvo.');
+        } catch (e) {
+            message.error(e.message);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const openEdit = (idx) => {
+        const s = plan.stages[idx];
+        form.setFieldsValue({
+            title: s.title,
+            status: s.status,
+            note: s.note,
+            startQuarter: s.startQuarter || undefined,
+            endQuarter: s.endQuarter || undefined,
+        });
+        setEditingIdx(idx);
+    };
+
+    const applyEdit = async () => {
+        const v = await form.validateFields();
+        const stages = plan.stages.map((s, i) =>
+            i === editingIdx
+                ? {
+                      ...s,
+                      title: v.title.trim(),
+                      status: v.status,
+                      note: (v.note || '').trim(),
+                      startQuarter: v.startQuarter || null,
+                      endQuarter: v.endQuarter || null,
+                  }
+                : s
+        );
+        mutate({ ...plan, stages });
+        setEditingIdx(null);
+    };
+
+    const removeStage = () => {
+        const stages = plan.stages.filter((_, i) => i !== editingIdx);
+        mutate({ ...plan, stages });
+        setEditingIdx(null);
+    };
+
+    const addStage = () => {
+        const stages = [
+            ...plan.stages,
+            { id: `etapa-${Date.now()}`, title: 'Nova etapa', status: 'nao_iniciado', note: '', startQuarter: null, endQuarter: null },
+        ];
+        mutate({ ...plan, stages });
+        openEdit(stages.length - 1);
+    };
+
+    const setKickoff = (d) => mutate({ ...plan, kickoff: d ? d.format('YYYY-MM') : null });
+
+    if (!companyId) {
+        return (
+            <div className="max-w-2xl">
+                <Alert
+                    type="info"
+                    showIcon
+                    message="Selecione uma empresa"
+                    description={
+                        isAdmin
+                            ? 'Escolha uma empresa no seletor do topo (ou em Administração → Empresas) para ver o acompanhamento do plano.'
+                            : 'Seu usuário ainda não está vinculado a uma empresa. Fale com o administrador.'
+                    }
+                />
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div className="flex justify-center py-20">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
+    const editing = editingIdx != null ? plan.stages[editingIdx] : null;
+
+    return (
+        <div className="w-full">
+            {/* Cabeçalho */}
+            <div className="flex flex-wrap items-start justify-between gap-3 mb-1">
+                <div>
+                    <Title level={3} className="!mb-0 climoo-heading !text-[#210856]">
+                        {selectedCompany.company}
+                    </Title>
+                    <Text type="secondary">
+                        Plano de Descarbonização · CNPJ {formatCnpj(selectedCompany.cnpj)}
+                        {plan.kickoff && ` · início em ${kickoffLabel(plan.kickoff)}`}
+                    </Text>
+                </div>
+                <div className="flex items-center gap-2">
+                    {canEdit && (
+                        <DatePicker
+                            picker="month"
+                            allowClear
+                            placeholder="Mês de início"
+                            value={plan.kickoff ? dayjs(`${plan.kickoff}-01`) : null}
+                            onChange={setKickoff}
+                            suffixIcon={<CalendarOutlined />}
+                        />
+                    )}
+                    {canEdit && (
+                        <Button
+                            type="primary"
+                            icon={<SaveOutlined />}
+                            loading={saving}
+                            disabled={!dirty}
+                            onClick={handleSave}
+                        >
+                            {dirty ? 'Salvar alterações' : 'Salvo'}
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            {!canEdit && (
+                <Alert
+                    className="mb-4 mt-2"
+                    type="info"
+                    showIcon
+                    message="Você está visualizando o acompanhamento (somente leitura). Para editar, peça permissão ao administrador."
+                />
+            )}
+
+            {/* Resumo de progresso */}
+            <Card className="my-4">
+                <div className="flex flex-wrap items-center gap-6">
+                    <Progress type="circle" percent={progress.pct} size={92} strokeColor="#0E7C66" />
+                    <div>
+                        <Text strong style={{ fontSize: 16 }} className="text-[#210856]">
+                            {progress.done} de {progress.total} etapas concluídas
+                        </Text>
+                        <Paragraph type="secondary" className="!mb-0">
+                            Etapas do método Climoo — do diagnóstico do inventário à submissão SBTi.
+                        </Paragraph>
+                        <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
+                            <Link to="/inventory" className="text-[#341472] hover:text-[#9354e0]">Abrir Inventário →</Link>
+                            <Link to="/targets" className="text-[#341472] hover:text-[#9354e0]">Metas →</Link>
+                            <Link to="/bau" className="text-[#341472] hover:text-[#9354e0]">Projeção BAU →</Link>
+                            <Link to="/scenarios" className="text-[#341472] hover:text-[#9354e0]">Cenários →</Link>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+
+            {/* Etapas */}
+            <div className="flex items-center justify-between mb-2">
+                <Text strong className="text-[#210856]" style={{ fontSize: 15 }}>
+                    Etapas do plano
+                </Text>
+                {canEdit && (
+                    <Button size="small" icon={<PlusOutlined />} onClick={addStage}>
+                        Adicionar etapa
+                    </Button>
+                )}
+            </div>
+            <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                {plan.stages.map((s, i) => (
+                    <StageCard key={s.id} index={i} stage={s} canEdit={canEdit} onEdit={openEdit} />
+                ))}
+            </div>
+
+            {/* Cronograma */}
+            <Card
+                className="mt-6"
+                title={<span className="text-[#210856] font-semibold">Cronograma de implementação</span>}
+            >
+                <PlanGantt stages={plan.stages} />
+                {canEdit && (
+                    <Text type="secondary" className="text-xs">
+                        Defina os trimestres de cada etapa clicando no card correspondente.
+                    </Text>
+                )}
+            </Card>
+
+            {/* Usuários da empresa */}
+            <Card
+                className="mt-6"
+                title={
+                    <span className="text-[#210856] font-semibold flex items-center gap-2">
+                        <TeamOutlined /> Usuários da empresa
+                    </span>
+                }
+                extra={
+                    isAdmin && (
+                        <Link to="/admin" className="text-[#341472] hover:text-[#9354e0] text-sm">
+                            Gerenciar em Administração →
+                        </Link>
+                    )
+                }
+            >
+                {users.length ? (
+                    <div className="flex flex-col divide-y divide-gray-100">
+                        {users.map((u) => (
+                            <div key={u.id} className="flex items-center gap-3 py-2">
+                                <Avatar style={{ background: '#210856' }} icon={<UserOutlined />} />
+                                <div className="flex-1">
+                                    <div className="text-sm text-gray-800">{u.name || u.email}</div>
+                                    <div className="text-xs text-gray-400">{u.email}</div>
+                                </div>
+                                {u.role === 'admin' && <Tag color="#210856">admin</Tag>}
+                                {u.role !== 'admin' && u.can_edit_plan && <Tag color="purple">edita o plano</Tag>}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Nenhum usuário vinculado a esta empresa." />
+                )}
+            </Card>
+
+            {/* Modal de edição de etapa */}
+            <Modal
+                title={editing ? `Etapa — ${editing.title}` : 'Etapa'}
+                open={editingIdx != null}
+                onOk={applyEdit}
+                onCancel={() => setEditingIdx(null)}
+                okText="Aplicar"
+                footer={[
+                    plan.stages.length > 1 && (
+                        <Button key="del" danger icon={<DeleteOutlined />} onClick={removeStage} className="!float-left">
+                            Remover etapa
+                        </Button>
+                    ),
+                    <Button key="cancel" onClick={() => setEditingIdx(null)}>
+                        Cancelar
+                    </Button>,
+                    <Button key="ok" type="primary" onClick={applyEdit}>
+                        Aplicar
+                    </Button>,
+                ]}
+                destroyOnClose
+            >
+                <Form form={form} layout="vertical" requiredMark={false} className="mt-2">
+                    <Form.Item name="title" label="Nome da etapa" rules={[{ required: true, message: 'Informe o nome.' }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+                        <Select options={STATUS_OPTIONS} />
+                    </Form.Item>
+                    <Form.Item name="note" label="Observação (opcional)" extra="Ex.: “Ainda em 2026”, responsável, marco.">
+                        <Input placeholder="Nota curta exibida no card e na barra do cronograma" />
+                    </Form.Item>
+                    <div className="flex gap-3">
+                        <Form.Item name="startQuarter" label="Trimestre inicial" className="flex-1">
+                            <Select allowClear placeholder="—" options={QUARTER_OPTIONS} />
+                        </Form.Item>
+                        <Form.Item name="endQuarter" label="Trimestre final" className="flex-1">
+                            <Select allowClear placeholder="—" options={QUARTER_OPTIONS} />
+                        </Form.Item>
+                    </div>
+                </Form>
+            </Modal>
+        </div>
+    );
+}

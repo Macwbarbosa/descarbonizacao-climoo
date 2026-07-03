@@ -41,11 +41,27 @@ serverless `/api/admin/users` com a `SUPABASE_SERVICE_ROLE_KEY` (Vercel em
 produção; no `npm run dev`, o mesmo handler roda como middleware do Vite). A
 API valida o token da sessão e só aceita chamadas de perfil `admin`.
 
+### Ambiente da empresa (acompanhamento do plano)
+
+Cada empresa tem um **ambiente de acompanhamento** (rota `/plano`, item
+"Acompanhamento" no menu) com as 8 etapas do método Climoo (status + prazos),
+um **cronograma** por trimestre (estilo Gantt) e a lista de usuários da empresa:
+
+- O **usuário da empresa** cai nesse painel ao entrar e navega para a
+  ferramenta (Inventário, Cenários…) a partir dele.
+- O **admin** abre o ambiente de qualquer empresa clicando nela em
+  Administração → Empresas.
+- Editar o acompanhamento (status, datas, cronograma) é permitido ao admin e
+  aos usuários com o interruptor **"Pode editar o acompanhamento do plano"**
+  ligado no cadastro; os demais visualizam em leitura. Isso é garantido no
+  banco pela RLS de `company_plans` (coluna `can_edit_plan` em `profiles`).
+
 ### Configuração (uma vez)
 
 1. Rode `supabase/schema.sql` no SQL Editor do Supabase (idempotente; cria
-   `companies`, `profiles`, trigger e as policies RLS, e migra CNPJs já salvos
-   para a tabela de empresas).
+   `companies`, `profiles`, `company_plans`, trigger e as policies RLS, e migra
+   CNPJs já salvos para a tabela de empresas). **Rode de novo** sempre que o
+   schema mudar — ele adiciona colunas/tabelas novas sem apagar dados.
 2. No Supabase, em **Authentication → Users → Add user**, crie
    `mac@climoo.com.br` com a sua senha (marque *Auto Confirm User*) — o perfil
    nasce como admin.

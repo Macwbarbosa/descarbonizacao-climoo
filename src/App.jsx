@@ -20,6 +20,7 @@ import {
   ExclamationCircleOutlined,
   HistoryOutlined,
   SettingOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons';
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
@@ -27,6 +28,7 @@ import LoginPage from '@/features/auth/LoginPage';
 import RecoveryPage from '@/RecoveryPage';
 import AuditLogPage from '@/features/auth/AuditLogPage';
 import AdminPage from '@/features/admin/AdminPage';
+import PlanTrackingPage from '@/features/plan/PlanTrackingPage';
 import { listCompanies, createCompany } from '@/features/admin/companiesAPI';
 import useCompanyPersistence from '@/features/decarbonization/shared/useCompanyPersistence';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
@@ -48,6 +50,7 @@ const { Sider, Header, Content } = Layout;
 const { Text } = Typography;
 
 const NAV = [
+  { key: '/plano', label: 'Acompanhamento', icon: <ScheduleOutlined />, element: <PlanTrackingPage /> },
   { key: '/inventory', label: 'Inventário', icon: <DatabaseOutlined />, element: <InventoryPage /> },
   { key: '/targets', label: 'Metas & Período', icon: <FlagOutlined />, element: <TargetsTimeframePage /> },
   { key: '/drivers', label: 'Variáveis de Crescimento', icon: <RiseOutlined />, element: <DriversPage /> },
@@ -83,7 +86,7 @@ function CompanyPicker() {
       setCompanies(list);
       // seleciona a primeira empresa se nenhuma estiver ativa
       if (!useAuthStore.getState().user?.selectedCompany && list[0]) {
-        setSelectedCompany({ cnpj: list[0].cnpj, company: list[0].name });
+        setSelectedCompany({ id: list[0].id, cnpj: list[0].cnpj, company: list[0].name });
       }
     } catch (e) {
       // banco indisponível — segue com a empresa já selecionada
@@ -98,7 +101,7 @@ function CompanyPicker() {
   }, [isAdmin]);
 
   const options = useMemo(() => {
-    const merged = companies.map((c) => ({ cnpj: c.cnpj, company: c.name }));
+    const merged = companies.map((c) => ({ id: c.id, cnpj: c.cnpj, company: c.name }));
     const active = selectedCompany;
     if (active?.cnpj && !merged.some((c) => c.cnpj === active.cnpj)) merged.unshift(active);
     return merged.map((c) => ({
@@ -127,7 +130,7 @@ function CompanyPicker() {
     try {
       const created = await createCompany({ name: values.company, cnpj: values.cnpj });
       setCompanies((prev) => [...prev, created]);
-      setSelectedCompany({ cnpj: created.cnpj, company: created.name });
+      setSelectedCompany({ id: created.id, cnpj: created.cnpj, company: created.name });
       setAddOpen(false);
       form.resetFields();
       message.success(`Empresa "${created.name}" criada e ativa. Cadastre os usuários dela em Administração.`);
@@ -300,6 +303,9 @@ export default function App() {
   // Usuário comum sem empresa vinculada: nada a mostrar além do aviso.
   if (!isAdmin && !hasCompany) return <NoCompanyScreen />;
 
+  // Tela inicial: cliente cai no acompanhamento do plano; admin, no inventário.
+  const home = isAdmin ? '/inventory' : '/plano';
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -366,7 +372,7 @@ export default function App() {
 
         <Content style={{ padding: 24 }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/inventory" replace />} />
+            <Route path="/" element={<Navigate to={home} replace />} />
             {NAV.map((n) => (
               <Route key={n.key} path={n.key} element={n.element} />
             ))}
@@ -380,7 +386,7 @@ export default function App() {
               path="/historico"
               element={isAdmin ? <AuditLogPage /> : <Navigate to="/inventory" replace />}
             />
-            <Route path="*" element={<Navigate to="/inventory" replace />} />
+            <Route path="*" element={<Navigate to={home} replace />} />
           </Routes>
         </Content>
       </Layout>

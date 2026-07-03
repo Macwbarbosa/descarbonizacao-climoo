@@ -20,7 +20,7 @@ import { supabase, hasSupabase } from '@/lib/supabaseClient';
  * `token` e `clearAuth` existem para satisfazer `apiClientV2` (interceptors).
  */
 
-const PROFILE_SELECT = 'id, email, name, role, company:companies(id, name, cnpj)';
+const PROFILE_SELECT = 'id, email, name, role, can_edit_plan, company:companies(id, name, cnpj)';
 
 const fetchProfile = async (userId) => {
     const { data, error } = await supabase
@@ -58,7 +58,7 @@ export const useAuthStore = create(
                 }
                 const role = profile?.role || 'user';
                 const company = profile?.company
-                    ? { cnpj: profile.company.cnpj, company: profile.company.name }
+                    ? { id: profile.company.id, cnpj: profile.company.cnpj, company: profile.company.name }
                     : null;
                 set((state) => ({
                     authEmail: (profile?.email || session.user.email || '').toLowerCase(),

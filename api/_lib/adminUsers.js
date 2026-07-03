@@ -74,7 +74,7 @@ export async function handleAdminUsers(req, res, env = process.env) {
         if (req.method === 'GET') {
             const { data, error } = await svc
                 .from('profiles')
-                .select('id, email, name, role, created_at, company:companies(id, name, cnpj)')
+                .select('id, email, name, role, can_edit_plan, created_at, company:companies(id, name, cnpj)')
                 .order('created_at', { ascending: true });
             if (error) return json(res, 500, { error: error.message });
             return json(res, 200, { users: data || [] });
@@ -87,6 +87,7 @@ export async function handleAdminUsers(req, res, env = process.env) {
             const password = String(body.password || '');
             const name = String(body.name || '').trim() || null;
             const companyId = body.companyId || null;
+            const canEditPlan = Boolean(body.canEditPlan);
 
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(res, 400, { error: 'E-mail inválido.' });
             if (password.length < 8) return json(res, 400, { error: 'A senha deve ter pelo menos 8 caracteres.' });
@@ -107,7 +108,10 @@ export async function handleAdminUsers(req, res, env = process.env) {
             // O trigger handle_new_user já criou o perfil; completa nome/empresa.
             const { error: profErr } = await svc
                 .from('profiles')
-                .upsert({ id: created.user.id, email, name, company_id: companyId }, { onConflict: 'id' });
+                .upsert(
+                    { id: created.user.id, email, name, company_id: companyId, can_edit_plan: canEditPlan },
+                    { onConflict: 'id' }
+                );
             if (profErr) return json(res, 500, { error: `Usuário criado, mas falhou ao gravar o perfil: ${profErr.message}` });
 
             return json(res, 200, { ok: true, id: created.user.id });
@@ -129,6 +133,7 @@ export async function handleAdminUsers(req, res, env = process.env) {
             const patch = {};
             if (body.name !== undefined) patch.name = String(body.name || '').trim() || null;
             if (body.companyId !== undefined) patch.company_id = body.companyId || null;
+            if (body.canEditPlan !== undefined) patch.can_edit_plan = Boolean(body.canEditPlan);
             if (Object.keys(patch).length) {
                 const { error } = await svc.from('profiles').update(patch).eq('id', id);
                 if (error) return json(res, 400, { error: `Falha ao atualizar o perfil: ${error.message}` });

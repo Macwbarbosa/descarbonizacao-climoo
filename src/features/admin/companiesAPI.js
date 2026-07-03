@@ -9,6 +9,22 @@ const NOT_CONFIGURED = 'Banco não configurado (VITE_SUPABASE_URL / VITE_SUPABAS
 
 export const onlyDigits = (raw) => String(raw || '').replace(/\D/g, '');
 
+/**
+ * Lista os usuários vinculados a uma empresa. Funciona tanto para o admin
+ * quanto para membros da própria empresa (a RLS de `profiles` libera colegas
+ * da mesma empresa). Retorna [] em caso de falha.
+ */
+export const listCompanyUsers = async (companyId) => {
+    if (!hasSupabase || !companyId) return [];
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, name, role, can_edit_plan')
+        .eq('company_id', companyId)
+        .order('name', { ascending: true });
+    if (error) return [];
+    return data || [];
+};
+
 /** Lista todas as empresas visíveis ao usuário (admin vê todas). */
 export const listCompanies = async () => {
     if (!hasSupabase) throw new Error(NOT_CONFIGURED);
@@ -63,4 +79,4 @@ export const deleteCompany = async (id) => {
     return true;
 };
 
-export default { listCompanies, createCompany, updateCompany, deleteCompany, onlyDigits };
+export default { listCompanies, listCompanyUsers, createCompany, updateCompany, deleteCompany, onlyDigits };
