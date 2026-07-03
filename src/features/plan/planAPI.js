@@ -7,12 +7,12 @@
  *   {
  *     kickoff: '2026-07',                       // mês de início (YYYY-MM) ou null
  *     stages: [
- *       { id, title, status, note, startMonth, endMonth,
+ *       { id, title, status, note, startDate, endDate,
  *         tasks: [{ id, title, done }] }
  *     ]
  *   }
  *   status ∈ 'nao_iniciado' | 'andamento' | 'concluido'
- *   startMonth/endMonth: 'YYYY-MM' (ex.: '2026-07') ou null
+ *   startDate/endDate: 'YYYY-MM-DD' (ex.: '2026-07-15') ou null
  *
  * Quando a etapa TEM tarefas, o status é DERIVADO delas (todas marcadas =
  * concluído; alguma marcada = em andamento; nenhuma = não iniciado).
@@ -45,7 +45,7 @@ export const DEFAULT_STAGES = [
     { id: 'cenarios', title: 'Construção dos cenários' },
     { id: 'validacao', title: 'Validação com a diretoria' },
     { id: 'submissao', title: 'Submissão e validação SBTi' },
-].map((s) => ({ ...s, status: 'nao_iniciado', note: '', startMonth: null, endMonth: null, tasks: [] }));
+].map((s) => ({ ...s, status: 'nao_iniciado', note: '', startDate: null, endDate: null, tasks: [] }));
 
 /** Plano vazio (com as etapas padrão) para uma empresa recém-criada. */
 export const emptyPlan = () => ({ kickoff: null, stages: DEFAULT_STAGES.map((s) => ({ ...s, tasks: [] })) });
@@ -57,23 +57,27 @@ const normalizeTasks = (tasks) =>
         done: !!t.done,
     }));
 
-/** Normaliza o plano lido do banco (migra trimestres antigos e deriva status). */
+/** Mês 'YYYY-MM' → data 'YYYY-MM-01' (migração de dados antigos). */
+const monthToDate = (m) => (m ? `${m}-01` : null);
+
+/** Normaliza o plano lido do banco (migra meses/trimestres antigos e deriva status). */
 const normalize = (plan) => {
     if (!plan || !Array.isArray(plan.stages) || plan.stages.length === 0) return emptyPlan();
     return {
         kickoff: plan.kickoff || null,
         stages: plan.stages.map((s, i) => {
             const tasks = normalizeTasks(s.tasks);
-            const startMonth = s.startMonth || quarterToStartMonth(s.startQuarter) || null;
-            const endMonth = s.endMonth || quarterToEndMonth(s.endQuarter) || null;
+            const startDate =
+                s.startDate || monthToDate(s.startMonth) || monthToDate(quarterToStartMonth(s.startQuarter));
+            const endDate = s.endDate || monthToDate(s.endMonth) || monthToDate(quarterToEndMonth(s.endQuarter));
             const manual = ['nao_iniciado', 'andamento', 'concluido'].includes(s.status) ? s.status : 'nao_iniciado';
             return {
                 id: s.id || `etapa-${i + 1}`,
                 title: s.title || `Etapa ${i + 1}`,
                 status: deriveStatus(tasks) || manual,
                 note: s.note || '',
-                startMonth,
-                endMonth,
+                startDate: startDate || null,
+                endDate: endDate || null,
                 tasks,
             };
         }),

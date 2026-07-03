@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Empty } from 'antd';
-import { spanMonths, monthIndex, parseMonth, monthShort } from '../months';
+import { spanMonths, monthIndex, parseMonth, monthShort, dateToMonth } from '../months';
 import { statusMeta } from '../status';
 import { effectiveStatus } from '../planAPI';
 
@@ -66,8 +66,8 @@ export default function PlanGantt({ stages }) {
 
                 {/* Linhas: etapas */}
                 {stages.map((s, i) => {
-                    const a = monthIndex(s.startMonth);
-                    const b = monthIndex(s.endMonth);
+                    const a = monthIndex(dateToMonth(s.startDate));
+                    const b = monthIndex(dateToMonth(s.endDate));
                     const meta = statusMeta(effectiveStatus(s));
                     const colStart = a != null ? a - base + 2 : null;
                     const colEnd = b != null ? b - base + 3 : colStart != null ? colStart + 1 : null;

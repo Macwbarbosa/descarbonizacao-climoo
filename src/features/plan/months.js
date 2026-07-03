@@ -34,6 +34,12 @@ export const monthLabel = (s) => {
 
 export const monthYear = (s) => parseMonth(s)?.year ?? null;
 
+/** Data 'YYYY-MM-DD' → mês 'YYYY-MM' (para posicionar no cronograma). */
+export const dateToMonth = (d) => {
+    const m = /^(\d{4})-(\d{2})/.exec(String(d || ''));
+    return m ? `${m[1]}-${m[2]}` : null;
+};
+
 /** Lista de meses (inclusiva) entre dois 'YYYY-MM'. */
 export const monthRange = (from, to) => {
     const a = monthIndex(from);
@@ -51,8 +57,8 @@ export const monthRange = (from, to) => {
 export const spanMonths = (stages) => {
     const idxs = [];
     (stages || []).forEach((s) => {
-        const a = monthIndex(s.startMonth);
-        const b = monthIndex(s.endMonth);
+        const a = monthIndex(dateToMonth(s.startDate));
+        const b = monthIndex(dateToMonth(s.endDate));
         if (a != null) idxs.push(a);
         if (b != null) idxs.push(b);
     });
