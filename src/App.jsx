@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, Tooltip, message } from 'antd';
+import { Layout, Menu, Select, Typography, Button, Modal, Input, Form, Dropdown, Avatar, Tooltip, Spin, message } from 'antd';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   DatabaseOutlined,
@@ -19,16 +19,17 @@ import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   HistoryOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
 import LoginPage from '@/features/auth/LoginPage';
 import RecoveryPage from '@/RecoveryPage';
 import AuditLogPage from '@/features/auth/AuditLogPage';
+import AdminPage from '@/features/admin/AdminPage';
+import { listCompanies, createCompany } from '@/features/admin/companiesAPI';
 import useCompanyPersistence from '@/features/decarbonization/shared/useCompanyPersistence';
-import { ADMIN_EMAIL } from '@/features/decarbonization/shared/decarbonizationAudit';
 import { formatCnpj } from '@/features/decarbonization/shared/decarbonizationStorage';
-import { listCompanyFiles, readCompanyFile } from '@/features/decarbonization/shared/decarbonizationFile';
 
 import {
   InventoryPage,
@@ -57,33 +58,35 @@ const NAV = [
   { key: '/initiatives-management', label: 'Gestão de Iniciativas', icon: <AppstoreOutlined />, element: <InitiativesManagementPage /> },
 ];
 
-/** Seletor de empresa — lista os CNPJs com arquivo salvo em decarbonization-data/. */
+/**
+ * Seletor de empresa.
+ *  - Admin: escolhe entre TODAS as empresas cadastradas (tabela `companies`) e
+ *    pode criar novas — o cadastro completo fica no painel /admin.
+ *  - Usuário comum: fica travado na empresa do próprio perfil (só exibição);
+ *    a RLS do Supabase garante o isolamento também no servidor.
+ */
 function CompanyPicker() {
+  const isAdmin = useAuthStore((s) => s.role === 'admin');
   const selectedCompany = useAuthStore((s) => s.user?.selectedCompany);
   const setSelectedCompany = useAuthStore((s) => s.setSelectedCompany);
 
-  const [companies, setCompanies] = useState([]); // [{ cnpj, company }]
+  const [companies, setCompanies] = useState([]); // [{ id, cnpj, name }]
   const [loading, setLoading] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [form] = Form.useForm();
 
   const loadCompanies = async () => {
+    if (!isAdmin) return;
     setLoading(true);
     try {
-      const cnpjs = await listCompanyFiles();
-      const list = await Promise.all(
-        cnpjs.map(async (cnpj) => {
-          const data = await readCompanyFile(cnpj).catch(() => null);
-          return { cnpj, company: data?.empresa || data?.companyName || formatCnpj(cnpj) };
-        })
-      );
+      const list = await listCompanies();
       setCompanies(list);
       // seleciona a primeira empresa se nenhuma estiver ativa
       if (!useAuthStore.getState().user?.selectedCompany && list[0]) {
-        setSelectedCompany(list[0]);
+        setSelectedCompany({ cnpj: list[0].cnpj, company: list[0].name });
       }
     } catch (e) {
-      // dev middleware indisponível (ex.: build/preview) — segue só com o que houver
+      // banco indisponível — segue com a empresa já selecionada
     } finally {
       setLoading(false);
     }
@@ -92,10 +95,10 @@ function CompanyPicker() {
   useEffect(() => {
     loadCompanies();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAdmin]);
 
   const options = useMemo(() => {
-    const merged = [...companies];
+    const merged = companies.map((c) => ({ cnpj: c.cnpj, company: c.name }));
     const active = selectedCompany;
     if (active?.cnpj && !merged.some((c) => c.cnpj === active.cnpj)) merged.unshift(active);
     return merged.map((c) => ({
@@ -105,19 +108,32 @@ function CompanyPicker() {
     }));
   }, [companies, selectedCompany]);
 
+  // Usuário comum: empresa fixa, sem seletor.
+  if (!isAdmin) {
+    if (!selectedCompany?.cnpj) return null;
+    return (
+      <div className="flex items-center gap-2">
+        <BankOutlined className="text-[#210856]" />
+        <span className="text-sm text-gray-700">
+          {selectedCompany.company}{' '}
+          <span className="text-gray-400 text-xs">{formatCnpj(selectedCompany.cnpj)}</span>
+        </span>
+      </div>
+    );
+  }
+
   const handleAdd = async () => {
     const values = await form.validateFields();
-    const cnpj = String(values.cnpj || '').replace(/\D/g, '');
-    if (cnpj.length !== 14) {
-      message.error('CNPJ deve ter 14 dígitos.');
-      return;
+    try {
+      const created = await createCompany({ name: values.company, cnpj: values.cnpj });
+      setCompanies((prev) => [...prev, created]);
+      setSelectedCompany({ cnpj: created.cnpj, company: created.name });
+      setAddOpen(false);
+      form.resetFields();
+      message.success(`Empresa "${created.name}" criada e ativa. Cadastre os usuários dela em Administração.`);
+    } catch (e) {
+      message.error(e.message);
     }
-    const company = { cnpj, company: values.company || formatCnpj(cnpj) };
-    setCompanies((prev) => (prev.some((c) => c.cnpj === cnpj) ? prev : [...prev, company]));
-    setSelectedCompany(company);
-    setAddOpen(false);
-    form.resetFields();
-    message.success(`Empresa ativa: ${company.company}. Vá em "Salvar no projeto" para gravar o JSON.`);
   };
 
   return (
@@ -142,7 +158,7 @@ function CompanyPicker() {
         open={addOpen}
         onOk={handleAdd}
         onCancel={() => setAddOpen(false)}
-        okText="Selecionar"
+        okText="Criar e selecionar"
       >
         <Form form={form} layout="vertical">
           <Form.Item name="company" label="Nome da empresa" rules={[{ required: true }]}>
@@ -188,17 +204,30 @@ function AutoSaveIndicator({ status, enabled }) {
   return null;
 }
 
-/** Menu do usuário logado: mostra o e-mail e permite sair. */
-function UserMenu({ onOpenAudit }) {
+/** Menu do usuário logado: mostra o e-mail e permite sair; admin acessa a administração. */
+function UserMenu({ onOpenAudit, onOpenAdmin }) {
   const authEmail = useAuthStore((s) => s.authEmail);
+  const profileName = useAuthStore((s) => s.profile?.name);
   const logout = useAuthStore((s) => s.logout);
-  const isAdmin = authEmail === ADMIN_EMAIL;
+  const isAdmin = useAuthStore((s) => s.role === 'admin');
 
   const items = [
-    { key: 'email', label: <span className="text-xs text-gray-500">{authEmail}</span>, disabled: true },
+    {
+      key: 'email',
+      label: (
+        <span className="text-xs text-gray-500">
+          {profileName ? `${profileName} · ` : ''}
+          {authEmail}
+        </span>
+      ),
+      disabled: true,
+    },
     { type: 'divider' },
     ...(isAdmin
-      ? [{ key: 'audit', icon: <HistoryOutlined />, label: 'Histórico de alterações', onClick: onOpenAudit }]
+      ? [
+          { key: 'admin', icon: <SettingOutlined />, label: 'Administração', onClick: onOpenAdmin },
+          { key: 'audit', icon: <HistoryOutlined />, label: 'Histórico de alterações', onClick: onOpenAudit },
+        ]
       : []),
     { key: 'logout', icon: <LogoutOutlined />, label: 'Sair', onClick: logout },
   ];
@@ -213,12 +242,35 @@ function UserMenu({ onOpenAudit }) {
   );
 }
 
+/** Tela para usuário autenticado mas ainda sem empresa vinculada. */
+function NoCompanyScreen() {
+  const authEmail = useAuthStore((s) => s.authEmail);
+  const logout = useAuthStore((s) => s.logout);
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ background: '#f4f3fb' }}>
+      <img src="/climoo-logo.png" alt="Climoo" className="h-8 w-auto mb-2" />
+      <Text strong className="text-[#210856]" style={{ fontSize: 16 }}>
+        Seu usuário ainda não está vinculado a uma empresa
+      </Text>
+      <Text type="secondary">
+        Peça ao administrador (mac@climoo.com.br) para vincular {authEmail} a uma empresa.
+      </Text>
+      <Button className="mt-2" icon={<LogoutOutlined />} onClick={logout}>
+        Sair
+      </Button>
+    </div>
+  );
+}
+
 export default function App() {
   const location = useLocation();
   const selectedKey = NAV.find((n) => location.pathname.startsWith(n.key))?.key || '/inventory';
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const authEmail = useAuthStore((s) => s.authEmail);
+  const ready = useAuthStore((s) => s.ready);
+  const isAdmin = useAuthStore((s) => s.role === 'admin');
+  const hasCompany = useAuthStore((s) => Boolean(s.user?.selectedCompany?.cnpj));
   // Rota de recuperação: página isolada que NÃO carrega/salva nada (evita
   // sobrescrever os dados do navegador). Detectada pela URL /recuperar.
   const recovery = typeof window !== 'undefined' && window.location.pathname.startsWith('/recuperar');
@@ -226,10 +278,27 @@ export default function App() {
   // Em modo recuperação, o hook fica desligado (skipLoad).
   const persistence = useCompanyPersistence(recovery);
 
+  // Restaura a sessão do Supabase Auth (uma vez).
+  useEffect(() => {
+    useAuthStore.getState().init();
+  }, []);
+
   if (recovery) return <RecoveryPage />;
+
+  // Aguarda a restauração da sessão (evita "piscar" a tela de login).
+  if (!ready) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f4f3fb' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   // Gate de acesso: sem login, mostra a tela de login.
   if (!authEmail) return <LoginPage />;
+
+  // Usuário comum sem empresa vinculada: nada a mostrar além do aviso.
+  if (!isAdmin && !hasCompany) return <NoCompanyScreen />;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -290,7 +359,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <AutoSaveIndicator status={persistence.status} enabled={persistence.enabled} />
             <CompanyPicker />
-            <UserMenu onOpenAudit={() => navigate('/historico')} />
+            <UserMenu onOpenAudit={() => navigate('/historico')} onOpenAdmin={() => navigate('/admin')} />
           </div>
         </Header>
         <div className="climoo-accent-bar" />
@@ -304,8 +373,12 @@ export default function App() {
             <Route path="/drivers/:id" element={<DriverDetailPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
             <Route
+              path="/admin"
+              element={isAdmin ? <AdminPage /> : <Navigate to="/inventory" replace />}
+            />
+            <Route
               path="/historico"
-              element={authEmail === ADMIN_EMAIL ? <AuditLogPage /> : <Navigate to="/inventory" replace />}
+              element={isAdmin ? <AuditLogPage /> : <Navigate to="/inventory" replace />}
             />
             <Route path="*" element={<Navigate to="/inventory" replace />} />
           </Routes>

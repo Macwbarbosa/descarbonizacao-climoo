@@ -4,21 +4,22 @@ import { MailOutlined, LockOutlined, LoginOutlined, GlobalOutlined } from '@ant-
 import { useAuthStore } from './shared/store/authStore';
 
 /**
- * Página de login (gate de acesso "fake", client-side). Layout de duas colunas:
- * formulário à esquerda e painel/hero à direita. Valida e-mail/senha contra a
- * lista autorizada em `shared/credentials.js` — sem segurança real.
+ * Página de login — autenticação real via Supabase Auth (e-mail + senha).
+ * Layout de duas colunas: formulário à esquerda e painel/hero à direita.
+ * Usuários são cadastrados pelo administrador no painel /admin; cada um cai
+ * automaticamente na empresa à qual foi vinculado.
  */
 function LoginPage() {
     const login = useAuthStore((s) => s.login);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const onFinish = ({ email, password }) => {
+    const onFinish = async ({ email, password }) => {
         setLoading(true);
         setError(null);
-        const ok = login(email, password);
-        if (!ok) {
-            setError('E-mail ou senha inválidos.');
+        const result = await login(email, password);
+        if (!result.ok) {
+            setError(result.message || 'E-mail ou senha inválidos.');
             setLoading(false);
         }
         // Se ok, o App re-renderiza para a aplicação (authEmail definido no store).
@@ -85,6 +86,9 @@ function LoginPage() {
                             <div className="text-right mb-4">
                                 <button
                                     type="button"
+                                    onClick={() =>
+                                        setError('Fale com o administrador (mac@climoo.com.br) para redefinir sua senha.')
+                                    }
                                     className="text-sm font-medium text-[#210856] hover:text-[#9354e0] bg-transparent border-0 cursor-pointer p-0"
                                 >
                                     Esqueceu a senha?

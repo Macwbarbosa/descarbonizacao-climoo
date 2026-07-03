@@ -1,54 +1,167 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { checkCredentials } from '../credentials';
+import { supabase, hasSupabase } from '@/lib/supabaseClient';
 
 /**
- * authStore (shim standalone)
- * ---------------------------
- * Na plataforma Climoo este store é populado pelo login e expõe a empresa
- * selecionada. Aqui, na ferramenta isolada, ele guarda apenas a empresa/CNPJ
- * ativos — que é tudo que o módulo de Descarbonização consome:
+ * authStore — autenticação REAL via Supabase Auth (e-mail + senha).
+ * ------------------------------------------------------------------
+ * Cada usuário tem um perfil em `profiles` (papel admin/user + empresa).
+ * O isolamento entre empresas é garantido NO SERVIDOR pela RLS do Supabase
+ * (ver supabase/schema.sql); este store só reflete a sessão no front:
  *
- *   - useAuthStore.getState().user?.selectedCompany?.cnpj
- *   - useAuthStore.getState().user?.selectedCompany?.company
- *   - reativo: useAuthStore((s) => s.user?.selectedCompany?.company / .cnpj)
+ *   - authEmail            e-mail da sessão autenticada
+ *   - role                 'admin' | 'user'
+ *   - profile              { id, email, name, role, company: {id, name, cnpj} }
+ *   - user.selectedCompany { cnpj, company } — empresa ativa. Para usuário
+ *                          comum é SEMPRE a empresa do perfil; o admin pode
+ *                          trocar entre todas as empresas cadastradas.
+ *   - ready                sessão restaurada (gate de carregamento do App)
  *
- * `token` e `clearAuth` existem só para satisfazer `apiClientV2` (interceptors).
- * A persistência por CNPJ dos dados continua em `decarbonizationStorage`
- * (localStorage) + `decarbonization-data/<cnpj>.json` (dev middleware).
+ * `token` e `clearAuth` existem para satisfazer `apiClientV2` (interceptors).
  */
+
+const PROFILE_SELECT = 'id, email, name, role, company:companies(id, name, cnpj)';
+
+const fetchProfile = async (userId) => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select(PROFILE_SELECT)
+        .eq('id', userId)
+        .maybeSingle();
+    if (error) throw new Error(error.message);
+    return data;
+};
+
+let authListenerAttached = false;
+
 export const useAuthStore = create(
-  persist(
-    (set) => ({
-      user: { selectedCompany: null }, // { cnpj: string, company: string }
-      token: null,
-      authEmail: null, // e-mail logado no gate de acesso (login "fake")
+    persist(
+        (set, get) => ({
+            user: { selectedCompany: null }, // { cnpj: string, company: string }
+            token: null,
+            authEmail: null,
+            role: null,
+            profile: null,
+            ready: !hasSupabase, // sem Supabase não há sessão a restaurar
 
-      /** Define a empresa ativa. company = { cnpj, company } */
-      setSelectedCompany: (company) =>
-        set((state) => ({ user: { ...state.user, selectedCompany: company } })),
+            /** Define a empresa ativa (só o admin troca). company = { cnpj, company } */
+            setSelectedCompany: (company) =>
+                set((state) => ({ user: { ...state.user, selectedCompany: company } })),
 
-      /**
-       * Valida o login do gate de acesso. Retorna `true` se autenticou.
-       * @param {string} email
-       * @param {string} password
-       */
-      login: (email, password) => {
-        const ok = checkCredentials(email, password);
-        if (ok) set({ authEmail: ok });
-        return Boolean(ok);
-      },
+            /** Aplica sessão + perfil no store. Usuário comum fica preso à empresa do perfil. */
+            applySession: async (session) => {
+                let profile = null;
+                try {
+                    profile = await fetchProfile(session.user.id);
+                } catch (e) {
+                    profile = null; // sem perfil legível — segue só com o e-mail da sessão
+                }
+                const role = profile?.role || 'user';
+                const company = profile?.company
+                    ? { cnpj: profile.company.cnpj, company: profile.company.name }
+                    : null;
+                set((state) => ({
+                    authEmail: (profile?.email || session.user.email || '').toLowerCase(),
+                    token: session.access_token,
+                    role,
+                    profile,
+                    user: {
+                        ...state.user,
+                        // admin mantém a última empresa escolhida; usuário comum é
+                        // SEMPRE re-apontado para a empresa do próprio perfil.
+                        selectedCompany:
+                            role === 'admin' ? state.user?.selectedCompany || company : company,
+                    },
+                }));
+            },
 
-      /** Sai do gate de acesso (mantém os dados por CNPJ no localStorage). */
-      logout: () => set({ authEmail: null }),
+            /** Restaura a sessão salva (chamado uma vez na montagem do App). */
+            init: async () => {
+                if (!hasSupabase) {
+                    set({ ready: true });
+                    return;
+                }
+                try {
+                    const { data } = await supabase.auth.getSession();
+                    if (data?.session) await get().applySession(data.session);
+                    else set({ authEmail: null, role: null, profile: null, token: null });
+                } catch (e) {
+                    set({ authEmail: null, role: null, profile: null, token: null });
+                } finally {
+                    set({ ready: true });
+                }
+                if (!authListenerAttached) {
+                    authListenerAttached = true;
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (event === 'SIGNED_OUT') {
+                            set({
+                                authEmail: null,
+                                role: null,
+                                profile: null,
+                                token: null,
+                                user: { selectedCompany: null },
+                            });
+                        } else if (session) {
+                            set({ token: session.access_token }); // refresh de token
+                        }
+                    });
+                }
+            },
 
-      clearAuth: () => set({ user: { selectedCompany: null }, token: null, authEmail: null }),
-    }),
-    {
-      name: 'climoo-descarb-auth',
-      partialize: (state) => ({ user: state.user, authEmail: state.authEmail }),
-    }
-  )
+            /**
+             * Login com e-mail/senha no Supabase Auth.
+             * @returns {Promise<{ ok: boolean, message?: string }>}
+             */
+            login: async (email, password) => {
+                if (!hasSupabase) {
+                    return {
+                        ok: false,
+                        message:
+                            'Banco não configurado: defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.',
+                    };
+                }
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: String(email || '').trim().toLowerCase(),
+                    password: String(password || ''),
+                });
+                if (error) {
+                    const message = /invalid login credentials/i.test(error.message)
+                        ? 'E-mail ou senha inválidos.'
+                        : `Falha no login: ${error.message}`;
+                    return { ok: false, message };
+                }
+                await get().applySession(data.session);
+                return { ok: true };
+            },
+
+            /** Encerra a sessão (os dados por CNPJ continuam no banco). */
+            logout: async () => {
+                if (hasSupabase) await supabase.auth.signOut().catch(() => {});
+                set({
+                    authEmail: null,
+                    role: null,
+                    profile: null,
+                    token: null,
+                    user: { selectedCompany: null },
+                });
+            },
+
+            clearAuth: () =>
+                set({
+                    user: { selectedCompany: null },
+                    token: null,
+                    authEmail: null,
+                    role: null,
+                    profile: null,
+                }),
+        }),
+        {
+            name: 'climoo-descarb-auth',
+            // Persistimos só a empresa ativa (conveniência do admin); a sessão em si
+            // é do Supabase (restaurada em init()).
+            partialize: (state) => ({ user: state.user }),
+        }
+    )
 );
 
 export default useAuthStore;

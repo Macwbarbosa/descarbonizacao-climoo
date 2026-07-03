@@ -1,8 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import react from '@vitejs/plugin-react-swc';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import path from 'path';
 import fs from 'fs';
+import { handleAdminUsers } from './api/_lib/adminUsers.js';
 
 /**
  * Plugin de DESENVOLVIMENTO: persiste os dados do módulo de Descarbonização
@@ -58,11 +59,29 @@ function decarbonizationDataPlugin() {
   };
 }
 
-export default defineConfig({
+/**
+ * Plugin de DESENVOLVIMENTO: expõe a MESMA API de administração de usuários da
+ * produção (função Vercel em api/admin/users.js) no dev server, em
+ * /api/admin/users. Requer SUPABASE_SERVICE_ROLE_KEY no .env.local (variável
+ * SEM o prefixo VITE_, portanto nunca vai para o bundle do navegador).
+ */
+function adminApiPlugin(env) {
+  return {
+    name: 'admin-users-api',
+    configureServer(server) {
+      server.middlewares.use('/api/admin/users', (req, res) => {
+        handleAdminUsers(req, res, env);
+      });
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => ({
   root: '.',
   plugins: [
     react(),
-    decarbonizationDataPlugin()
+    decarbonizationDataPlugin(),
+    adminApiPlugin(loadEnv(mode, process.cwd(), ''))
   ],
   resolve: {
     alias: {
@@ -85,4 +104,4 @@ export default defineConfig({
     },
     minify: 'esbuild',
   },
-});
+}));
