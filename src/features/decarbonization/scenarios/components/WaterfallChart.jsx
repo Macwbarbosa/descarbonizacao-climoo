@@ -105,6 +105,9 @@ const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, hei
 
         const config = {
             data: rows,
+            // Espaço extra no topo p/ o rótulo de 2 linhas acima das barras altas
+            // (evita o corte do número na barra próxima ao máximo).
+            appendPadding: [34, 8, 0, 8],
             xField: 'stage',
             yField: 'range',
             isRange: true,

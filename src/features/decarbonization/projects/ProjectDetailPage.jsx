@@ -9,7 +9,7 @@ import useDriversStore from '../drivers/store/useDriversStore';
 import usePlanTargetsStore from '../targets-timeframe/store/usePlanTargetsStore';
 import useTechnologyBankStore from '../../../store/technologyBankStore';
 import { mergedInitiatives } from './utils/initiativeCatalog';
-import { activitiesForProject, metaNamesOf, projectMetaIds } from '../shared/metaScopes';
+import { activitiesForProject, metaNamesOf, projectMetaIds, metaCoveredActivities } from '../shared/metaScopes';
 import { indicePorAno } from '../drivers/utils/driverIndex';
 import { isIntensityType, reductionTypeOf } from '../targets-timeframe/services/sbtiTargetService';
 import ProjectEditor from './components/ProjectEditor';
@@ -72,7 +72,7 @@ function ProjectDetailPage() {
     // Se o projeto pertence a uma meta de INTENSIDADE, as emissões das atividades
     // são mostradas como indicador (tCO2e ÷ denominador projetado por ano).
     const intensity = useMemo(() => {
-        const off = { unit: 'tCO2e', denomByYear: null };
+        const off = { unit: 'tCO2e', denomByYear: null, activityIds: new Set() };
         if (!project) return off;
         const meta = projectMetaIds(project)
             .map((mid) => metasById[mid])
@@ -84,8 +84,15 @@ function ProjectDetailPage() {
             year: p.year,
             value: driver.baseValue > 0 ? (driver.baseValue * p.index) / 100 : p.index,
         }));
-        return { unit: `tCO2e/${driver.unit || 'un.'}`, denomByYear: Object.fromEntries(proj.map((p) => [p.year, p.value])) };
-    }, [project, metasById, drivers, baseYear, netZeroYear]);
+        // Só as atividades COBERTAS pela meta de intensidade são exibidas em
+        // intensidade; as demais (ex.: E1/E2 de meta absoluta) seguem em tCO2e.
+        const activityIds = new Set(metaCoveredActivities(meta, activities).map((a) => a.id));
+        return {
+            unit: `tCO2e/${driver.unit || 'un.'}`,
+            denomByYear: Object.fromEntries(proj.map((p) => [p.year, p.value])),
+            activityIds,
+        };
+    }, [project, metasById, drivers, baseYear, netZeroYear, activities]);
 
 
     const handleRemove = (projectId) => {
@@ -150,6 +157,7 @@ function ProjectDetailPage() {
                                 onSetMembers={(ids) => patchProject(project.id, { memberActivityIds: ids })}
                                 unit={intensity.unit}
                                 denomByYear={intensity.denomByYear}
+                                intensityActivityIds={intensity.activityIds}
                             />
                         }
                     />

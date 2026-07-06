@@ -13,12 +13,13 @@ const pct = (v) => `${Number(v).toLocaleString('pt-BR', { maximumFractionDigits:
  * para CADA projeto que cobre a atividade, uma linha de Abrangência (a cobertura
  * definida naquele projeto) e uma de Redução (abatimento daquele projeto).
  */
-function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx, baseYear, endYear, unit, denomByYear }) {
+function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx, baseYear, endYear, unit, denomByYear, intensity }) {
     const years = [];
     for (let y = baseYear; y <= endYear; y += 1) years.push(y);
     const covering = (map[activity.id] || []).map((pid) => projectsById[pid]).filter(Boolean);
-    // Intensidade: divide o valor do ano pelo denominador projetado daquele ano.
-    const disp = (v, y) => (denomByYear && denomByYear[y] ? v / denomByYear[y] : v);
+    // Intensidade só nesta atividade quando ela é da meta de intensidade; senão tCO2e.
+    const disp = (v, y) => (intensity && denomByYear && denomByYear[y] ? v / denomByYear[y] : v);
+    const rowUnit = intensity ? unit : 'tCO2e';
 
     const emissao = {};
     activityEmissionByYear(activity, { baseYear, endYear }, ctx.driversById).forEach(({ year, emission }) => {
@@ -50,7 +51,7 @@ function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx,
                 <tbody>
                     <tr>
                         <td className="border border-gray-200 px-2 py-1 text-left bg-[#f3f5f8] whitespace-nowrap font-semibold">
-                            {denomByYear ? `Intensidade (${unit})` : 'Emissão (tCO2e)'}
+                            {intensity ? `Intensidade (${unit})` : 'Emissão (tCO2e)'}
                         </td>
                         {years.map((y) => (
                             <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums">{fmt(disp(emissao[y], y))}</td>
@@ -75,7 +76,7 @@ function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx,
                                 </tr>
                                 <tr>
                                     <td className="border border-gray-200 px-2 py-1 text-left bg-[#f3f5f8] whitespace-nowrap">
-                                        Redução — {project.name} ({denomByYear ? unit : 'tCO2e'})
+                                        Redução — {project.name} ({rowUnit})
                                     </td>
                                     {years.map((y) => (
                                         <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums text-[#2F6F5E]">{fmt(disp(red[y], y))}</td>
@@ -106,9 +107,10 @@ ActivityYearDetail.propTypes = {
     unit: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     denomByYear: PropTypes.object,
+    intensity: PropTypes.bool,
 };
 
-ActivityYearDetail.defaultProps = { unit: 'tCO2e', denomByYear: null };
+ActivityYearDetail.defaultProps = { unit: 'tCO2e', denomByYear: null, intensity: false };
 
 /**
  * Grade ÚNICA de atividades do projeto + cobertura. Árvore expansível
@@ -118,7 +120,7 @@ ActivityYearDetail.defaultProps = { unit: 'tCO2e', denomByYear: null };
  *   - ao expandir, detalhe ano-a-ano (Emissão · Abrangência · Redução).
  * Substitui os dois lugares antigos ("Atividades do grupo" + "Matriz de cobertura").
  */
-function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, endYear, currentProjectId, memberIds, onSetMembers, unit, denomByYear }) {
+function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, endYear, currentProjectId, memberIds, onSetMembers, unit, denomByYear, intensityActivityIds }) {
     const [onlyOrphans, setOnlyOrphans] = useState(false);
     const [onlyMembers, setOnlyMembers] = useState(false);
     const [coverFilter, setCoverFilter] = useState('');
@@ -331,11 +333,15 @@ function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, e
                                                                             <td className="px-3 py-2 text-left cursor-pointer" style={{ paddingLeft: 44 }} onClick={() => toggleAct(a.id)}>
                                                                                 {actOpen ? <CaretDownOutlined className="text-gray-400 mr-1" /> : <CaretRightOutlined className="text-gray-400 mr-1" />}
                                                                                 {a.name}
-                                                                                {typeof a.baseEmission === 'number' && (
-                                                                                    <span className="text-[11px] text-gray-400 ml-2">
-                                                                                        {fmt(denomByYear && denomByYear[baseYear] ? a.baseEmission / denomByYear[baseYear] : a.baseEmission)} {unit}
-                                                                                    </span>
-                                                                                )}
+                                                                                {typeof a.baseEmission === 'number' && (() => {
+                                                                                    const showInt = !!denomByYear && intensityActivityIds.has(a.id);
+                                                                                    const v = showInt && denomByYear[baseYear] ? a.baseEmission / denomByYear[baseYear] : a.baseEmission;
+                                                                                    return (
+                                                                                        <span className="text-[11px] text-gray-400 ml-2">
+                                                                                            {fmt(v)} {showInt ? unit : 'tCO2e'}
+                                                                                        </span>
+                                                                                    );
+                                                                                })()}
                                                                                 {orphan && (
                                                                                     <Tooltip title="Órfã — não recebe abatimento em nenhum cenário">
                                                                                         <WarningOutlined className="text-[#b9462f] ml-2" />
@@ -371,6 +377,7 @@ function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, e
                                                                                         endYear={endYear}
                                                                                         unit={unit}
                                                                                         denomByYear={denomByYear}
+                                                                                        intensity={!!denomByYear && intensityActivityIds.has(a.id)}
                                                                                     />
                                                                                 </td>
                                                                             </tr>
@@ -406,6 +413,8 @@ CoverageMatrixTab.propTypes = {
     unit: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     denomByYear: PropTypes.object,
+    // eslint-disable-next-line react/forbid-prop-types
+    intensityActivityIds: PropTypes.object,
 };
 
 CoverageMatrixTab.defaultProps = {
@@ -415,6 +424,7 @@ CoverageMatrixTab.defaultProps = {
     onSetMembers: null,
     unit: 'tCO2e',
     denomByYear: null,
+    intensityActivityIds: new Set(),
 };
 
 export default CoverageMatrixTab;

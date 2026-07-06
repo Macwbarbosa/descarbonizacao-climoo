@@ -43,13 +43,14 @@ export const allowedScopesForProject = (project, metasById) => {
 export const activitiesForProject = (activities, project, metasById) => {
     const metaIds = projectMetaIds(project);
     if (metaIds.length === 0) return activities;
-    const members = new Set(project?.memberActivityIds || []);
     const covered = new Set();
     metaIds.forEach((mid) => {
         const meta = metasById[mid];
         if (meta) metaCoveredActivities(meta, activities).forEach((a) => covered.add(a.id));
     });
-    return activities.filter((a) => covered.has(a.id) || members.has(a.id));
+    // Estritamente a cobertura das metas do projeto (escopos + exclusões) — fora
+    // disso não há atividade coberta. Mantém as já selecionadas SE ainda cobertas.
+    return activities.filter((a) => covered.has(a.id));
 };
 
 /** Atividades EXCLUÍDAS da cobertura de uma meta (Set). */
