@@ -10,11 +10,13 @@ const labelCls = 'text-[10px] uppercase tracking-wide text-gray-500 block mb-1';
 
 /**
  * Editor da lista de fornecedores/clientes engajados. Cada linha: nome, tipo
- * (fornecedor/cliente) e a emissão associada (tCO2e, ano-base). As emissões
- * cobertas pela meta de engajamento são a SOMA dessas emissões, e o % do
- * Escopo 3 é calculado a partir do total do inventário.
+ * (fornecedor/cliente), CATEGORIA do Escopo 3 e a emissão associada (tCO2e,
+ * ano-base). As emissões cobertas pela meta de engajamento são a SOMA dessas
+ * emissões, e o % do Escopo 3 é calculado a partir do total do inventário.
+ * Em metas combinadas, a emissão é descontada da categoria na cobertura de
+ * redução (evita dupla contagem).
  */
-function EngagementPartnersEditor({ partners, scope3Total, disabled, onChange }) {
+function EngagementPartnersEditor({ partners, scope3Total, categoryOptions, disabled, onChange }) {
     const list = Array.isArray(partners) ? partners : [];
     const covered = list.reduce((t, p) => t + (Number(p.emission) || 0), 0);
     const coveragePct = scope3Total > 0 ? (covered / scope3Total) * 100 : 0;
@@ -22,7 +24,7 @@ function EngagementPartnersEditor({ partners, scope3Total, disabled, onChange })
 
     const patch = (id, field, value) => onChange(list.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
     const add = () =>
-        onChange([...list, { id: uuidv4(), name: '', kind: 'fornecedor', emission: 0 }]);
+        onChange([...list, { id: uuidv4(), name: '', kind: 'fornecedor', category: undefined, emission: 0 }]);
     const remove = (id) => onChange(list.filter((p) => p.id !== id));
 
     return (
@@ -42,14 +44,15 @@ function EngagementPartnersEditor({ partners, scope3Total, disabled, onChange })
             ) : (
                 <div className="flex flex-col gap-2">
                     {/* Cabeçalho */}
-                    <div className="hidden sm:grid grid-cols-[1fr_150px_160px_40px] gap-2 text-[10px] uppercase tracking-wide text-gray-400">
+                    <div className="hidden sm:grid grid-cols-[1fr_130px_1fr_150px_40px] gap-2 text-[10px] uppercase tracking-wide text-gray-400">
                         <span>Nome</span>
                         <span>Tipo</span>
+                        <span>Categoria (Escopo 3)</span>
                         <span>Emissão (tCO2e)</span>
                         <span />
                     </div>
                     {list.map((p) => (
-                        <div key={p.id} className="grid grid-cols-2 sm:grid-cols-[1fr_150px_160px_40px] gap-2 items-center">
+                        <div key={p.id} className="grid grid-cols-2 sm:grid-cols-[1fr_130px_1fr_150px_40px] gap-2 items-center">
                             <Input
                                 value={p.name}
                                 placeholder="Ex.: Fornecedor A"
@@ -64,6 +67,16 @@ function EngagementPartnersEditor({ partners, scope3Total, disabled, onChange })
                                     { value: 'fornecedor', label: 'Fornecedor' },
                                     { value: 'cliente', label: 'Cliente' },
                                 ]}
+                            />
+                            <Select
+                                value={p.category}
+                                onChange={(v) => patch(p.id, 'category', v)}
+                                disabled={disabled}
+                                placeholder="Categoria"
+                                showSearch
+                                optionFilterProp="label"
+                                options={categoryOptions}
+                                notFoundContent="Sem categorias de Escopo 3 no inventário"
                             />
                             <InputNumber
                                 value={p.emission}
@@ -109,6 +122,7 @@ function EngagementPartnersEditor({ partners, scope3Total, disabled, onChange })
 EngagementPartnersEditor.propTypes = {
     partners: PropTypes.arrayOf(PropTypes.object),
     scope3Total: PropTypes.number,
+    categoryOptions: PropTypes.arrayOf(PropTypes.object),
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
 };
@@ -116,6 +130,7 @@ EngagementPartnersEditor.propTypes = {
 EngagementPartnersEditor.defaultProps = {
     partners: [],
     scope3Total: 0,
+    categoryOptions: [],
     disabled: false,
 };
 

@@ -226,6 +226,44 @@ export const coveredBaselineByScope = (meta, baseActivities) => {
     return out;
 };
 
+/**
+ * Emissões do Escopo 3 COBERTAS pela meta, agrupadas por categoria (respeita as
+ * exclusões). Usado para descontar o engajamento por categoria na meta combinada.
+ * @returns {Object<string, number>} categoria → tCO2e cobertos
+ */
+export const coveredScope3ByCategory = (meta, baseActivities) => {
+    const excluded = new Set(meta?.excludedActivityIds || []);
+    const out = {};
+    if (!meta?.scopes?.scope3) return out;
+    (baseActivities || []).forEach((a) => {
+        if (a.scope !== 'Escopo 3' || excluded.has(a.id)) return;
+        const cat = a.category || '—';
+        out[cat] = (out[cat] || 0) + (Number(a.emission) || 0);
+    });
+    return out;
+};
+
+/**
+ * Desconto do engajamento por categoria: para cada parceiro, subtrai a emissão
+ * associada da categoria correspondente na cobertura de REDUÇÃO (limitado ao que
+ * há coberto naquela categoria — evita cobertura > 100%). Parceiros sem categoria
+ * (ou em categoria não coberta pela redução) somam-se por fora.
+ * @returns {{ deducted:number }} total efetivamente descontado da redução.
+ */
+export const engagementDeduction = (meta, baseActivities) => {
+    const remaining = coveredScope3ByCategory(meta, baseActivities);
+    let deducted = 0;
+    (meta?.engagement?.partners || []).forEach((p) => {
+        const e = Number(p.emission) || 0;
+        const cat = p.category;
+        if (!cat || remaining[cat] == null) return; // categoria não coberta → soma por fora
+        const d = Math.min(e, remaining[cat]);
+        deducted += d;
+        remaining[cat] -= d;
+    });
+    return { deducted };
+};
+
 const interpolateYears = (fromYear, fromValue, toYear, toValue) => {
     const pts = [];
     const span = toYear - fromYear;
@@ -441,18 +479,27 @@ export const computeMetaTarget = (meta, ctx) => {
     });
 
     // ── Meta COMBINADA: redução + engajamento; cobertura conjunta ≥ 67% ─────
+    // O engajamento por categoria é DESCONTADO da cobertura de redução (evita
+    // dupla contagem e cobertura > 100%): total = redução_ajustada + engajamento.
     if (isCombinedType(meta.type)) {
         const engagementEmissions = sumEngagementEmissions(meta);
-        const reductionCoveredScope3 = coveredScope3(meta, ctx);
-        const combinedCoveredEmissions = reductionCoveredScope3 + engagementEmissions;
+        const reductionCoveredFull = coveredScope3(meta, ctx);
+        const { deducted } = ctx.baseActivities ? engagementDeduction(meta, ctx.baseActivities) : { deducted: 0 };
+        const reductionCoveredScope3 = Math.max(0, reductionCoveredFull - deducted);
+        const combinedCoveredEmissions = Math.min(
+            scope3Total || Infinity,
+            reductionCoveredScope3 + engagementEmissions
+        );
         const combinedCoveragePct = scope3Total > 0 ? (combinedCoveredEmissions / scope3Total) * 100 : 0;
         return {
             metaId: meta.id,
             kind: 'combined',
             ...base,
             engagementEmissions,
+            engagementDeducted: deducted,
             partners: meta.engagement?.partners || [],
             reductionCoveredScope3,
+            reductionCoveredFull,
             scope3Total,
             combinedCoveredEmissions,
             combinedCoveragePct,
@@ -495,6 +542,8 @@ export default {
     buildTargetTrajectory,
     coveredEmissions,
     coveredBaselineByScope,
+    coveredScope3ByCategory,
+    engagementDeduction,
     isIntensityType,
     isEngagementType,
     isCombinedType,

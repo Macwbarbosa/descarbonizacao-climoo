@@ -48,6 +48,15 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
         return (baseActivities || []).filter((a) => scopes.includes(a.scope));
     }, [baseActivities, meta]);
 
+    // Categorias do Escopo 3 presentes no inventário do ano-base (para os parceiros).
+    const scope3CategoryOptions = useMemo(() => {
+        const cats = new Set();
+        (baseActivities || []).forEach((a) => {
+            if (a.scope === 'Escopo 3' && a.category) cats.add(a.category);
+        });
+        return [...cats].sort().map((c) => ({ value: c, label: c }));
+    }, [baseActivities]);
+
     const submissionYear = meta.submissionYear ?? new Date().getFullYear();
     const yearOptions = (from, to) => {
         const out = [];
@@ -218,12 +227,13 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                 <div className="mt-4 rounded-lg border border-[#e4d9fb] bg-[#faf8ff] p-3">
                     <div className="text-[11px] text-gray-500 mb-2">
                         {combined
-                            ? 'Parte de engajamento — some-se à parte de redução acima para compor a cobertura conjunta.'
+                            ? 'Parte de engajamento — a emissão de cada parceiro é descontada da sua categoria na cobertura de redução acima (evita dupla contagem) e somada à cobertura conjunta.'
                             : 'Emissões cobertas pela meta = soma das emissões dos fornecedores/clientes engajados.'}
                     </div>
                     <EngagementPartnersEditor
                         partners={meta.engagement?.partners || []}
                         scope3Total={scope3Total}
+                        categoryOptions={scope3CategoryOptions}
                         onChange={setPartners}
                     />
                 </div>
@@ -317,8 +327,11 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                     showIcon
                     message={
                         <span>
-                            Cobertura conjunta (redução {fmt(target.reductionCoveredScope3)} + engajamento{' '}
-                            {fmt(target.engagementEmissions)} tCO2e) ={' '}
+                            Cobertura conjunta = redução {fmt(target.reductionCoveredScope3)}
+                            {target.engagementDeducted > 0 && (
+                                <> (já descontados {fmt(target.engagementDeducted)} de engajamento por categoria)</>
+                            )}{' '}
+                            + engajamento {fmt(target.engagementEmissions)} tCO2e ={' '}
                             <b>{Number(target.combinedCoveragePct || 0).toFixed(0)}%</b> do Escopo 3 (
                             {fmt(target.scope3Total)} tCO2e).{' '}
                             {target.meets67
