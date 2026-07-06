@@ -147,14 +147,46 @@ export const acaNearTermReduction = ({ anoBase, anoMaisRecente, anoAlvo, anoNetZ
 export const TARGET_TYPE_OPTIONS = [
     { value: 'absoluta', label: 'Redução absoluta', short: 'absoluta', intensity: false },
     { value: 'intensidade_fisica', label: 'Intensidade física', short: 'int. física', intensity: true },
-    { value: 'intensidade_economica', label: 'Intensidade econômica', short: 'int. econômica', intensity: true },
+    { value: 'intensidade_economica', label: 'Intensidade monetária', short: 'int. monetária', intensity: true },
+    { value: 'engajamento', label: 'Engajamento (fornecedores/clientes)', short: 'engajamento', intensity: false },
+    { value: 'combinada', label: 'Meta combinada (redução + engajamento)', short: 'combinada', intensity: false },
     { value: 'sda_setorial', label: 'Setorial (SDA)', short: 'SDA', intensity: false },
 ];
+
+/** Sub-tipos de redução disponíveis na parte de redução de uma meta combinada. */
+export const COMBINED_REDUCTION_OPTIONS = [
+    { value: 'absoluta', label: 'Redução absoluta' },
+    { value: 'intensidade_fisica', label: 'Intensidade física' },
+    { value: 'intensidade_economica', label: 'Intensidade monetária' },
+];
+
+/** Cobertura mínima do Escopo 3 exigida para a meta combinada (SBTi: ≥ 2/3). */
+export const SCOPE3_MIN_COVERAGE_PCT = 67;
+
+/** Horizonte fixo da meta de engajamento: 5 anos a partir da submissão. */
+export const ENGAGEMENT_HORIZON_YEARS = 5;
 
 /** @param {TipoMeta} type */
 export const isIntensityType = (type) => type === 'intensidade_fisica' || type === 'intensidade_economica';
 /** @param {TipoMeta} type */
+export const isEngagementType = (type) => type === 'engajamento';
+/** @param {TipoMeta} type */
+export const isCombinedType = (type) => type === 'combinada';
+/** Tipos que carregam uma parte de engajamento (lista de fornecedores/clientes). */
+export const hasEngagementPart = (type) => isEngagementType(type) || isCombinedType(type);
+
+/** Sub-tipo da parte de REDUÇÃO de uma meta (a própria, ou o sub-tipo da combinada). */
+export const reductionTypeOf = (meta) =>
+    isCombinedType(meta?.type) ? meta?.combinedReductionType || 'absoluta' : meta?.type;
+
+/** @param {TipoMeta} type */
 export const needsDenominator = (type) => isIntensityType(type);
+/** A meta (considerando a parte de redução da combinada) exige denominador? */
+export const needsDenominatorForMeta = (meta) => isIntensityType(reductionTypeOf(meta));
+
+/** Soma das emissões dos fornecedores/clientes engajados (tCO2e). */
+export const sumEngagementEmissions = (meta) =>
+    (meta?.engagement?.partners || []).reduce((total, p) => total + (Number(p.emission) || 0), 0);
 
 export const SCOPE_KEYS = ['scope1', 'scope2', 'scope3'];
 
@@ -338,36 +370,98 @@ export const computeSbtiTarget = ({
     };
 };
 
+/** Emissão TOTAL do Escopo 3 no ano-base (independe da cobertura/escopos da meta). */
+const totalScope3Base = (ctx) => {
+    if (ctx.baseActivities) {
+        return coveredBaselineByScope(
+            { scopes: { scope1: false, scope2: false, scope3: true }, excludedActivityIds: [] },
+            ctx.baseActivities
+        ).scope3;
+    }
+    return ctx.baselineByScope?.scope3 || 0;
+};
+
+/** Emissão do Escopo 3 COBERTA pela meta (parte de redução), respeitando exclusões. */
+const coveredScope3 = (meta, ctx) => {
+    if (ctx.baseActivities) return coveredBaselineByScope(meta, ctx.baseActivities).scope3;
+    return meta.scopes?.scope3 ? ctx.baselineByScope?.scope3 || 0 : 0;
+};
+
 /**
  * Deriva a meta a partir de um objeto Meta + contexto (ergonômico/reutilizável).
+ * Suporta metas de redução (absoluta/intensidade/SDA), de ENGAJAMENTO e COMBINADA.
  * @param {Meta} meta
  * @param {MetaTargetContext} ctx
- * @returns {Object} resultado de `computeSbtiTarget` + `metaId`.
+ * @returns {Object} resultado + `metaId` + `kind`.
  */
 export const computeMetaTarget = (meta, ctx) => {
-    // Se houver inventário do ano-base, respeita a COBERTURA por atividade
-    // (escopos + exclusões da meta); senão, usa os totais por escopo.
+    const submissionYear = meta.submissionYear ?? new Date().getFullYear();
+    const scope3Total = totalScope3Base(ctx);
+
+    // ── Meta de ENGAJAMENTO: sem trajetória de redução própria ──────────────
+    if (isEngagementType(meta.type)) {
+        const engagementEmissions = sumEngagementEmissions(meta);
+        const coveragePct = scope3Total > 0 ? (engagementEmissions / scope3Total) * 100 : 0;
+        return {
+            metaId: meta.id,
+            kind: 'engagement',
+            engagementEmissions,
+            scope3Total,
+            coveragePct,
+            targetYear: submissionYear + ENGAGEMENT_HORIZON_YEARS,
+            partners: meta.engagement?.partners || [],
+            meets67: coveragePct >= SCOPE3_MIN_COVERAGE_PCT,
+            // Chaves neutras para os Cenários (engajamento não reduz o inventário próprio).
+            trajetoria: [],
+            trajetoriaAbsoluta: [],
+            valorBase: null,
+            reducaoNearTermPct: 0,
+        };
+    }
+
+    // ── Parte de REDUÇÃO (própria, ou sub-tipo da combinada) ────────────────
+    const reductionType = reductionTypeOf(meta);
     const emissoesPorEscopo = ctx.baseActivities
         ? coveredBaselineByScope(meta, ctx.baseActivities)
         : coveredEmissions(meta.scopes, ctx.baselineByScope);
     const denominadorPorAno =
-        needsDenominator(meta.type) && meta.denominatorDriverId && ctx.getDenominatorProjection
+        isIntensityType(reductionType) && meta.denominatorDriverId && ctx.getDenominatorProjection
             ? ctx.getDenominatorProjection(meta.denominatorDriverId)
             : null;
 
-    return {
-        metaId: meta.id,
-        ...computeSbtiTarget({
-            anoBase: ctx.baseYear,
-            anoMaisRecente: ctx.recentYear,
-            anoNearTerm: meta.nearTermYear,
-            anoNetZero: meta.netZeroYear ?? null,
-            ambicao: meta.ambition,
-            tipoMeta: meta.type,
-            emissoesPorEscopo,
-            denominadorPorAno,
-        }),
-    };
+    const base = computeSbtiTarget({
+        anoBase: ctx.baseYear,
+        anoMaisRecente: ctx.recentYear,
+        anoNearTerm: meta.nearTermYear,
+        anoNetZero: meta.netZeroYear ?? null,
+        ambicao: meta.ambition,
+        tipoMeta: reductionType,
+        emissoesPorEscopo,
+        denominadorPorAno,
+    });
+
+    // ── Meta COMBINADA: redução + engajamento; cobertura conjunta ≥ 67% ─────
+    if (isCombinedType(meta.type)) {
+        const engagementEmissions = sumEngagementEmissions(meta);
+        const reductionCoveredScope3 = coveredScope3(meta, ctx);
+        const combinedCoveredEmissions = reductionCoveredScope3 + engagementEmissions;
+        const combinedCoveragePct = scope3Total > 0 ? (combinedCoveredEmissions / scope3Total) * 100 : 0;
+        return {
+            metaId: meta.id,
+            kind: 'combined',
+            ...base,
+            engagementEmissions,
+            partners: meta.engagement?.partners || [],
+            reductionCoveredScope3,
+            scope3Total,
+            combinedCoveredEmissions,
+            combinedCoveragePct,
+            engagementTargetYear: submissionYear + ENGAGEMENT_HORIZON_YEARS,
+            meets67: combinedCoveragePct >= SCOPE3_MIN_COVERAGE_PCT,
+        };
+    }
+
+    return { metaId: meta.id, kind: 'reduction', ...base };
 };
 
 /**
@@ -402,7 +496,16 @@ export default {
     coveredEmissions,
     coveredBaselineByScope,
     isIntensityType,
+    isEngagementType,
+    isCombinedType,
+    hasEngagementPart,
+    reductionTypeOf,
     needsDenominator,
+    needsDenominatorForMeta,
+    sumEngagementEmissions,
+    SCOPE3_MIN_COVERAGE_PCT,
+    ENGAGEMENT_HORIZON_YEARS,
+    COMBINED_REDUCTION_OPTIONS,
     autoMetaName,
     scopesLabel,
     ANNUAL_RATES,

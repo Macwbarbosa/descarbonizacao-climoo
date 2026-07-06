@@ -41,6 +41,11 @@ const makeMeta = (overrides = {}) => {
         excludedActivityIds: [],
         type: 'absoluta',
         denominatorDriverId: null,
+        // Parte de redução da meta COMBINADA (absoluta ou intensidade).
+        combinedReductionType: 'absoluta',
+        // Parte de ENGAJAMENTO (metas 'engajamento' e 'combinada'):
+        // fornecedores/clientes engajados e a emissão associada a cada um.
+        engagement: { partners: [] },
         ambition: '1p5',
         submissionYear,
         nearTermYear: submissionYear + 5,

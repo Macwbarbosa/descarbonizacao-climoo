@@ -78,8 +78,8 @@ function TargetsTimeframePage() {
     }, [metas, ctx]);
 
     const validation = useMemo(
-        () => validateMetas(metas, { baselineByScope, params }),
-        [metas, baselineByScope, params]
+        () => validateMetas(metas, { baselineByScope, params, targets }),
+        [metas, baselineByScope, params, targets]
     );
 
     return (

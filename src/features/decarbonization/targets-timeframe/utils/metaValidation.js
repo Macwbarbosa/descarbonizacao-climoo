@@ -1,4 +1,12 @@
-import { SCOPE_KEYS, needsDenominator } from '../services/sbtiTargetService';
+import {
+    SCOPE_KEYS,
+    needsDenominatorForMeta,
+    isEngagementType,
+    isCombinedType,
+    hasEngagementPart,
+    sumEngagementEmissions,
+    SCOPE3_MIN_COVERAGE_PCT,
+} from '../services/sbtiTargetService';
 
 /**
  * Validações das metas (consolidado e por meta). Inline, não bloqueantes.
@@ -15,14 +23,16 @@ export const SCOPE3_THRESHOLD = 40;
 
 const SCOPE_SHORT = { scope1: 'E1', scope2: 'E2', scope3: 'E3' };
 
-/** É um tipo "absoluto" (conta para dupla contagem)? */
-const isAbsoluteType = (type) => type === 'absoluta' || type === 'sda_setorial';
+/** É um tipo "absoluto" (conta para dupla contagem)? Engajamento não conta. */
+const isAbsoluteType = (type) => type === 'absoluta' || type === 'sda_setorial' || type === 'combinada';
 
 /**
  * @param {import('../services/sbtiTargetService').Meta[]} metas
- * @param {{ baselineByScope: Object, params: Object }} ctx
+ * @param {{ baselineByScope: Object, params: Object, targets?: Object }} ctx
+ *   `targets` (opcional): mapa metaId → resultado de computeMetaTarget, usado
+ *   para checar a cobertura conjunta ≥ 67% das metas combinadas.
  */
-export const validateMetas = (metas, { baselineByScope, params }) => {
+export const validateMetas = (metas, { baselineByScope, params, targets = {} }) => {
     const total = SCOPE_KEYS.reduce((sum, k) => sum + (baselineByScope[k] || 0), 0);
     const scope3Share = total > 0 ? (baselineByScope.scope3 / total) * 100 : 0;
 
@@ -57,10 +67,24 @@ export const validateMetas = (metas, { baselineByScope, params }) => {
         const ntMax = submissionYear + 10;
         const coversAny = SCOPE_KEYS.some((k) => m.scopes?.[k]);
         if (!coversAny) issues.push('selecione ao menos um escopo');
-        if (needsDenominator(m.type) && !m.denominatorDriverId) {
+        if (needsDenominatorForMeta(m) && !m.denominatorDriverId) {
             issues.push('metas de intensidade exigem um denominador (driver da Etapa 3)');
         }
-        if (m.nearTermYear < ntMin || m.nearTermYear > ntMax) {
+        // Engajamento: exige ao menos um fornecedor/cliente com emissão.
+        if (hasEngagementPart(m.type) && sumEngagementEmissions(m) <= 0) {
+            issues.push('cadastre ao menos um fornecedor/cliente com a emissão associada');
+        }
+        // Meta combinada: cobertura conjunta (redução + engajamento) ≥ 67% do Escopo 3.
+        if (isCombinedType(m.type)) {
+            const t = targets[m.id];
+            if (t && !t.meets67) {
+                issues.push(
+                    `cobertura conjunta ${Number(t.combinedCoveragePct || 0).toFixed(0)}% < ${SCOPE3_MIN_COVERAGE_PCT}% do Escopo 3`
+                );
+            }
+        }
+        // Engajamento tem horizonte fixo (submissão + 5 anos) — não valida o intervalo.
+        if (!isEngagementType(m.type) && (m.nearTermYear < ntMin || m.nearTermYear > ntMax)) {
             issues.push(`near-term deve ficar entre ${ntMin} e ${ntMax} (5–10 anos da submissão ${submissionYear})`);
         }
         if (m.netZeroYear != null) {
