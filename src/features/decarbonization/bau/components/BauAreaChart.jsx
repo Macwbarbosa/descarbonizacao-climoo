@@ -52,6 +52,9 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById, 
 
         const colorOf = (scope) => SERIES_COLORS[scope] || '#999';
         const maxV = data.reduce((m, p) => Math.max(m, Number(p.value) || 0), 0) || 1;
+        // Só as séries presentes nos dados (na ordem canônica) — evita a legenda
+        // mostrar um escopo que não faz parte da cobertura da meta.
+        const seriesPresent = SERIES_ORDER.filter((s) => data.some((d) => d.scope === s));
 
         const config = {
             data,
@@ -94,8 +97,8 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById, 
             },
             tooltip: { formatter: (d) => ({ name: d.scope, value: fmtVal(d.value, unit) }) },
             legend: { position: 'bottom', marker: { symbol: 'circle' } },
-            // Garante a ordem/realce do Total e dos escopos na legenda e no desenho.
-            meta: { scope: { values: SERIES_ORDER } },
+            // Garante a ordem/realce e limita a legenda às séries presentes.
+            meta: { scope: { values: seriesPresent } },
             annotations: [
                 {
                     type: 'line',
