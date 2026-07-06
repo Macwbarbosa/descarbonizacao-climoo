@@ -222,19 +222,34 @@ function ScenariosPage() {
     // indicadores (gauges) e os projetos passam a mostrar o VALOR NO INDICADOR
     // (tCO2e ÷ denominador no ano-alvo), em vez de tCO2e absoluto.
     const intensityDisplay = useMemo(() => {
-        const identity = { isIntensity: false, unit: 'tCO2e', toDisplay: (v) => v };
+        const identity = { isIntensity: false, unit: 'tCO2e', toDisplay: (v) => v, atYear: (v) => v };
         const meta = focusMeta?.meta;
         if (!meta || !isIntensityType(reductionTypeOf(meta)) || !meta.denominatorDriverId) return identity;
         const proj = metaCtx.getDenominatorProjection(meta.denominatorDriverId) || [];
-        const denom = proj.find((p) => p.year === targetYear)?.value || null;
-        if (!denom) return identity;
+        const byYear = Object.fromEntries(proj.map((p) => [p.year, p.value]));
+        const denomTarget = byYear[targetYear] || null;
+        if (!denomTarget) return identity;
         const driver = drivers.find((d) => d.id === meta.denominatorDriverId);
         return {
             isIntensity: true,
             unit: `tCO2e/${driver?.unit || 'un.'}`,
-            toDisplay: (v) => (v == null ? v : v / denom),
+            toDisplay: (v) => (v == null ? v : v / denomTarget), // valores no ano-alvo
+            atYear: (v, y) => (v == null ? v : byYear[y] ? v / byYear[y] : v), // por ano (cascata: base)
         };
     }, [focusMeta, metaCtx, targetYear, drivers]);
+
+    // Cascata em INTENSIDADE: base no ano-base, BAU/reduções/resultado no ano-alvo.
+    const wfDisplay = useMemo(() => {
+        if (!wf || !intensityDisplay.isIntensity) return wf;
+        return {
+            ...wf,
+            baseEmission: intensityDisplay.atYear(wf.baseEmission, baseYear),
+            bau: intensityDisplay.atYear(wf.bau, targetYear),
+            result: intensityDisplay.atYear(wf.result, targetYear),
+            bars: (wf.bars || []).map((b) => ({ ...b, value: intensityDisplay.atYear(b.value, targetYear) })),
+        };
+    }, [wf, intensityDisplay, baseYear, targetYear]);
+    const focusMetaTargetDisplay = intensityDisplay.toDisplay(focusMetaTarget);
 
     // Linhas no tempo (restritas aos escopos da meta em foco).
     const { lineData, serieKinds } = useMemo(() => {
@@ -385,7 +400,7 @@ function ScenariosPage() {
             <Col xs={24} lg={16} xl={17}>
                 <Card className="mb-4" style={chartCardStyle}>
                     {chartHeader('cascata')}
-                    <WaterfallChart ref={cascadeRef} data={wf} metaTarget={focusMetaTarget} targetYear={targetYear} baseYear={baseYear} palette={palette} />
+                    <WaterfallChart ref={cascadeRef} data={wfDisplay} metaTarget={focusMetaTargetDisplay} unit={intensityDisplay.unit} targetYear={targetYear} baseYear={baseYear} palette={palette} />
                 </Card>
                 <Card className="mb-4" style={chartCardStyle}>
                     {chartHeader('linhas')}
@@ -422,7 +437,7 @@ function ScenariosPage() {
             styles={{ mask: { backdropFilter: 'blur(6px)', backgroundColor: 'rgba(23, 12, 61, 0.45)' } }}
         >
             {zoomChart === 'cascata' && (
-                <WaterfallChart data={wf} metaTarget={focusMetaTarget} targetYear={targetYear} baseYear={baseYear} height={560} palette={palette} />
+                <WaterfallChart data={wfDisplay} metaTarget={focusMetaTargetDisplay} unit={intensityDisplay.unit} targetYear={targetYear} baseYear={baseYear} height={560} palette={palette} />
             )}
             {zoomChart === 'linhas' && (
                 <ScenarioLinesChart data={lineDataView} serieKinds={serieKinds} targetYear={targetYear} height={560} palette={palette} />

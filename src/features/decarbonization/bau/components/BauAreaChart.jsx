@@ -26,7 +26,13 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById, 
     const plotRef = useRef(null);
 
     const data = useMemo(() => {
-        const porEscopo = bauStackedByScope(activities, { baseYear, endYear }, driversById);
+        // Só os escopos presentes nas atividades (cobertura da meta) — evita
+        // mostrar uma linha de um escopo que não faz parte da meta (ex.: E3 na
+        // meta de E1+E2).
+        const scopesPresent = new Set(activities.map((a) => a.scope));
+        const porEscopo = bauStackedByScope(activities, { baseYear, endYear }, driversById).filter((p) =>
+            scopesPresent.has(p.scope)
+        );
         const total = [];
         for (let y = baseYear; y <= endYear; y += 1) {
             total.push({ year: y, scope: 'Total', value: totalEmission(activities, y, baseYear, driversById) });

@@ -33,9 +33,10 @@ const wrapLabel = (text, maxLen = 12, maxLines = 3) => {
  * Cascata no ano-alvo: BAU → uma barra por Projeto (abatimento) → resultado,
  * com a linha de meta. Cores derivadas da paleta (padrão Climoo, editável).
  */
-const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, height, palette }, downloadRef) => {
+const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, height, palette, unit }, downloadRef) => {
     const ref = useRef(null);
     const plotRef = useRef(null);
+    const isIntensity = unit !== 'tCO2e';
 
     const P = palette || DEFAULT_PALETTE;
     const BASEYEAR_GRADIENT = toGradient(darken(P.primary, 0.18));
@@ -86,7 +87,7 @@ const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, hei
                 end: [rows[rows.length - 1].stage, metaTarget],
                 style: { stroke: META_COLOR, lineDash: [8, 6], lineWidth: 2.5 },
                 text: {
-                    content: `Meta ${targetYear} · ${fmt(metaTarget)} tCO2e`,
+                    content: `Meta ${targetYear} · ${fmt(metaTarget)} ${unit}`,
                     position: 'start',
                     offsetY: -10,
                     offsetX: 4,
@@ -138,8 +139,14 @@ const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, hei
             },
             yAxis: {
                 min: 0,
-                title: { text: 'Emissões totais (tCO2e)', style: { fontSize: 12, fontWeight: 'bold', fill: '#6B7280' } },
-                label: { formatter: (v) => `${(Number(v) / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}k`, style: { fill: '#6B7280' } },
+                title: { text: isIntensity ? `Intensidade (${unit})` : 'Emissões totais (tCO2e)', style: { fontSize: 12, fontWeight: 'bold', fill: '#6B7280' } },
+                label: {
+                    formatter: (v) =>
+                        isIntensity
+                            ? Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 2 })
+                            : `${(Number(v) / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}k`,
+                    style: { fill: '#6B7280' },
+                },
                 grid: { line: { style: { stroke: '#D1D5DB', lineDash: [4, 6], lineWidth: 1 } } },
             },
             // Hover: desliga a "active-region" (faixa cinza da categoria inteira, mais
@@ -158,7 +165,7 @@ const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, hei
                         isProjectBar && metaTarget > 0
                             ? ` · ${((value / metaTarget) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% da meta`
                             : '';
-                    return { name: d.stage, value: `${fmt(value)} tCO2e${pctMeta}` };
+                    return { name: d.stage, value: `${fmt(value)} ${unit}${pctMeta}` };
                 },
             },
             annotations,
@@ -184,7 +191,7 @@ const WaterfallChart = forwardRef(({ data, metaTarget, targetYear, baseYear, hei
                 plotRef.current = null;
             }
         };
-    }, [rows, metaTarget, targetYear, data]);
+    }, [rows, metaTarget, targetYear, data, unit]);
 
     if (!data || rows.length === 0) return <Empty description="Sem dados para a cascata." />;
     return <div ref={ref} style={{ width: '100%', height, position: 'relative', overflow: 'hidden' }} />;
@@ -201,8 +208,9 @@ WaterfallChart.propTypes = {
     height: PropTypes.number,
     // eslint-disable-next-line react/forbid-prop-types
     palette: PropTypes.object,
+    unit: PropTypes.string,
 };
 
-WaterfallChart.defaultProps = { data: null, metaTarget: null, baseYear: null, height: 320, palette: null };
+WaterfallChart.defaultProps = { data: null, metaTarget: null, baseYear: null, height: 320, palette: null, unit: 'tCO2e' };
 
 export default WaterfallChart;
