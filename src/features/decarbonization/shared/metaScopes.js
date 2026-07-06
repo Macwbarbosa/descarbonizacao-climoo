@@ -34,15 +34,22 @@ export const allowedScopesForProject = (project, metasById) => {
 };
 
 /**
- * Atividades disponíveis para um projeto: dentro dos escopos das suas metas,
- * MAIS as já selecionadas (membro) — para nunca "sumir" com seleções existentes
- * ao trocar a meta. Sem meta/escopo → todas as atividades.
+ * Atividades disponíveis para um projeto: apenas as COBERTAS pelas metas do
+ * projeto (escopo + fora da lista de exclusão de cada meta), MAIS as já
+ * selecionadas (membro) — para nunca "sumir" com seleções existentes. Se a
+ * cobertura da meta tem só algumas categorias/atividades, só elas aparecem.
+ * Sem meta → todas as atividades.
  */
 export const activitiesForProject = (activities, project, metasById) => {
-    const allowed = allowedScopesForProject(project, metasById);
-    if (allowed.length === 0) return activities;
+    const metaIds = projectMetaIds(project);
+    if (metaIds.length === 0) return activities;
     const members = new Set(project?.memberActivityIds || []);
-    return activities.filter((a) => allowed.includes(a.scope) || members.has(a.id));
+    const covered = new Set();
+    metaIds.forEach((mid) => {
+        const meta = metasById[mid];
+        if (meta) metaCoveredActivities(meta, activities).forEach((a) => covered.add(a.id));
+    });
+    return activities.filter((a) => covered.has(a.id) || members.has(a.id));
 };
 
 /** Atividades EXCLUÍDAS da cobertura de uma meta (Set). */

@@ -9,26 +9,32 @@ const fmt = (v) => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 3,
 
 /**
  * Placar de KPIs do BAU: emissão base, BAU no ano-meta, crescimento médio das
- * emissões (a.a.) e mix por escopo (E1/E2/E3 %). Recalcula ao vivo.
+ * emissões (a.a.) e mix por escopo (E1/E2/E3 %). Quando `denomByYear` é
+ * informado (meta de intensidade), base e BAU são mostrados como INDICADOR
+ * (tCO2e ÷ denominador do ano). Recalcula ao vivo.
  */
-function BauKpis({ activities, baseYear, targetYear, driversById }) {
+function BauKpis({ activities, baseYear, targetYear, driversById, unit, denomByYear }) {
     const { base, target, growth, mix } = useMemo(() => {
-        const b = totalEmission(activities, baseYear, baseYear, driversById);
-        const t = totalEmission(activities, targetYear, baseYear, driversById);
+        let b = totalEmission(activities, baseYear, baseYear, driversById);
+        let t = totalEmission(activities, targetYear, baseYear, driversById);
         const g = averageAnnualEmissionGrowth(activities, baseYear, targetYear, driversById);
         const byScope = SCOPES.map((s) => scopeEmission(activities, s, targetYear, baseYear, driversById));
         const pct = t > 0 ? byScope.map((v) => Math.round((v / t) * 100)) : [0, 0, 0];
+        if (denomByYear) {
+            if (denomByYear[baseYear]) b /= denomByYear[baseYear];
+            if (denomByYear[targetYear]) t /= denomByYear[targetYear];
+        }
         return { base: b, target: t, growth: g, mix: pct };
-    }, [activities, baseYear, targetYear, driversById]);
+    }, [activities, baseYear, targetYear, driversById, denomByYear]);
 
     return (
         <Row gutter={[12, 12]} className="mb-4">
             <Col xs={24} sm={12} lg={6}>
                 <StatCard
                     icon={<Stack size={18} weight="fill" />}
-                    title={`Emissão base ${baseYear}`}
+                    title={denomByYear ? `Intensidade base ${baseYear}` : `Emissão base ${baseYear}`}
                     value={fmt(base)}
-                    unit="tCO2e"
+                    unit={unit}
                     tooltipInfo="Total do inventário no ano-base."
                 />
             </Col>
@@ -37,7 +43,7 @@ function BauKpis({ activities, baseYear, targetYear, driversById }) {
                     icon={<TrendUp size={18} weight="fill" />}
                     title={`BAU ${targetYear}`}
                     value={fmt(target)}
-                    unit="tCO2e"
+                    unit={unit}
                     tooltipInfo="Projeção sem ação no ano-meta."
                 />
             </Col>
@@ -70,6 +76,11 @@ BauKpis.propTypes = {
     targetYear: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     driversById: PropTypes.object.isRequired,
+    unit: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    denomByYear: PropTypes.object,
 };
+
+BauKpis.defaultProps = { unit: 'tCO2e', denomByYear: null };
 
 export default BauKpis;

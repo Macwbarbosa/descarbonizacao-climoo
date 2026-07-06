@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { Button, Select, Spin, Alert, Upload, Tooltip, message } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button, Select, Spin, Alert, Upload, Tooltip, Tabs, message } from 'antd';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
@@ -8,6 +8,9 @@ import useBauStore from './store/useBauStore';
 import useDriversStore from '../drivers/store/useDriversStore';
 import usePlanTargetsStore from '../targets-timeframe/store/usePlanTargetsStore';
 import { parseNumber } from '../inventory/utils/inventoryAggregate';
+import { indicePorAno } from '../drivers/utils/driverIndex';
+import { isIntensityType, reductionTypeOf } from '../targets-timeframe/services/sbtiTargetService';
+import { metaScopeLabels, metaCoveredActivities } from '../shared/metaScopes';
 import BauKpis from './components/BauKpis';
 import BauAreaChart from './components/BauAreaChart';
 import BauMatrix from './components/BauMatrix';
@@ -35,11 +38,37 @@ function BauProjectionPage() {
     // Período/ano-base — fonte única: tela Metas & Período.
     const { baseYear, netZeroYear } = usePlanTargetsStore((s) => s.params);
     const endYear = netZeroYear;
+    // Metas (para separar o BAU por meta, como nos Cenários).
+    const metas = usePlanTargetsStore((s) => s.metas);
+    const loadPlanData = usePlanTargetsStore((s) => s.loadPlanData);
+    const [focusMetaId, setFocusMetaId] = useState(null);
 
     useEffect(() => {
+        loadPlanData().catch(() => {});
         loadDrivers().catch(() => {});
         loadActivities().catch(() => message.error('Erro ao carregar o inventário de atividades.'));
-    }, [loadDrivers, loadActivities]);
+    }, [loadPlanData, loadDrivers, loadActivities]);
+
+    // Meta em foco e atividades restritas à COBERTURA da meta (escopos + exclusões).
+    const focusMeta = useMemo(() => metas.find((m) => m.id === focusMetaId) || metas[0] || null, [metas, focusMetaId]);
+    const bauActivities = useMemo(
+        () => (focusMeta && metaScopeLabels(focusMeta).length ? metaCoveredActivities(focusMeta, activities) : activities),
+        [focusMeta, activities]
+    );
+
+    // Exibição em INTENSIDADE quando a meta em foco é de intensidade: BAU passa a
+    // ser mostrado como indicador (tCO2e ÷ denominador projetado por ano).
+    const intensity = useMemo(() => {
+        const off = { on: false, unit: 'tCO2e', denomByYear: null };
+        if (!focusMeta || !isIntensityType(reductionTypeOf(focusMeta)) || !focusMeta.denominatorDriverId) return off;
+        const driver = drivers.find((d) => d.id === focusMeta.denominatorDriverId);
+        if (!driver) return off;
+        const proj = indicePorAno(driver, { baseYear, endYear }).map((p) => ({
+            year: p.year,
+            value: driver.baseValue > 0 ? (driver.baseValue * p.index) / 100 : p.index,
+        }));
+        return { on: true, unit: `tCO2e/${driver.unit || 'un.'}`, denomByYear: Object.fromEntries(proj.map((p) => [p.year, p.value])) };
+    }, [focusMeta, drivers, baseYear, endYear]);
 
     // Mantém o ano-alvo dentro do horizonte do plano.
     useEffect(() => {
@@ -209,17 +238,38 @@ function BauProjectionPage() {
 
             {error && <Alert className="mb-4" type="error" showIcon message={error} />}
 
+            {metas.length > 0 && (
+                <Tabs
+                    type="card"
+                    activeKey={focusMeta?.id}
+                    onChange={setFocusMetaId}
+                    items={metas.map((m) => ({ key: m.id, label: m.name }))}
+                    className="mb-3"
+                />
+            )}
+
             <Spin spinning={loading}>
-                <BauKpis activities={activities} baseYear={baseYear} targetYear={targetYear} driversById={driversById} />
+                <BauKpis
+                    activities={bauActivities}
+                    baseYear={baseYear}
+                    targetYear={targetYear}
+                    driversById={driversById}
+                    unit={intensity.unit}
+                    denomByYear={intensity.denomByYear}
+                />
 
                 <Card className="mb-4">
-                    <h3 className="text-base font-semibold text-[#210856] mb-3">Emissões BAU projetadas</h3>
+                    <h3 className="text-base font-semibold text-[#210856] mb-3">
+                        Emissões BAU projetadas{intensity.on ? ' (intensidade)' : ''}
+                    </h3>
                     <BauAreaChart
-                        activities={activities}
+                        activities={bauActivities}
                         baseYear={baseYear}
                         endYear={endYear}
                         targetYear={targetYear}
                         driversById={driversById}
+                        unit={intensity.unit}
+                        denomByYear={intensity.denomByYear}
                     />
                 </Card>
 
@@ -240,7 +290,7 @@ function BauProjectionPage() {
                         </div>
                     </div>
                     <BauMatrix
-                        activities={activities}
+                        activities={bauActivities}
                         drivers={drivers}
                         driversById={driversById}
                         baseYear={baseYear}

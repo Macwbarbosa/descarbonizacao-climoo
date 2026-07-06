@@ -4,7 +4,7 @@ import { Area } from '@antv/g2plot';
 import { Empty } from 'antd';
 import { bauStackedByScope, totalEmission, SCOPES } from '../utils/bauProjection';
 
-const fmt = (v) => `${Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} tCO2e`;
+const fmtVal = (v, unit) => `${Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} ${unit}`;
 
 /** Cores por série, no estilo do gráfico "Trajetória no tempo" (Cenários). */
 const SERIES_COLORS = {
@@ -21,7 +21,7 @@ const SERIES_ORDER = ['Total', ...SCOPES];
  * gráfico "Trajetória no tempo" da tela de Cenários. A legenda (rodapé) permite
  * ver/ocultar cada linha. Marcador no ano-alvo. Recalcula ao vivo.
  */
-function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById }) {
+function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById, unit, denomByYear }) {
     const ref = useRef(null);
     const plotRef = useRef(null);
 
@@ -32,8 +32,13 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById }
             total.push({ year: y, scope: 'Total', value: totalEmission(activities, y, baseYear, driversById) });
         }
         // Total primeiro (fica ao fundo); escopos por cima.
-        return [...total, ...porEscopo];
-    }, [activities, baseYear, endYear, driversById]);
+        const rows = [...total, ...porEscopo];
+        // Intensidade: divide cada ponto pelo denominador projetado do ano.
+        if (denomByYear) {
+            return rows.map((p) => ({ ...p, value: denomByYear[p.year] ? p.value / denomByYear[p.year] : p.value }));
+        }
+        return rows;
+    }, [activities, baseYear, endYear, driversById, denomByYear]);
 
     useEffect(() => {
         const el = ref.current;
@@ -70,12 +75,18 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById }
             },
             yAxis: {
                 min: 0,
-                title: { text: 'Emissões (tCO2e)', style: { fontSize: 12, fontWeight: 'bold', fill: '#6B7280' } },
+                title: { text: denomByYear ? `Intensidade (${unit})` : 'Emissões (tCO2e)', style: { fontSize: 12, fontWeight: 'bold', fill: '#6B7280' } },
                 // Sem meta.value.formatter: o tick chegaria aqui já formatado → NaN ("NaNk").
-                label: { formatter: (v) => `${(Number(v) / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}k`, style: { fill: '#6B7280' } },
+                label: {
+                    formatter: (v) =>
+                        denomByYear
+                            ? Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 2 })
+                            : `${(Number(v) / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}k`,
+                    style: { fill: '#6B7280' },
+                },
                 grid: { line: { style: { stroke: '#E5E7EB', lineDash: [4, 6], lineWidth: 1 } } },
             },
-            tooltip: { formatter: (d) => ({ name: d.scope, value: fmt(d.value) }) },
+            tooltip: { formatter: (d) => ({ name: d.scope, value: fmtVal(d.value, unit) }) },
             legend: { position: 'bottom', marker: { symbol: 'circle' } },
             // Garante a ordem/realce do Total e dos escopos na legenda e no desenho.
             meta: { scope: { values: SERIES_ORDER } },
@@ -110,7 +121,7 @@ function BauAreaChart({ activities, baseYear, endYear, targetYear, driversById }
                 plotRef.current = null;
             }
         };
-    }, [data, targetYear]);
+    }, [data, targetYear, unit, denomByYear]);
 
     if (data.length === 0) return <Empty description="Sem dados de inventário." />;
     return <div ref={ref} style={{ width: '100%', height: 300, position: 'relative', overflow: 'hidden' }} />;
@@ -124,6 +135,11 @@ BauAreaChart.propTypes = {
     targetYear: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     driversById: PropTypes.object.isRequired,
+    unit: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    denomByYear: PropTypes.object,
 };
+
+BauAreaChart.defaultProps = { unit: 'tCO2e', denomByYear: null };
 
 export default BauAreaChart;
