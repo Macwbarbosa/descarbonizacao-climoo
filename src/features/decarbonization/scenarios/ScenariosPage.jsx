@@ -11,7 +11,7 @@ import useInventoryStore from '../inventory/store/useInventoryStore';
 import useTechnologyBankStore from '../../../store/technologyBankStore';
 import { mergedInitiativesById } from '../projects/utils/initiativeCatalog';
 import { aggregateByScope, activitiesForYear } from '../inventory/utils/inventoryAggregate';
-import { computeMetaTarget } from '../targets-timeframe/services/sbtiTargetService';
+import { computeMetaTarget, isIntensityType, reductionTypeOf } from '../targets-timeframe/services/sbtiTargetService';
 import { indicePorAno } from '../drivers/utils/driverIndex';
 import {
     waterfallData,
@@ -36,6 +36,7 @@ import useChartTheme from './utils/chartTheme';
 import { downloadXlsx } from './utils/chartExport';
 
 const fmt0 = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+const fmt2 = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 
 /**
  * Etapa 6 — Cenários. Combina Projetos (Etapa 5) em cenários e compara a
@@ -217,6 +218,24 @@ function ScenariosPage() {
         [focusMeta, targetYear]
     );
 
+    // Exibição em INTENSIDADE: quando a meta em foco é de intensidade, os
+    // indicadores (gauges) e os projetos passam a mostrar o VALOR NO INDICADOR
+    // (tCO2e ÷ denominador no ano-alvo), em vez de tCO2e absoluto.
+    const intensityDisplay = useMemo(() => {
+        const identity = { isIntensity: false, unit: 'tCO2e', toDisplay: (v) => v };
+        const meta = focusMeta?.meta;
+        if (!meta || !isIntensityType(reductionTypeOf(meta)) || !meta.denominatorDriverId) return identity;
+        const proj = metaCtx.getDenominatorProjection(meta.denominatorDriverId) || [];
+        const denom = proj.find((p) => p.year === targetYear)?.value || null;
+        if (!denom) return identity;
+        const driver = drivers.find((d) => d.id === meta.denominatorDriverId);
+        return {
+            isIntensity: true,
+            unit: `tCO2e/${driver?.unit || 'un.'}`,
+            toDisplay: (v) => (v == null ? v : v / denom),
+        };
+    }, [focusMeta, metaCtx, targetYear, drivers]);
+
     // Linhas no tempo (restritas aos escopos da meta em foco).
     const { lineData, serieKinds } = useMemo(() => {
         const data = [];
@@ -356,6 +375,8 @@ function ScenariosPage() {
                     initiativesById={initiativesById}
                     ctx={displayCtx}
                     targetYear={targetYear}
+                    unitLabel={intensityDisplay.unit}
+                    toDisplay={intensityDisplay.toDisplay}
                     onToggle={(pid, included) => upsertItem(activeScenarioId, pid, { included })}
                     onUpsertItem={(pid, patch) => upsertItem(activeScenarioId, pid, patch)}
                     onRemoveItem={(pid) => removeItem(activeScenarioId, pid)}
@@ -462,11 +483,17 @@ function ScenariosPage() {
                                     </div>
                                     <div>
                                         <div className="text-[10px] uppercase tracking-wide text-gray-500">Baseline</div>
-                                        <div className="font-semibold tabular-nums">{fmt0(focusMeta.target?.valorBase)} tCO2e</div>
+                                        <div className="font-semibold tabular-nums">
+                                            {(intensityDisplay.isIntensity ? fmt2 : fmt0)(focusMeta.target?.valorBase)}{' '}
+                                            {intensityDisplay.unit}
+                                        </div>
                                     </div>
                                     <div>
                                         <div className="text-[10px] uppercase tracking-wide text-gray-500">Alvo {targetYear}</div>
-                                        <div className="font-semibold tabular-nums">{fmt0(focusMeta.target?.valorNearTerm)} tCO2e</div>
+                                        <div className="font-semibold tabular-nums">
+                                            {(intensityDisplay.isIntensity ? fmt2 : fmt0)(focusMeta.target?.valorNearTerm)}{' '}
+                                            {intensityDisplay.unit}
+                                        </div>
                                     </div>
                                     <div>
                                         <div className="text-[10px] uppercase tracking-wide text-gray-500">Redução</div>
@@ -549,10 +576,11 @@ function ScenariosPage() {
                 {activeScenario ? (
                   <>
                     <ScenarioKpis
-                        bauTarget={bauTarget}
-                        scenarioTarget={scenarioTarget}
-                        metaTarget={focusMetaTarget}
-                        gap={focusGap.gap}
+                        bauTarget={intensityDisplay.toDisplay(bauTarget)}
+                        scenarioTarget={intensityDisplay.toDisplay(scenarioTarget)}
+                        metaTarget={intensityDisplay.toDisplay(focusMetaTarget)}
+                        gap={intensityDisplay.toDisplay(focusGap.gap)}
+                        unit={intensityDisplay.unit}
                         targetYear={targetYear}
                         metaName={focusMeta?.meta.name || ''}
                     />

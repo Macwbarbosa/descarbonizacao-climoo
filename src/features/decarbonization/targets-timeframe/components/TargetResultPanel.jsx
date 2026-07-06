@@ -90,20 +90,6 @@ function TargetResultPanel({ target, meta, params, scopesLabel, ambitionLabel, t
                     }
                 />
             )}
-            {isIntensity && (
-                <Alert
-                    className="mt-3"
-                    type="info"
-                    showIcon
-                    message={
-                        <span>
-                            Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com r = <b>{num(taxaAnual, 1)}%/ano</b> (mín.
-                            SBTi 1,5°C: 7%/ano) → <b>{pct(reducaoNearTermPct)}</b> em {nearTermYear}. O absoluto,
-                            comparado pelos Cenários, resulta de intensidade × projeção do denominador (driver da Etapa 3).
-                        </span>
-                    }
-                />
-            )}
 
             <Row gutter={[12, 12]} className="mt-4">
                 <Col xs={24} sm={12} lg={6}>

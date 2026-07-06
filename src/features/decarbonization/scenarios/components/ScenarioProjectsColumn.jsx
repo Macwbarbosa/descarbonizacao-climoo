@@ -15,7 +15,7 @@ const scopesOf = (project, activitiesById) => {
 };
 
 /** Coluna esquerda: Projetos do cenário (liga/desliga, resumo, override, adicionar). */
-function ScenarioProjectsColumn({ scenario, projects, metas, focusMeta, initiativesById, ctx, targetYear, onToggle, onUpsertItem, onRemoveItem }) {
+function ScenarioProjectsColumn({ scenario, projects, metas, focusMeta, initiativesById, ctx, targetYear, unitLabel, toDisplay, onToggle, onUpsertItem, onRemoveItem }) {
     const [overrideFor, setOverrideFor] = useState(null);
     const projectsById = Object.fromEntries(projects.map((p) => [p.id, p]));
     const metasById = Object.fromEntries((metas || []).map((m) => [m.id, m]));
@@ -63,7 +63,7 @@ function ScenarioProjectsColumn({ scenario, projects, metas, focusMeta, initiati
                                     <Tag key={n} color="purple" className="rounded-full m-0 mr-1 text-[10px]">{n}</Tag>
                                 ))}
                                 {scopesOf(project, ctx.activitiesById).map((s) => <Tag key={s} className="rounded-full m-0 mr-1 text-[10px]">{s}</Tag>)}
-                                {(project.memberActivityIds || []).length} ativ. · −{fmt(abat)} tCO2e em {targetYear}
+                                {(project.memberActivityIds || []).length} ativ. · −{fmt(toDisplay(abat))} {unitLabel} em {targetYear}
                                 {hasOverride && <Tag color="gold" className="rounded-full ml-1 text-[10px]">override</Tag>}
                             </div>
                             <div className="flex items-center gap-1 mt-2">
@@ -117,11 +117,13 @@ ScenarioProjectsColumn.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     ctx: PropTypes.object.isRequired,
     targetYear: PropTypes.number.isRequired,
+    unitLabel: PropTypes.string,
+    toDisplay: PropTypes.func,
     onToggle: PropTypes.func.isRequired,
     onUpsertItem: PropTypes.func.isRequired,
     onRemoveItem: PropTypes.func.isRequired,
 };
 
-ScenarioProjectsColumn.defaultProps = { scenario: null, metas: [], focusMeta: null };
+ScenarioProjectsColumn.defaultProps = { scenario: null, metas: [], focusMeta: null, unitLabel: 'tCO2e', toDisplay: (v) => v };
 
 export default ScenarioProjectsColumn;
