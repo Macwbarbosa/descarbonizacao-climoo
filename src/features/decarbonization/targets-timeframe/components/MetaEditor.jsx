@@ -9,8 +9,6 @@ import {
     SCOPE_KEYS,
     SCOPE3_MIN_COVERAGE_PCT,
     ENGAGEMENT_HORIZON_YEARS,
-    INTENSITY_BASELINE_FLOOR_YEAR,
-    INTENSITY_MIN_ANNUAL_RATE,
     isEngagementType,
     isCombinedType,
     isIntensityType,
@@ -273,20 +271,6 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                 )}
             </Row>
 
-            {intensity && (
-                <Alert
-                    className="mt-3"
-                    type="info"
-                    showIcon
-                    message={
-                        <span>
-                            Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com <b>r = {INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}%/ano</b>{' '}
-                            (taxa SBTi fixa da ambição) e n = ano-meta − max(ano-base, {INTENSITY_BASELINE_FLOOR_YEAR}). O
-                            absoluto resulta de intensidade × projeção do denominador (driver da Etapa 3).
-                        </span>
-                    }
-                />
-            )}
 
             {/* Cobertura da meta (atividades) — parte de redução (não em engajamento puro) */}
             {!engagement && (

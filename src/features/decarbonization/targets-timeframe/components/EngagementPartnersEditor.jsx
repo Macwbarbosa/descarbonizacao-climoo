@@ -81,10 +81,11 @@ function EngagementPartnersEditor({ partners, scope3Total, categoryOptions, disa
                             <InputNumber
                                 value={p.emission}
                                 min={0}
+                                step={0.001}
+                                precision={3}
+                                decimalSeparator=","
                                 className="w-full"
                                 controls={false}
-                                formatter={(v) => `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                                parser={(v) => `${v}`.replace(/\./g, '')}
                                 onChange={(v) => patch(p.id, 'emission', v || 0)}
                                 disabled={disabled}
                             />

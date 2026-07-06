@@ -393,33 +393,28 @@ export const computeSbtiTarget = ({
     let reducaoNetZeroPct;
 
     if (intensity) {
-        // Meta de INTENSIDADE (SBTi): redução cumulativa = 1 − (1 − r)^n, onde
-        // r = taxa anual informada (mín. 7%/ano p/ 1,5°C) e
-        // n = ano − max(ano-base, 2020) (reduções pré-2020 não contam).
-        // Fórmula idêntica p/ intensidade física e monetária; muda só a taxa r.
+        // Meta de INTENSIDADE (SBTi): redução cumulativa = 1 − (1 − r)^n, com
+        // r = taxa anual (7%/ano p/ 1,5°C) e n = ano-meta − 2020 (a trajetória de
+        // intensidade é ancorada em 2020 — reduções anteriores a 2020 não contam).
+        // Ex.: ano-base 2025, ano-meta 2036 → n = 16 → 1 − 0,93^16 = 68,69%.
         unidade = 'intensidade';
         const r = Math.max(0, Number(intensityAnnualRate) || 0) / 100;
         taxaAnual = r * 100;
-        const anoInicio = Math.max(Number(anoBase), INTENSITY_BASELINE_FLOOR_YEAR);
-        const reduAt = (ano) => 1 - Math.pow(1 - r, Math.max(0, ano - anoInicio)); // fração
+        const reduAt = (ano) => 1 - Math.pow(1 - r, Math.max(0, ano - INTENSITY_BASELINE_FLOOR_YEAR));
         reducaoNearTermPct = reduAt(anoNearTerm) * 100;
         reducaoNetZeroPct = hasNetZero ? reduAt(anoNetZero) * 100 : null;
 
         if (denomBase && denomBase > 0) {
             const denomOr = (ano) => denomAt(ano) ?? denomBase;
             valorBase = baseCoberta / denomBase;
-            const intAt = (ano) => valorBase * (1 - reduAt(ano)); // = valorBase·(1−r)^n
-            valorNearTerm = intAt(anoNearTerm);
-            valorNetZero = hasNetZero ? intAt(anoNetZero) : null;
-            const endYear = hasNetZero ? anoNetZero : anoNearTerm;
-            trajetoria = [];
-            for (let y = anoBase; y <= endYear; y += 1) {
-                const tipo =
-                    y === anoBase ? 'base' : y === anoNearTerm ? 'near-term' : hasNetZero && y === anoNetZero ? 'net-zero' : null;
-                trajetoria.push({ ano: y, valor: intAt(y), marco: !!tipo, tipo });
-            }
+            valorNearTerm = valorBase * (1 - reducaoNearTermPct / 100);
+            valorNetZero = hasNetZero ? valorBase * (1 - reducaoNetZeroPct / 100) : null;
+            trajetoria = buildTargetTrajectory({ anoBase, anoNearTerm, anoNetZero, valorBase, valorNearTerm, valorNetZero });
             // Absoluto = intensidade × projeção do denominador (Cenários comparam isto).
-            trajetoriaAbsoluta = trajetoria.map((p) => ({ ...p, valor: p.valor * denomOr(p.ano) }));
+            trajetoriaAbsoluta = trajetoria.map((p) => ({
+                ...p,
+                valor: p.valor != null ? p.valor * denomOr(p.ano) : null,
+            }));
         } else {
             denominadorAusente = true;
             valorBase = null;
@@ -504,6 +499,7 @@ export const computeMetaTarget = (meta, ctx) => {
             engagementEmissions,
             scope3Total,
             coveragePct,
+            engagementCoveragePct: coveragePct, // % do Escopo 3 total (= rodapé da tabela)
             partnerCategories: catShare.partnerCategories,
             engagementShareOfCategoriesPct: catShare.sharePct,
             targetYear: submissionYear + ENGAGEMENT_HORIZON_YEARS,
@@ -560,6 +556,7 @@ export const computeMetaTarget = (meta, ctx) => {
             ...base,
             engagementEmissions,
             engagementDeducted: deducted,
+            engagementCoveragePct: scope3Total > 0 ? (engagementEmissions / scope3Total) * 100 : 0,
             partnerCategories: catShare.partnerCategories,
             engagementShareOfCategoriesPct: catShare.sharePct,
             partners: meta.engagement?.partners || [],
@@ -621,12 +618,18 @@ export const reductionCommitmentText = ({ companyName, meta, target, baseYear, d
  *  metas climáticas baseadas na ciência até {ano de submissão + 5}."
  */
 export const engagementCommitmentText = ({ companyName, target, standalone = false }) => {
-    const share = fmtPct1(target?.engagementShareOfCategoriesPct ?? target?.coveragePct ?? 0);
+    // % em emissão sobre o TOTAL do Escopo 3 (mesmo valor do rodapé da tabela).
+    const share = fmtPct1(target?.engagementCoveragePct ?? target?.coveragePct ?? 0);
     const cats = (target?.partnerCategories || []).join(', ');
     const catPhrase = cats ? ` (considerando as emissões abrangidas pela ${cats})` : '';
     const year = target?.engagementTargetYear ?? target?.targetYear;
+    // Trata só fornecedores, só clientes, ou ambos, conforme os parceiros cadastrados.
+    const kinds = new Set((target?.partners || []).map((p) => p.kind));
+    let who = 'fornecedores e clientes';
+    if (kinds.size === 1 && kinds.has('cliente')) who = 'clientes';
+    else if (kinds.size === 1 && kinds.has('fornecedor')) who = 'fornecedores';
     const subject = standalone ? `${companyName} assegura` : 'Adicionalmente, a empresa assegura';
-    return `${subject} que ${share} de seus fornecedores e clientes${catPhrase} estabelecerão metas climáticas baseadas na ciência até ${year}.`;
+    return `${subject} que ${share}, em emissão, de seus ${who}${catPhrase} estabelecerão metas climáticas baseadas na ciência até ${year}.`;
 };
 
 /** Nome automático sugerido para a meta (editável pelo usuário). */
