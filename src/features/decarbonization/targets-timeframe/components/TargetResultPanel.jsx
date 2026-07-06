@@ -21,7 +21,6 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
         taxaAnual,
         reducaoNearTermPct,
         reducaoNetZeroPct,
-        reducaoAbsolutaNearTermPct,
         valorBase,
         valorNearTerm,
         valorNetZero,
@@ -89,16 +88,18 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
                 <div className="text-[15px] leading-relaxed mt-1.5">{summary}</div>
             </div>
 
-            <Alert
-                className="mt-3"
-                type="info"
-                showIcon
-                message={
-                    pisoAtivo
-                        ? `Pela regra SBTi (ACA), a trajetória de net-zero exigiria menos que o piso da ambição: aplica-se o piso de ${num(larrFloorPct, 2)}%/ano → taxa efetiva ${num(taxaAnual, 2)}%/ano.`
-                        : `Taxa derivada da trajetória de net-zero por escopo (E1 90% · E2 100% · E3 90%/75%), ponderada pelo inventário: ${num(taxaAnual, 2)}%/ano (acima do piso de ${num(larrFloorPct, 2)}%/ano). A % de redução varia com o mix de escopos.`
-                }
-            />
+            {!isIntensity && (
+                <Alert
+                    className="mt-3"
+                    type="info"
+                    showIcon
+                    message={
+                        pisoAtivo
+                            ? `Pela regra SBTi (ACA), a trajetória de net-zero exigiria menos que o piso da ambição: aplica-se o piso de ${num(larrFloorPct, 2)}%/ano → taxa efetiva ${num(taxaAnual, 2)}%/ano.`
+                            : `Taxa derivada da trajetória de net-zero por escopo (E1 90% · E2 100% · E3 90%/75%), ponderada pelo inventário: ${num(taxaAnual, 2)}%/ano (acima do piso de ${num(larrFloorPct, 2)}%/ano). A % de redução varia com o mix de escopos.`
+                    }
+                />
+            )}
             {isIntensity && (
                 <Alert
                     className="mt-3"
@@ -106,10 +107,9 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
                     showIcon
                     message={
                         <span>
-                            Intensidade = emissões ÷ denominador (driver da Etapa 3). A âncora é a redução
-                            ABSOLUTA de <b>{pct(reducaoAbsolutaNearTermPct)}</b> (mesma da meta absoluta); como o
-                            denominador cresce, a queda de <b>intensidade</b> é mais acentuada (
-                            <b>{pct(reducaoNearTermPct)}</b>). Os Cenários comparam a trajetória absoluta.
+                            Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com r = <b>{num(taxaAnual, 1)}%/ano</b> (mín.
+                            SBTi 1,5°C: 7%/ano) → <b>{pct(reducaoNearTermPct)}</b> em {nearTermYear}. O absoluto,
+                            comparado pelos Cenários, resulta de intensidade × projeção do denominador (driver da Etapa 3).
                         </span>
                     }
                 />

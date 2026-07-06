@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
+import { Input, InputNumber, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
     AMBITION_OPTIONS,
@@ -9,6 +9,8 @@ import {
     SCOPE_KEYS,
     SCOPE3_MIN_COVERAGE_PCT,
     ENGAGEMENT_HORIZON_YEARS,
+    INTENSITY_BASELINE_FLOOR_YEAR,
+    INTENSITY_MIN_ANNUAL_RATE,
     isEngagementType,
     isCombinedType,
     isIntensityType,
@@ -198,12 +200,37 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
             </Row>
 
             {intensity && (
-                <Alert
-                    className="mt-3"
-                    type="info"
-                    showIcon
-                    message="Intensidade: as emissões cobertas pela meta são divididas pelo denominador (variável de crescimento da Etapa 3) para obter a intensidade base; a mesma taxa de contração é aplicada à intensidade."
-                />
+                <Row gutter={[12, 12]} className="mt-3">
+                    <Col xs={24} lg={8}>
+                        <span className={labelCls}>Taxa anual de redução de intensidade (%/ano)</span>
+                        <InputNumber
+                            value={meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}
+                            min={0}
+                            max={100}
+                            step={0.5}
+                            className="w-full"
+                            addonAfter="%/ano"
+                            onChange={(v) => onPatch({ intensityAnnualRate: v ?? 0 })}
+                        />
+                        <div className="text-[11px] text-gray-400 mt-1">
+                            Mínimo SBTi para 1,5°C: {INTENSITY_MIN_ANNUAL_RATE['1p5']}%/ano.
+                        </div>
+                    </Col>
+                    <Col xs={24} lg={16}>
+                        <Alert
+                            type="info"
+                            showIcon
+                            message={
+                                <span>
+                                    Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com r ={' '}
+                                    {meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}%/ano e n = ano-meta
+                                    − max(ano-base, {INTENSITY_BASELINE_FLOOR_YEAR}). O absoluto resulta de intensidade ×
+                                    projeção do denominador (driver da Etapa 3).
+                                </span>
+                            }
+                        />
+                    </Col>
+                </Row>
             )}
 
             {/* Cobertura da meta (atividades) — parte de redução (não em engajamento puro) */}

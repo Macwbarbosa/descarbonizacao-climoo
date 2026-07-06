@@ -166,6 +166,12 @@ export const SCOPE3_MIN_COVERAGE_PCT = 67;
 /** Horizonte fixo da meta de engajamento: 5 anos a partir da submissão. */
 export const ENGAGEMENT_HORIZON_YEARS = 5;
 
+/** Reduções anteriores a este ano não contam para novas metas (regra SBTi). */
+export const INTENSITY_BASELINE_FLOOR_YEAR = 2020;
+
+/** Taxa anual mínima de redução de intensidade por ambição (SBTi), em %/ano. */
+export const INTENSITY_MIN_ANNUAL_RATE = { '1p5': 7, wb2: 3 };
+
 /** @param {TipoMeta} type */
 export const isIntensityType = (type) => type === 'intensidade_fisica' || type === 'intensidade_economica';
 /** @param {TipoMeta} type */
@@ -322,6 +328,7 @@ export const computeSbtiTarget = ({
     tipoMeta = 'absoluta',
     emissoesPorEscopo = {},
     denominadorPorAno = null,
+    intensityAnnualRate = 7,
 }) => {
     const baseCoberta = sumCoveredBase(emissoesPorEscopo);
     const hasNetZero = anoNetZero != null && anoNetZero > anoNearTerm;
@@ -338,11 +345,9 @@ export const computeSbtiTarget = ({
         ambicao,
         emissoesPorEscopo,
     });
-    // Redução ABSOLUTA (contração ACA) — mesma taxa para meta absoluta e de
-    // intensidade; é a ÂNCORA (o que os Cenários comparam em tCO2e).
+    // Redução ABSOLUTA (contração ACA) — referência para metas absolutas/SDA.
     const reducaoAbsolutaNearTermPct = aca.reducaoPct;
     const reducaoAbsolutaNetZeroPct = hasNetZero ? NET_ZERO_REDUCTION_PCT : null;
-    const taxaAnual = aca.taxaAnualPct; // taxa anual linear EFETIVA (base→alvo), em %.
 
     const denomAt = (year) => {
         if (!Array.isArray(denominadorPorAno)) return null;
@@ -351,60 +356,64 @@ export const computeSbtiTarget = ({
     };
     const denomBase = denomAt(anoBase);
 
-    // Trajetória ABSOLUTA (base → near-term [→ net-zero]) — sempre a âncora.
-    const absBase = baseCoberta;
-    const absNearTerm = baseCoberta * (1 - reducaoAbsolutaNearTermPct / 100);
-    const absNetZero = hasNetZero ? baseCoberta * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
-    const trajetoriaAbsoluta = buildTargetTrajectory({
-        anoBase,
-        anoNearTerm,
-        anoNetZero,
-        valorBase: absBase,
-        valorNearTerm: absNearTerm,
-        valorNetZero: absNetZero,
-    });
-
     let unidade;
     let valorBase;
     let valorNearTerm;
     let valorNetZero;
     let trajetoria;
+    let trajetoriaAbsoluta;
+    let taxaAnual;
     let denominadorAusente = false;
-    // Por padrão, os % exibidos são os absolutos (metas absolutas/SDA).
-    let reducaoNearTermPct = reducaoAbsolutaNearTermPct;
-    let reducaoNetZeroPct = reducaoAbsolutaNetZeroPct;
+    let reducaoNearTermPct;
+    let reducaoNetZeroPct;
 
     if (intensity) {
-        // Intensidade(ano) = ABSOLUTO(ano) ÷ denominador(ano). Como o denominador
-        // (variável de crescimento) cresce, a QUEDA DE INTENSIDADE é mais acentuada
-        // que a redução absoluta — mantendo o absoluto na âncora SBTi.
+        // Meta de INTENSIDADE (SBTi): redução cumulativa = 1 − (1 − r)^n, onde
+        // r = taxa anual informada (mín. 7%/ano p/ 1,5°C) e
+        // n = ano − max(ano-base, 2020) (reduções pré-2020 não contam).
+        // Fórmula idêntica p/ intensidade física e monetária; muda só a taxa r.
         unidade = 'intensidade';
+        const r = Math.max(0, Number(intensityAnnualRate) || 0) / 100;
+        taxaAnual = r * 100;
+        const anoInicio = Math.max(Number(anoBase), INTENSITY_BASELINE_FLOOR_YEAR);
+        const reduAt = (ano) => 1 - Math.pow(1 - r, Math.max(0, ano - anoInicio)); // fração
+        reducaoNearTermPct = reduAt(anoNearTerm) * 100;
+        reducaoNetZeroPct = hasNetZero ? reduAt(anoNetZero) * 100 : null;
+
         if (denomBase && denomBase > 0) {
             const denomOr = (ano) => denomAt(ano) ?? denomBase;
-            trajetoria = trajetoriaAbsoluta.map((p) => ({
-                ...p,
-                valor: p.valor != null ? p.valor / denomOr(p.ano) : null,
-            }));
-            valorBase = absBase / denomBase;
-            valorNearTerm = absNearTerm / denomOr(anoNearTerm);
-            valorNetZero = hasNetZero ? absNetZero / denomOr(anoNetZero) : null;
-            reducaoNearTermPct = valorBase > 0 ? (1 - valorNearTerm / valorBase) * 100 : reducaoAbsolutaNearTermPct;
-            reducaoNetZeroPct =
-                hasNetZero && valorBase > 0 ? (1 - valorNetZero / valorBase) * 100 : reducaoAbsolutaNetZeroPct;
+            valorBase = baseCoberta / denomBase;
+            const intAt = (ano) => valorBase * (1 - reduAt(ano)); // = valorBase·(1−r)^n
+            valorNearTerm = intAt(anoNearTerm);
+            valorNetZero = hasNetZero ? intAt(anoNetZero) : null;
+            const endYear = hasNetZero ? anoNetZero : anoNearTerm;
+            trajetoria = [];
+            for (let y = anoBase; y <= endYear; y += 1) {
+                const tipo =
+                    y === anoBase ? 'base' : y === anoNearTerm ? 'near-term' : hasNetZero && y === anoNetZero ? 'net-zero' : null;
+                trajetoria.push({ ano: y, valor: intAt(y), marco: !!tipo, tipo });
+            }
+            // Absoluto = intensidade × projeção do denominador (Cenários comparam isto).
+            trajetoriaAbsoluta = trajetoria.map((p) => ({ ...p, valor: p.valor * denomOr(p.ano) }));
         } else {
             denominadorAusente = true;
             valorBase = null;
             valorNearTerm = null;
             valorNetZero = null;
             trajetoria = [];
+            trajetoriaAbsoluta = [];
         }
     } else {
         // 'absoluta' e 'sda_setorial' (SDA cai no ACA até a fase 2 — ver TODO no topo).
         unidade = 'absoluto';
-        valorBase = absBase;
-        valorNearTerm = absNearTerm;
-        valorNetZero = absNetZero;
-        trajetoria = trajetoriaAbsoluta;
+        taxaAnual = aca.taxaAnualPct;
+        reducaoNearTermPct = reducaoAbsolutaNearTermPct;
+        reducaoNetZeroPct = reducaoAbsolutaNetZeroPct;
+        valorBase = baseCoberta;
+        valorNearTerm = baseCoberta * (1 - reducaoAbsolutaNearTermPct / 100);
+        valorNetZero = hasNetZero ? baseCoberta * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
+        trajetoria = buildTargetTrajectory({ anoBase, anoNearTerm, anoNetZero, valorBase, valorNearTerm, valorNetZero });
+        trajetoriaAbsoluta = trajetoria;
     }
 
     return {
@@ -499,6 +508,7 @@ export const computeMetaTarget = (meta, ctx) => {
         tipoMeta: reductionType,
         emissoesPorEscopo,
         denominadorPorAno,
+        intensityAnnualRate: meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7,
     });
 
     // ── Meta COMBINADA: redução + engajamento; cobertura conjunta ≥ 67% ─────
@@ -577,6 +587,8 @@ export default {
     sumEngagementEmissions,
     SCOPE3_MIN_COVERAGE_PCT,
     ENGAGEMENT_HORIZON_YEARS,
+    INTENSITY_BASELINE_FLOOR_YEAR,
+    INTENSITY_MIN_ANNUAL_RATE,
     COMBINED_REDUCTION_OPTIONS,
     autoMetaName,
     scopesLabel,

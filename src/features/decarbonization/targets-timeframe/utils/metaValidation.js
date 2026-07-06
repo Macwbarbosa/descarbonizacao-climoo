@@ -3,9 +3,12 @@ import {
     needsDenominatorForMeta,
     isEngagementType,
     isCombinedType,
+    isIntensityType,
+    reductionTypeOf,
     hasEngagementPart,
     sumEngagementEmissions,
     SCOPE3_MIN_COVERAGE_PCT,
+    INTENSITY_MIN_ANNUAL_RATE,
 } from '../services/sbtiTargetService';
 
 /**
@@ -69,6 +72,14 @@ export const validateMetas = (metas, { baselineByScope, params, targets = {} }) 
         if (!coversAny) issues.push('selecione ao menos um escopo');
         if (needsDenominatorForMeta(m) && !m.denominatorDriverId) {
             issues.push('metas de intensidade exigem um denominador (driver da Etapa 3)');
+        }
+        // Intensidade: taxa anual não pode ficar abaixo do mínimo SBTi da ambição.
+        if (isIntensityType(reductionTypeOf(m))) {
+            const minRate = INTENSITY_MIN_ANNUAL_RATE[m.ambition] ?? INTENSITY_MIN_ANNUAL_RATE['1p5'];
+            const rate = m.intensityAnnualRate ?? minRate;
+            if (rate < minRate) {
+                issues.push(`taxa de intensidade ${rate}%/ano < mínimo SBTi (${minRate}%/ano) para a ambição`);
+            }
         }
         // Engajamento: exige ao menos um fornecedor/cliente com emissão.
         if (hasEngagementPart(m.type) && sumEngagementEmissions(m) <= 0) {
