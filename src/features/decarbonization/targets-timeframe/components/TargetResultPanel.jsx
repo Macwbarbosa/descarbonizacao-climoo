@@ -21,6 +21,7 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
         taxaAnual,
         reducaoNearTermPct,
         reducaoNetZeroPct,
+        reducaoAbsolutaNearTermPct,
         valorBase,
         valorNearTerm,
         valorNetZero,
@@ -103,7 +104,14 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
                     className="mt-3"
                     type="info"
                     showIcon
-                    message="Trajetória em intensidade (mesma taxa de contração aplicada à intensidade). A conversão para absoluto, consumida pelos Cenários, usa a projeção do denominador (driver da Etapa 3)."
+                    message={
+                        <span>
+                            Intensidade = emissões ÷ denominador (driver da Etapa 3). A âncora é a redução
+                            ABSOLUTA de <b>{pct(reducaoAbsolutaNearTermPct)}</b> (mesma da meta absoluta); como o
+                            denominador cresce, a queda de <b>intensidade</b> é mais acentuada (
+                            <b>{pct(reducaoNearTermPct)}</b>). Os Cenários comparam a trajetória absoluta.
+                        </span>
+                    }
                 />
             )}
 

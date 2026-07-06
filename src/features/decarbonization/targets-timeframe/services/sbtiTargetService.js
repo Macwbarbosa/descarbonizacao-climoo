@@ -338,9 +338,11 @@ export const computeSbtiTarget = ({
         ambicao,
         emissoesPorEscopo,
     });
-    const reducaoNearTermPct = aca.reducaoPct;
+    // Redução ABSOLUTA (contração ACA) — mesma taxa para meta absoluta e de
+    // intensidade; é a ÂNCORA (o que os Cenários comparam em tCO2e).
+    const reducaoAbsolutaNearTermPct = aca.reducaoPct;
+    const reducaoAbsolutaNetZeroPct = hasNetZero ? NET_ZERO_REDUCTION_PCT : null;
     const taxaAnual = aca.taxaAnualPct; // taxa anual linear EFETIVA (base→alvo), em %.
-    const reducaoNetZeroPct = hasNetZero ? NET_ZERO_REDUCTION_PCT : null;
 
     const denomAt = (year) => {
         if (!Array.isArray(denominadorPorAno)) return null;
@@ -349,43 +351,61 @@ export const computeSbtiTarget = ({
     };
     const denomBase = denomAt(anoBase);
 
+    // Trajetória ABSOLUTA (base → near-term [→ net-zero]) — sempre a âncora.
+    const absBase = baseCoberta;
+    const absNearTerm = baseCoberta * (1 - reducaoAbsolutaNearTermPct / 100);
+    const absNetZero = hasNetZero ? baseCoberta * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
+    const trajetoriaAbsoluta = buildTargetTrajectory({
+        anoBase,
+        anoNearTerm,
+        anoNetZero,
+        valorBase: absBase,
+        valorNearTerm: absNearTerm,
+        valorNetZero: absNetZero,
+    });
+
     let unidade;
     let valorBase;
     let valorNearTerm;
     let valorNetZero;
+    let trajetoria;
     let denominadorAusente = false;
+    // Por padrão, os % exibidos são os absolutos (metas absolutas/SDA).
+    let reducaoNearTermPct = reducaoAbsolutaNearTermPct;
+    let reducaoNetZeroPct = reducaoAbsolutaNetZeroPct;
 
     if (intensity) {
+        // Intensidade(ano) = ABSOLUTO(ano) ÷ denominador(ano). Como o denominador
+        // (variável de crescimento) cresce, a QUEDA DE INTENSIDADE é mais acentuada
+        // que a redução absoluta — mantendo o absoluto na âncora SBTi.
         unidade = 'intensidade';
         if (denomBase && denomBase > 0) {
-            valorBase = baseCoberta / denomBase;
+            const denomOr = (ano) => denomAt(ano) ?? denomBase;
+            trajetoria = trajetoriaAbsoluta.map((p) => ({
+                ...p,
+                valor: p.valor != null ? p.valor / denomOr(p.ano) : null,
+            }));
+            valorBase = absBase / denomBase;
+            valorNearTerm = absNearTerm / denomOr(anoNearTerm);
+            valorNetZero = hasNetZero ? absNetZero / denomOr(anoNetZero) : null;
+            reducaoNearTermPct = valorBase > 0 ? (1 - valorNearTerm / valorBase) * 100 : reducaoAbsolutaNearTermPct;
+            reducaoNetZeroPct =
+                hasNetZero && valorBase > 0 ? (1 - valorNetZero / valorBase) * 100 : reducaoAbsolutaNetZeroPct;
         } else {
-            valorBase = null;
             denominadorAusente = true;
+            valorBase = null;
+            valorNearTerm = null;
+            valorNetZero = null;
+            trajetoria = [];
         }
-        valorNearTerm = valorBase != null ? valorBase * (1 - reducaoNearTermPct / 100) : null;
-        valorNetZero = hasNetZero && valorBase != null ? valorBase * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
     } else {
         // 'absoluta' e 'sda_setorial' (SDA cai no ACA até a fase 2 — ver TODO no topo).
         unidade = 'absoluto';
-        valorBase = baseCoberta;
-        valorNearTerm = baseCoberta * (1 - reducaoNearTermPct / 100);
-        valorNetZero = hasNetZero ? baseCoberta * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
+        valorBase = absBase;
+        valorNearTerm = absNearTerm;
+        valorNetZero = absNetZero;
+        trajetoria = trajetoriaAbsoluta;
     }
-
-    const trajetoria =
-        valorBase == null
-            ? []
-            : buildTargetTrajectory({ anoBase, anoNearTerm, anoNetZero, valorBase, valorNearTerm, valorNetZero });
-
-    // Conversão para absoluto (Cenários comparam emissões absolutas).
-    // Para metas absolutas: já é absoluto. Para intensidade: valor × denominador(ano).
-    const trajetoriaAbsoluta = !intensity
-        ? trajetoria
-        : trajetoria.map((p) => {
-              const denom = denomAt(p.ano) ?? denomBase;
-              return { ano: p.ano, valor: denom != null ? p.valor * denom : null, marco: p.marco, tipo: p.tipo };
-          });
 
     return {
         unidade,
@@ -394,6 +414,9 @@ export const computeSbtiTarget = ({
         taxaAnual,
         reducaoNearTermPct,
         reducaoNetZeroPct,
+        // Redução absoluta equivalente (âncora SBTi) — para contexto nas metas de intensidade.
+        reducaoAbsolutaNearTermPct,
+        reducaoAbsolutaNetZeroPct,
         valorBase,
         valorNearTerm,
         valorNetZero,
