@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Tag, Row, Col, Alert } from 'antd';
 import { Stack, TrendDown, Target, Leaf } from '@phosphor-icons/react';
 import { StatCard, ChartCard } from '@/shared/components/ui/Card';
+import { useAuthStore } from '@/features/auth/shared/store/authStore';
+import { reductionCommitmentText, engagementCommitmentText } from '../services/sbtiTargetService';
 import TargetTrajectoryChart from './TargetTrajectoryChart';
 
 const num = (v, dec = 0) => Number(v).toLocaleString('pt-BR', { maximumFractionDigits: dec });
@@ -13,8 +15,9 @@ const pct = (v) => `${Number(v).toLocaleString('pt-BR', { minimumFractionDigits:
  * resumo em linguagem natural + KPIs + gráfico da trajetória daquela meta.
  * Suporta metas absolutas (tCO2e) e de intensidade (tCO2e/unidade).
  */
-function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLabel, denominatorUnit }) {
+function TargetResultPanel({ target, meta, params, scopesLabel, ambitionLabel, typeLabel, denominatorUnit }) {
     const { baseYear, recentYear } = params;
+    const companyName = useAuthStore((s) => s.user?.selectedCompany?.company) || 'A empresa';
     const {
         unidade,
         baseCoberta,
@@ -47,26 +50,13 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
         );
     }
 
-    const verb = isIntensity ? `a intensidade (${unitLabel}) de` : 'emissões absolutas de';
+    const reductionText = reductionCommitmentText({ companyName, meta, target, baseYear, denominatorUnit });
+    const engagementText =
+        target.kind === 'combined' ? engagementCommitmentText({ companyName, target, standalone: false }) : null;
     const summary = (
         <>
-            Reduzir {verb} <b className="text-emerald-300">{scopesLabel || '—'}</b> em{' '}
-            <b className="text-emerald-300">{pct(reducaoNearTermPct)}</b> até{' '}
-            <b className="text-emerald-300">{nearTermYear}</b>
-            {hasNetZero ? (
-                <>
-                    {' '}e em <b className="text-emerald-300">{pct(reducaoNetZeroPct)}</b> até{' '}
-                    <b className="text-emerald-300">{netZeroYear}</b> (net-zero)
-                </>
-            ) : null}
-            , ano-base <b className="text-emerald-300">{baseYear}</b>
-            {recentYear > baseYear ? (
-                <>
-                    , ano mais recente <b className="text-emerald-300">{recentYear}</b>
-                </>
-            ) : null}{' '}
-            · ambição <b className="text-emerald-300">{ambitionLabel}</b> · tipo{' '}
-            <b className="text-emerald-300">{typeLabel}</b>.
+            {reductionText}
+            {engagementText ? <> {engagementText}</> : null}
         </>
     );
 
@@ -176,6 +166,8 @@ function TargetResultPanel({ target, params, scopesLabel, ambitionLabel, typeLab
 TargetResultPanel.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     target: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    meta: PropTypes.object.isRequired,
     params: PropTypes.shape({
         baseYear: PropTypes.number,
         recentYear: PropTypes.number,

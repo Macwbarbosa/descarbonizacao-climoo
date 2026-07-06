@@ -249,6 +249,31 @@ export const coveredScope3ByCategory = (meta, baseActivities) => {
     return out;
 };
 
+/** Emissão TOTAL do Escopo 3 por categoria (todas as atividades, sem exclusões). */
+export const scope3TotalsByCategory = (baseActivities) => {
+    const out = {};
+    (baseActivities || []).forEach((a) => {
+        if (a.scope !== 'Escopo 3' || !a.category) return;
+        out[a.category] = (out[a.category] || 0) + (Number(a.emission) || 0);
+    });
+    return out;
+};
+
+/**
+ * Cobertura do engajamento relativa às categorias dos parceiros: % das emissões
+ * DAS CATEGORIAS engajadas que estão cobertas pelos fornecedores/clientes.
+ * @returns {{ partnerCategories:string[], categoriesTotal:number, sharePct:number }}
+ */
+export const engagementCategoryShare = (meta, baseActivities) => {
+    const partners = meta?.engagement?.partners || [];
+    const partnerCategories = [...new Set(partners.map((p) => p.category).filter(Boolean))];
+    const totals = scope3TotalsByCategory(baseActivities);
+    const categoriesTotal = partnerCategories.reduce((t, c) => t + (totals[c] || 0), 0);
+    const engag = sumEngagementEmissions(meta);
+    const sharePct = categoriesTotal > 0 ? (engag / categoriesTotal) * 100 : 0;
+    return { partnerCategories, categoriesTotal, sharePct };
+};
+
 /**
  * Desconto do engajamento por categoria: para cada parceiro, subtrai a emissão
  * associada da categoria correspondente na cobertura de REDUÇÃO (limitado ao que
@@ -472,12 +497,15 @@ export const computeMetaTarget = (meta, ctx) => {
     if (isEngagementType(meta.type)) {
         const engagementEmissions = sumEngagementEmissions(meta);
         const coveragePct = scope3Total > 0 ? (engagementEmissions / scope3Total) * 100 : 0;
+        const catShare = engagementCategoryShare(meta, ctx.baseActivities);
         return {
             metaId: meta.id,
             kind: 'engagement',
             engagementEmissions,
             scope3Total,
             coveragePct,
+            partnerCategories: catShare.partnerCategories,
+            engagementShareOfCategoriesPct: catShare.sharePct,
             targetYear: submissionYear + ENGAGEMENT_HORIZON_YEARS,
             partners: meta.engagement?.partners || [],
             meets67: coveragePct >= SCOPE3_MIN_COVERAGE_PCT,
@@ -508,7 +536,8 @@ export const computeMetaTarget = (meta, ctx) => {
         tipoMeta: reductionType,
         emissoesPorEscopo,
         denominadorPorAno,
-        intensityAnnualRate: meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7,
+        // Taxa de intensidade é FIXA pela ambição (SBTi 1,5°C: 7%/ano) — não editável.
+        intensityAnnualRate: INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7,
     });
 
     // ── Meta COMBINADA: redução + engajamento; cobertura conjunta ≥ 67% ─────
@@ -524,12 +553,15 @@ export const computeMetaTarget = (meta, ctx) => {
             reductionCoveredScope3 + engagementEmissions
         );
         const combinedCoveragePct = scope3Total > 0 ? (combinedCoveredEmissions / scope3Total) * 100 : 0;
+        const catShare = engagementCategoryShare(meta, ctx.baseActivities);
         return {
             metaId: meta.id,
             kind: 'combined',
             ...base,
             engagementEmissions,
             engagementDeducted: deducted,
+            partnerCategories: catShare.partnerCategories,
+            engagementShareOfCategoriesPct: catShare.sharePct,
             partners: meta.engagement?.partners || [],
             reductionCoveredScope3,
             reductionCoveredFull,
@@ -558,6 +590,44 @@ export const scopesLabel = (scopes) =>
     SCOPE_KEYS.filter((k) => scopes?.[k])
         .map((k) => `E${k.slice(-1)}`)
         .join('+');
+
+const fmtPct1 = (v) => `${Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+
+/** Frase dos escopos cobertos, ex.: 'suas emissões de Escopo 3' / '... de Escopos 1 e 2'. */
+export const scopePhrase = (scopes) => {
+    const nums = SCOPE_KEYS.filter((k) => scopes?.[k]).map((k) => k.slice(-1));
+    if (!nums.length) return 'suas emissões';
+    if (nums.length === 1) return `suas emissões de Escopo ${nums[0]}`;
+    return `suas emissões de Escopos ${nums.slice(0, -1).join(', ')} e ${nums[nums.length - 1]}`;
+};
+
+/**
+ * Texto do compromisso da PARTE DE REDUÇÃO (absoluta ou intensidade), no padrão:
+ * "{EMPRESA} compromete-se a reduzir {escopos} em {X}% [por unidade de {unid}]
+ *  até {ano}, tendo {ano-base} como ano-base."
+ */
+export const reductionCommitmentText = ({ companyName, meta, target, baseYear, denominatorUnit }) => {
+    const scope = scopePhrase(meta.scopes);
+    const yr = target?.trajetoria?.find((p) => p.tipo === 'near-term')?.ano ?? meta.nearTermYear;
+    const red = fmtPct1(target?.reducaoNearTermPct);
+    const unit = target?.unidade === 'intensidade' ? ` por unidade de ${denominatorUnit || 'valor agregado'}` : '';
+    return `${companyName} compromete-se a reduzir ${scope} em ${red}${unit} até ${yr}, tendo ${baseYear} como ano-base.`;
+};
+
+/**
+ * Texto do compromisso da PARTE DE ENGAJAMENTO, no padrão:
+ * "[Adicionalmente, a empresa|{EMPRESA}] assegura que {XX}% de seus fornecedores
+ *  e clientes (considerando as emissões abrangidas pela {categoria}) estabelecerão
+ *  metas climáticas baseadas na ciência até {ano de submissão + 5}."
+ */
+export const engagementCommitmentText = ({ companyName, target, standalone = false }) => {
+    const share = fmtPct1(target?.engagementShareOfCategoriesPct ?? target?.coveragePct ?? 0);
+    const cats = (target?.partnerCategories || []).join(', ');
+    const catPhrase = cats ? ` (considerando as emissões abrangidas pela ${cats})` : '';
+    const year = target?.engagementTargetYear ?? target?.targetYear;
+    const subject = standalone ? `${companyName} assegura` : 'Adicionalmente, a empresa assegura';
+    return `${subject} que ${share} de seus fornecedores e clientes${catPhrase} estabelecerão metas climáticas baseadas na ciência até ${year}.`;
+};
 
 /** Nome automático sugerido para a meta (editável pelo usuário). */
 export const autoMetaName = (meta) => {

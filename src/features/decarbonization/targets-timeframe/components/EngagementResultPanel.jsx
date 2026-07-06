@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Tag, Row, Col, Alert } from 'antd';
 import { Users, Target, Handshake, CalendarCheck } from '@phosphor-icons/react';
 import { StatCard } from '@/shared/components/ui/Card';
-import { SCOPE3_MIN_COVERAGE_PCT } from '../services/sbtiTargetService';
+import { useAuthStore } from '@/features/auth/shared/store/authStore';
+import { SCOPE3_MIN_COVERAGE_PCT, engagementCommitmentText } from '../services/sbtiTargetService';
 
 const num = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 
@@ -15,8 +16,10 @@ const num = (v) => Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigit
  */
 function EngagementResultPanel({ target }) {
     const { engagementEmissions, scope3Total, coveragePct, targetYear, partners, meets67 } = target;
+    const companyName = useAuthStore((s) => s.user?.selectedCompany?.company) || 'A empresa';
     const fornecedores = partners.filter((p) => p.kind === 'fornecedor').length;
     const clientes = partners.filter((p) => p.kind === 'cliente').length;
+    const commitment = engagementCommitmentText({ companyName, target, standalone: true });
 
     return (
         <div className="mt-4">
@@ -27,14 +30,7 @@ function EngagementResultPanel({ target }) {
 
             <div className="rounded-lg bg-[#210856] text-white px-4 py-4">
                 <div className="text-[11px] uppercase tracking-wide opacity-70">Resumo da meta de engajamento</div>
-                <div className="text-[15px] leading-relaxed mt-1.5">
-                    Engajar <b className="text-emerald-300">{partners.length}</b> parceiro(s) —{' '}
-                    <b className="text-emerald-300">{fornecedores}</b> fornecedor(es) e{' '}
-                    <b className="text-emerald-300">{clientes}</b> cliente(s) — cobrindo{' '}
-                    <b className="text-emerald-300">{num(engagementEmissions)} tCO2e</b> (
-                    <b className="text-emerald-300">{coveragePct.toFixed(0)}%</b> do Escopo 3) para que definam suas
-                    próprias metas até <b className="text-emerald-300">{targetYear}</b> (5 anos a partir da submissão).
-                </div>
+                <div className="text-[15px] leading-relaxed mt-1.5">{commitment}</div>
             </div>
 
             <Alert

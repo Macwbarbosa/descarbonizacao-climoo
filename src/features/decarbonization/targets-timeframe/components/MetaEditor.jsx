@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
+import { Input, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
     AMBITION_OPTIONS,
@@ -103,6 +103,77 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
 
     const setPartners = (partners) => onPatch({ engagement: { ...(meta.engagement || {}), partners } });
 
+    // Bloco de ambição / submissão / horizonte (vem no início da meta).
+    const horizonBlock = engagement ? (
+        <Row gutter={[12, 12]}>
+            <Col xs={12} lg={4}>
+                <span className={labelCls}>Ano de submissão</span>
+                <Select
+                    value={submissionYear}
+                    options={yearOptions(2020, new Date().getFullYear() + 3)}
+                    onChange={onSubmissionChange}
+                    style={{ width: '100%' }}
+                />
+            </Col>
+            <Col xs={12} lg={6}>
+                <span className={labelCls}>Ano-alvo (fixo)</span>
+                <Input value={submissionYear + ENGAGEMENT_HORIZON_YEARS} disabled />
+                <div className="text-[11px] text-gray-400 mt-1">
+                    Engajamento: {ENGAGEMENT_HORIZON_YEARS} anos a partir da submissão.
+                </div>
+            </Col>
+        </Row>
+    ) : (
+        <Row gutter={[12, 12]}>
+            <Col xs={24} lg={8}>
+                <span className={labelCls}>Ambição</span>
+                <div>
+                    <Segmented
+                        value={meta.ambition}
+                        options={AMBITION_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+                        onChange={(v) => onPatch({ ambition: v })}
+                    />
+                </div>
+            </Col>
+            <Col xs={12} lg={4}>
+                <span className={labelCls}>Ano de submissão</span>
+                <Select
+                    value={submissionYear}
+                    options={yearOptions(2020, new Date().getFullYear() + 3)}
+                    onChange={onSubmissionChange}
+                    style={{ width: '100%' }}
+                />
+            </Col>
+            <Col xs={12} lg={6}>
+                <span className={labelCls}>Near-term</span>
+                <Select
+                    value={meta.nearTermYear}
+                    options={yearOptions(submissionYear + 5, submissionYear + 10)}
+                    onChange={(v) => onPatch({ nearTermYear: v })}
+                    style={{ width: '100%' }}
+                />
+                <div className="text-[11px] text-gray-400 mt-1">5–10 anos da submissão ({submissionYear}).</div>
+            </Col>
+            <Col xs={12} lg={6}>
+                <span className={labelCls}>Long-term (net-zero) · opcional</span>
+                <div className="flex items-center gap-2">
+                    <Checkbox
+                        checked={meta.netZeroYear != null}
+                        onChange={(e) => onPatch({ netZeroYear: e.target.checked ? params.netZeroYear : null })}
+                    />
+                    <Select
+                        value={meta.netZeroYear || undefined}
+                        disabled={meta.netZeroYear == null}
+                        options={yearOptions(meta.nearTermYear + 1, params.netZeroYear)}
+                        onChange={(v) => onPatch({ netZeroYear: v })}
+                        placeholder="sem long-term"
+                        style={{ flex: 1 }}
+                    />
+                </div>
+            </Col>
+        </Row>
+    );
+
     return (
         <div>
             {/* Nome + remover */}
@@ -117,6 +188,9 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                     </Button>
                 </Col>
             </Row>
+
+            {/* Ambição / submissão / horizonte (início) */}
+            <div className="mt-4">{horizonBlock}</div>
 
             {/* Escopos cobertos */}
             <div className="mt-4">
@@ -200,37 +274,18 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
             </Row>
 
             {intensity && (
-                <Row gutter={[12, 12]} className="mt-3">
-                    <Col xs={24} lg={8}>
-                        <span className={labelCls}>Taxa anual de redução de intensidade (%/ano)</span>
-                        <InputNumber
-                            value={meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}
-                            min={0}
-                            max={100}
-                            step={0.5}
-                            className="w-full"
-                            addonAfter="%/ano"
-                            onChange={(v) => onPatch({ intensityAnnualRate: v ?? 0 })}
-                        />
-                        <div className="text-[11px] text-gray-400 mt-1">
-                            Mínimo SBTi para 1,5°C: {INTENSITY_MIN_ANNUAL_RATE['1p5']}%/ano.
-                        </div>
-                    </Col>
-                    <Col xs={24} lg={16}>
-                        <Alert
-                            type="info"
-                            showIcon
-                            message={
-                                <span>
-                                    Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com r ={' '}
-                                    {meta.intensityAnnualRate ?? INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}%/ano e n = ano-meta
-                                    − max(ano-base, {INTENSITY_BASELINE_FLOOR_YEAR}). O absoluto resulta de intensidade ×
-                                    projeção do denominador (driver da Etapa 3).
-                                </span>
-                            }
-                        />
-                    </Col>
-                </Row>
+                <Alert
+                    className="mt-3"
+                    type="info"
+                    showIcon
+                    message={
+                        <span>
+                            Redução de intensidade = 1 − (1 − r)<sup>n</sup>, com <b>r = {INTENSITY_MIN_ANNUAL_RATE[meta.ambition] ?? 7}%/ano</b>{' '}
+                            (taxa SBTi fixa da ambição) e n = ano-meta − max(ano-base, {INTENSITY_BASELINE_FLOOR_YEAR}). O
+                            absoluto resulta de intensidade × projeção do denominador (driver da Etapa 3).
+                        </span>
+                    }
+                />
             )}
 
             {/* Cobertura da meta (atividades) — parte de redução (não em engajamento puro) */}
@@ -275,77 +330,6 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                 />
             )}
 
-            {/* Horizonte / ambição */}
-            {engagement ? (
-                <Row gutter={[12, 12]} className="mt-4">
-                    <Col xs={12} lg={4}>
-                        <span className={labelCls}>Ano de submissão</span>
-                        <Select
-                            value={submissionYear}
-                            options={yearOptions(2020, new Date().getFullYear() + 3)}
-                            onChange={onSubmissionChange}
-                            style={{ width: '100%' }}
-                        />
-                    </Col>
-                    <Col xs={12} lg={6}>
-                        <span className={labelCls}>Ano-alvo (fixo)</span>
-                        <Input value={submissionYear + ENGAGEMENT_HORIZON_YEARS} disabled />
-                        <div className="text-[11px] text-gray-400 mt-1">
-                            Engajamento: {ENGAGEMENT_HORIZON_YEARS} anos a partir da submissão.
-                        </div>
-                    </Col>
-                </Row>
-            ) : (
-                <Row gutter={[12, 12]} className="mt-4">
-                    <Col xs={24} lg={8}>
-                        <span className={labelCls}>Ambição</span>
-                        <div>
-                            <Segmented
-                                value={meta.ambition}
-                                options={AMBITION_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
-                                onChange={(v) => onPatch({ ambition: v })}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs={12} lg={4}>
-                        <span className={labelCls}>Ano de submissão</span>
-                        <Select
-                            value={submissionYear}
-                            options={yearOptions(2020, new Date().getFullYear() + 3)}
-                            onChange={onSubmissionChange}
-                            style={{ width: '100%' }}
-                        />
-                    </Col>
-                    <Col xs={12} lg={6}>
-                        <span className={labelCls}>Near-term</span>
-                        <Select
-                            value={meta.nearTermYear}
-                            options={yearOptions(submissionYear + 5, submissionYear + 10)}
-                            onChange={(v) => onPatch({ nearTermYear: v })}
-                            style={{ width: '100%' }}
-                        />
-                        <div className="text-[11px] text-gray-400 mt-1">5–10 anos da submissão ({submissionYear}).</div>
-                    </Col>
-                    <Col xs={12} lg={6}>
-                        <span className={labelCls}>Long-term (net-zero) · opcional</span>
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                checked={meta.netZeroYear != null}
-                                onChange={(e) => onPatch({ netZeroYear: e.target.checked ? params.netZeroYear : null })}
-                            />
-                            <Select
-                                value={meta.netZeroYear || undefined}
-                                disabled={meta.netZeroYear == null}
-                                options={yearOptions(meta.nearTermYear + 1, params.netZeroYear)}
-                                onChange={(v) => onPatch({ netZeroYear: v })}
-                                placeholder="sem long-term"
-                                style={{ flex: 1 }}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-            )}
-
             {/* Cobertura conjunta (combinada) */}
             {combined && target && (
                 <Alert
@@ -384,6 +368,7 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
             ) : target ? (
                 <TargetResultPanel
                     target={target}
+                    meta={meta}
                     params={params}
                     scopesLabel={scopesLabel}
                     ambitionLabel={ambitionLabel}

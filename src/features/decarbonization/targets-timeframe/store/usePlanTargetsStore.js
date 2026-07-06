@@ -41,8 +41,6 @@ const makeMeta = (overrides = {}) => {
         excludedActivityIds: [],
         type: 'absoluta',
         denominatorDriverId: null,
-        // Taxa anual de redução de intensidade (%/ano; SBTi 1,5°C: mín. 7%).
-        intensityAnnualRate: 7,
         // Parte de redução da meta COMBINADA (absoluta ou intensidade).
         combinedReductionType: 'absoluta',
         // Parte de ENGAJAMENTO (metas 'engajamento' e 'combinada'):
