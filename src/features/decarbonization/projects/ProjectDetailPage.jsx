@@ -9,7 +9,9 @@ import useDriversStore from '../drivers/store/useDriversStore';
 import usePlanTargetsStore from '../targets-timeframe/store/usePlanTargetsStore';
 import useTechnologyBankStore from '../../../store/technologyBankStore';
 import { mergedInitiatives } from './utils/initiativeCatalog';
-import { activitiesForProject, metaNamesOf } from '../shared/metaScopes';
+import { activitiesForProject, metaNamesOf, projectMetaIds } from '../shared/metaScopes';
+import { indicePorAno } from '../drivers/utils/driverIndex';
+import { isIntensityType, reductionTypeOf } from '../targets-timeframe/services/sbtiTargetService';
 import ProjectEditor from './components/ProjectEditor';
 import CoverageMatrixTab from './components/CoverageMatrixTab';
 
@@ -66,6 +68,24 @@ function ProjectDetailPage() {
         [activities, project, metasById]
     );
     const metaNames = project ? metaNamesOf(project, metasById) : [];
+
+    // Se o projeto pertence a uma meta de INTENSIDADE, as emissões das atividades
+    // são mostradas como indicador (tCO2e ÷ denominador projetado por ano).
+    const intensity = useMemo(() => {
+        const off = { unit: 'tCO2e', denomByYear: null };
+        if (!project) return off;
+        const meta = projectMetaIds(project)
+            .map((mid) => metasById[mid])
+            .find((m) => m && isIntensityType(reductionTypeOf(m)) && m.denominatorDriverId);
+        if (!meta) return off;
+        const driver = drivers.find((d) => d.id === meta.denominatorDriverId);
+        if (!driver) return off;
+        const proj = indicePorAno(driver, { baseYear, endYear: netZeroYear }).map((p) => ({
+            year: p.year,
+            value: driver.baseValue > 0 ? (driver.baseValue * p.index) / 100 : p.index,
+        }));
+        return { unit: `tCO2e/${driver.unit || 'un.'}`, denomByYear: Object.fromEntries(proj.map((p) => [p.year, p.value])) };
+    }, [project, metasById, drivers, baseYear, netZeroYear]);
 
 
     const handleRemove = (projectId) => {
@@ -128,6 +148,8 @@ function ProjectDetailPage() {
                                 currentProjectId={project.id}
                                 memberIds={project.memberActivityIds || []}
                                 onSetMembers={(ids) => patchProject(project.id, { memberActivityIds: ids })}
+                                unit={intensity.unit}
+                                denomByYear={intensity.denomByYear}
                             />
                         }
                     />

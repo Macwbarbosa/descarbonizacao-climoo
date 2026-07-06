@@ -13,10 +13,12 @@ const pct = (v) => `${Number(v).toLocaleString('pt-BR', { maximumFractionDigits:
  * para CADA projeto que cobre a atividade, uma linha de Abrangência (a cobertura
  * definida naquele projeto) e uma de Redução (abatimento daquele projeto).
  */
-function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx, baseYear, endYear }) {
+function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx, baseYear, endYear, unit, denomByYear }) {
     const years = [];
     for (let y = baseYear; y <= endYear; y += 1) years.push(y);
     const covering = (map[activity.id] || []).map((pid) => projectsById[pid]).filter(Boolean);
+    // Intensidade: divide o valor do ano pelo denominador projetado daquele ano.
+    const disp = (v, y) => (denomByYear && denomByYear[y] ? v / denomByYear[y] : v);
 
     const emissao = {};
     activityEmissionByYear(activity, { baseYear, endYear }, ctx.driversById).forEach(({ year, emission }) => {
@@ -47,9 +49,11 @@ function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx,
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="border border-gray-200 px-2 py-1 text-left bg-[#f3f5f8] whitespace-nowrap font-semibold">Emissão (tCO2e)</td>
+                        <td className="border border-gray-200 px-2 py-1 text-left bg-[#f3f5f8] whitespace-nowrap font-semibold">
+                            {denomByYear ? `Intensidade (${unit})` : 'Emissão (tCO2e)'}
+                        </td>
                         {years.map((y) => (
-                            <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums">{fmt(emissao[y])}</td>
+                            <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums">{fmt(disp(emissao[y], y))}</td>
                         ))}
                     </tr>
                     {perProject.length === 0 ? (
@@ -71,10 +75,10 @@ function ActivityYearDetail({ activity, map, projectsById, initiativesById, ctx,
                                 </tr>
                                 <tr>
                                     <td className="border border-gray-200 px-2 py-1 text-left bg-[#f3f5f8] whitespace-nowrap">
-                                        Redução — {project.name} (tCO2e)
+                                        Redução — {project.name} ({denomByYear ? unit : 'tCO2e'})
                                     </td>
                                     {years.map((y) => (
-                                        <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums text-[#2F6F5E]">{fmt(red[y])}</td>
+                                        <td key={y} className="border border-gray-200 px-2 py-1 text-right tabular-nums text-[#2F6F5E]">{fmt(disp(red[y], y))}</td>
                                     ))}
                                 </tr>
                             </React.Fragment>
@@ -99,7 +103,12 @@ ActivityYearDetail.propTypes = {
     ctx: PropTypes.object.isRequired,
     baseYear: PropTypes.number.isRequired,
     endYear: PropTypes.number.isRequired,
+    unit: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    denomByYear: PropTypes.object,
 };
+
+ActivityYearDetail.defaultProps = { unit: 'tCO2e', denomByYear: null };
 
 /**
  * Grade ÚNICA de atividades do projeto + cobertura. Árvore expansível
@@ -109,7 +118,7 @@ ActivityYearDetail.propTypes = {
  *   - ao expandir, detalhe ano-a-ano (Emissão · Abrangência · Redução).
  * Substitui os dois lugares antigos ("Atividades do grupo" + "Matriz de cobertura").
  */
-function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, endYear, currentProjectId, memberIds, onSetMembers }) {
+function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, endYear, currentProjectId, memberIds, onSetMembers, unit, denomByYear }) {
     const [onlyOrphans, setOnlyOrphans] = useState(false);
     const [onlyMembers, setOnlyMembers] = useState(false);
     const [coverFilter, setCoverFilter] = useState('');
@@ -323,7 +332,9 @@ function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, e
                                                                                 {actOpen ? <CaretDownOutlined className="text-gray-400 mr-1" /> : <CaretRightOutlined className="text-gray-400 mr-1" />}
                                                                                 {a.name}
                                                                                 {typeof a.baseEmission === 'number' && (
-                                                                                    <span className="text-[11px] text-gray-400 ml-2">{fmt(a.baseEmission)} tCO2e</span>
+                                                                                    <span className="text-[11px] text-gray-400 ml-2">
+                                                                                        {fmt(denomByYear && denomByYear[baseYear] ? a.baseEmission / denomByYear[baseYear] : a.baseEmission)} {unit}
+                                                                                    </span>
                                                                                 )}
                                                                                 {orphan && (
                                                                                     <Tooltip title="Órfã — não recebe abatimento em nenhum cenário">
@@ -358,6 +369,8 @@ function CoverageMatrixTab({ activities, projects, initiatives, ctx, baseYear, e
                                                                                         ctx={ctx}
                                                                                         baseYear={baseYear}
                                                                                         endYear={endYear}
+                                                                                        unit={unit}
+                                                                                        denomByYear={denomByYear}
                                                                                     />
                                                                                 </td>
                                                                             </tr>
@@ -390,8 +403,18 @@ CoverageMatrixTab.propTypes = {
     currentProjectId: PropTypes.string,
     memberIds: PropTypes.arrayOf(PropTypes.string),
     onSetMembers: PropTypes.func,
+    unit: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    denomByYear: PropTypes.object,
 };
 
-CoverageMatrixTab.defaultProps = { initiatives: [], currentProjectId: null, memberIds: [], onSetMembers: null };
+CoverageMatrixTab.defaultProps = {
+    initiatives: [],
+    currentProjectId: null,
+    memberIds: [],
+    onSetMembers: null,
+    unit: 'tCO2e',
+    denomByYear: null,
+};
 
 export default CoverageMatrixTab;
