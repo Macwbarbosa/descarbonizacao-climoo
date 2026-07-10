@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Form, Input, InputNumber, Select } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, AutoComplete } from 'antd';
 import { SCOPES, categoriesForScope, activityNameWithGroup } from '../utils/inventoryAggregate';
 
 /** Separa "Grupo | Atividade" em { group, activity } (grupo é opcional). */
@@ -86,13 +86,18 @@ function ActivityFormModal({ open, activity, groupOptions, onSave, onClose }) {
                         notFoundContent="Selecione um escopo primeiro"
                     />
                 </Form.Item>
-                <Form.Item name="group" label="Grupo" tooltip="Grupos do módulo de Emissões — entra no nome como “Grupo | Atividade”.">
-                    <Select
-                        placeholder={groupSelectOptions.length ? 'Selecione o grupo (opcional)' : 'Nenhum grupo disponível'}
+                <Form.Item
+                    name="group"
+                    label="Grupo"
+                    tooltip="Sugestões dos grupos do módulo de Emissões — você também pode digitar um grupo novo. Entra no nome como “Grupo | Atividade”."
+                >
+                    <AutoComplete
+                        placeholder="Selecione ou digite o grupo (opcional)"
                         options={groupSelectOptions}
-                        showSearch
-                        optionFilterProp="label"
                         allowClear
+                        filterOption={(input, option) =>
+                            String(option?.value ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
                     />
                 </Form.Item>
                 <Form.Item name="name" label="Atividade" rules={[{ required: true, message: 'Informe a atividade' }]}>
