@@ -43,6 +43,9 @@ const makeMeta = (overrides = {}) => {
         denominatorDriverId: null,
         // Parte de redução da meta COMBINADA (absoluta ou intensidade).
         combinedReductionType: 'absoluta',
+        // Meta FLAG: % de redução e % de remoção informadas manualmente (total = soma).
+        flagReductionPct: 0,
+        flagRemovalPct: 0,
         // Parte de ENGAJAMENTO (metas 'engajamento' e 'combinada'):
         // fornecedores/clientes engajados e a emissão associada a cada um.
         engagement: { partners: [] },

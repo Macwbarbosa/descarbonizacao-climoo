@@ -400,6 +400,26 @@ function InventoryPage() {
                     pagination={false}
                     size="middle"
                     scroll={{ x: 1000 }}
+                    summary={(pageData) => {
+                        // pageData reflete os filtros de coluna aplicados na tabela.
+                        const soma = pageData.reduce((t, r) => t + (Number(r.emission) || 0), 0);
+                        const filtrado = pageData.length !== yearActivities.length;
+                        return (
+                            <Table.Summary fixed>
+                                <Table.Summary.Row className="bg-[#f6f4fc]">
+                                    <Table.Summary.Cell index={0} colSpan={4}>
+                                        <span className="font-semibold text-[#210856]">
+                                            Total{filtrado ? ' (filtrado)' : ''} · {pageData.length} atividade(s)
+                                        </span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={4} align="right">
+                                        <span className="font-semibold tabular-nums text-[#210856]">{fmt3(soma)} tCO2e</span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={5} colSpan={2} />
+                                </Table.Summary.Row>
+                            </Table.Summary>
+                        );
+                    }}
                 />
             </Card>
 

@@ -150,6 +150,7 @@ export const TARGET_TYPE_OPTIONS = [
     { value: 'intensidade_economica', label: 'Intensidade monetária', short: 'int. monetária', intensity: true },
     { value: 'engajamento', label: 'Engajamento (fornecedores/clientes)', short: 'engajamento', intensity: false },
     { value: 'combinada', label: 'Meta combinada (redução + engajamento)', short: 'combinada', intensity: false },
+    { value: 'flag', label: 'FLAG (Florestas, Terra e Agricultura)', short: 'FLAG', intensity: false },
     { value: 'sda_setorial', label: 'Setorial (SDA)', short: 'SDA', intensity: false },
 ];
 
@@ -178,6 +179,8 @@ export const isIntensityType = (type) => type === 'intensidade_fisica' || type =
 export const isEngagementType = (type) => type === 'engajamento';
 /** @param {TipoMeta} type */
 export const isCombinedType = (type) => type === 'combinada';
+/** @param {TipoMeta} type — FLAG: redução + remoção informadas manualmente. */
+export const isFlagType = (type) => type === 'flag';
 /** Tipos que carregam uma parte de engajamento (lista de fornecedores/clientes). */
 export const hasEngagementPart = (type) => isEngagementType(type) || isCombinedType(type);
 
@@ -513,6 +516,48 @@ export const computeMetaTarget = (meta, ctx) => {
         };
     }
 
+    // ── Meta FLAG (Florestas, Terra e Agricultura): redução + remoção manuais ──
+    // A % total (para o texto e a trajetória) é a SOMA da meta de redução com a
+    // meta de remoção informadas pelo usuário.
+    if (isFlagType(meta.type)) {
+        const reductionPct = Math.max(0, Number(meta.flagReductionPct) || 0);
+        const removalPct = Math.max(0, Number(meta.flagRemovalPct) || 0);
+        const totalPct = Math.min(100, reductionPct + removalPct);
+        const emissoesPorEscopo = ctx.baseActivities
+            ? coveredBaselineByScope(meta, ctx.baseActivities)
+            : coveredEmissions(meta.scopes, ctx.baselineByScope);
+        const baseCoberta = sumCoveredBase(emissoesPorEscopo);
+        const anoNearTerm = meta.nearTermYear;
+        const anoNetZero = meta.netZeroYear ?? null;
+        const hasNetZero = anoNetZero != null && anoNetZero > anoNearTerm;
+        const valorBase = baseCoberta;
+        const valorNearTerm = baseCoberta * (1 - totalPct / 100);
+        const valorNetZero = hasNetZero ? baseCoberta * (1 - NET_ZERO_REDUCTION_PCT / 100) : null;
+        const trajetoria = buildTargetTrajectory({ anoBase: ctx.baseYear, anoNearTerm, anoNetZero, valorBase, valorNearTerm, valorNetZero });
+        return {
+            metaId: meta.id,
+            kind: 'flag',
+            unidade: 'absoluto',
+            baseCoberta,
+            taxaAnual: 0,
+            reducaoNearTermPct: totalPct,
+            reducaoNetZeroPct: hasNetZero ? NET_ZERO_REDUCTION_PCT : null,
+            flagReductionPct: reductionPct,
+            flagRemovalPct: removalPct,
+            flagTotalPct: totalPct,
+            valorBase,
+            valorNearTerm,
+            valorNetZero,
+            hasNetZero,
+            trajetoria,
+            trajetoriaAbsoluta: trajetoria,
+            denominadorAusente: false,
+            larrFloorPct: 0,
+            pisoAtivo: false,
+            larrPorEscopo: [],
+        };
+    }
+
     // ── Parte de REDUÇÃO (própria, ou sub-tipo da combinada) ────────────────
     const reductionType = reductionTypeOf(meta);
     const emissoesPorEscopo = ctx.baseActivities
@@ -632,6 +677,16 @@ export const engagementCommitmentText = ({ companyName, target, standalone = fal
     return `${subject} que ${share}, em emissão, de seus ${who}${catPhrase} estabelecerão metas climáticas baseadas na ciência até ${year}.`;
 };
 
+/**
+ * Texto do compromisso de uma meta FLAG: "{EMPRESA} compromete-se a reduzir suas
+ * emissões FLAG em {total}% até {ano}, tendo {base} como ano-base — sendo {red}%
+ * por redução e {rem}% por remoção."
+ */
+export const flagCommitmentText = ({ companyName, meta, target, baseYear }) => {
+    const yr = target?.trajetoria?.find((p) => p.tipo === 'near-term')?.ano ?? meta.nearTermYear;
+    return `${companyName} compromete-se a reduzir suas emissões FLAG (Florestas, Terra e Agricultura) em ${fmtPct1(target?.flagTotalPct)} até ${yr}, tendo ${baseYear} como ano-base — sendo ${fmtPct1(target?.flagReductionPct)} por redução de emissões e ${fmtPct1(target?.flagRemovalPct)} por remoções.`;
+};
+
 /** Nome automático sugerido para a meta (editável pelo usuário). */
 export const autoMetaName = (meta) => {
     const typeOpt = TARGET_TYPE_OPTIONS.find((t) => t.value === meta.type);
@@ -653,6 +708,8 @@ export default {
     isIntensityType,
     isEngagementType,
     isCombinedType,
+    isFlagType,
+    flagCommitmentText,
     hasEngagementPart,
     reductionTypeOf,
     needsDenominator,

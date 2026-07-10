@@ -4,7 +4,7 @@ import { Tag, Row, Col, Alert } from 'antd';
 import { Stack, TrendDown, Target, Leaf } from '@phosphor-icons/react';
 import { StatCard, ChartCard } from '@/shared/components/ui/Card';
 import { useAuthStore } from '@/features/auth/shared/store/authStore';
-import { reductionCommitmentText, engagementCommitmentText } from '../services/sbtiTargetService';
+import { reductionCommitmentText, engagementCommitmentText, flagCommitmentText } from '../services/sbtiTargetService';
 import TargetTrajectoryChart from './TargetTrajectoryChart';
 
 const num = (v, dec = 0) => Number(v).toLocaleString('pt-BR', { maximumFractionDigits: dec });
@@ -50,7 +50,10 @@ function TargetResultPanel({ target, meta, params, scopesLabel, ambitionLabel, t
         );
     }
 
-    const reductionText = reductionCommitmentText({ companyName, meta, target, baseYear, denominatorUnit });
+    const reductionText =
+        target.kind === 'flag'
+            ? flagCommitmentText({ companyName, meta, target, baseYear })
+            : reductionCommitmentText({ companyName, meta, target, baseYear, denominatorUnit });
     const engagementText =
         target.kind === 'combined' ? engagementCommitmentText({ companyName, target, standalone: false }) : null;
     const summary = (
@@ -78,7 +81,7 @@ function TargetResultPanel({ target, meta, params, scopesLabel, ambitionLabel, t
                 <div className="text-[15px] leading-relaxed mt-1.5">{summary}</div>
             </div>
 
-            {!isIntensity && (
+            {!isIntensity && target.kind !== 'flag' && (
                 <Alert
                     className="mt-3"
                     type="info"

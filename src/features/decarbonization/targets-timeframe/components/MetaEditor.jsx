@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
+import { Input, InputNumber, Select, Segmented, Checkbox, Button, Row, Col, Alert, Divider, Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
     AMBITION_OPTIONS,
@@ -11,6 +11,7 @@ import {
     ENGAGEMENT_HORIZON_YEARS,
     isEngagementType,
     isCombinedType,
+    isFlagType,
     isIntensityType,
     reductionTypeOf,
 } from '../services/sbtiTargetService';
@@ -39,8 +40,10 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
 
     const engagement = isEngagementType(meta.type);
     const combined = isCombinedType(meta.type);
+    const flag = isFlagType(meta.type);
     const reductionType = reductionTypeOf(meta);
     const intensity = isIntensityType(reductionType); // parte de redução usa denominador?
+    const flagTotalPct = (Number(meta.flagReductionPct) || 0) + (Number(meta.flagRemovalPct) || 0);
 
     // Atividades do ano-base dentro dos escopos cobertos — universo da cobertura (parte de redução).
     const coverageActivities = useMemo(() => {
@@ -123,16 +126,18 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
         </Row>
     ) : (
         <Row gutter={[12, 12]}>
-            <Col xs={24} lg={8}>
-                <span className={labelCls}>Ambição</span>
-                <div>
-                    <Segmented
-                        value={meta.ambition}
-                        options={AMBITION_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
-                        onChange={(v) => onPatch({ ambition: v })}
-                    />
-                </div>
-            </Col>
+            {!flag && (
+                <Col xs={24} lg={8}>
+                    <span className={labelCls}>Ambição</span>
+                    <div>
+                        <Segmented
+                            value={meta.ambition}
+                            options={AMBITION_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+                            onChange={(v) => onPatch({ ambition: v })}
+                        />
+                    </div>
+                </Col>
+            )}
             <Col xs={12} lg={4}>
                 <span className={labelCls}>Ano de submissão</span>
                 <Select
@@ -271,6 +276,48 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                 )}
             </Row>
 
+            {/* FLAG: meta de redução + meta de remoção (informadas manualmente) */}
+            {flag && (
+                <div className="mt-4 rounded-lg border border-[#e4d9fb] bg-[#faf8ff] p-3">
+                    <div className="text-[11px] text-gray-500 mb-2">
+                        Meta FLAG (Florestas, Terra e Agricultura): informe a meta de redução e a de remoção; a
+                        meta geral FLAG é a soma das duas.
+                    </div>
+                    <Row gutter={[12, 12]} align="bottom">
+                        <Col xs={12} lg={8}>
+                            <span className={labelCls}>Meta de redução (%)</span>
+                            <InputNumber
+                                value={meta.flagReductionPct ?? 0}
+                                min={0}
+                                max={100}
+                                step={0.5}
+                                className="w-full"
+                                addonAfter="%"
+                                onChange={(v) => onPatch({ flagReductionPct: v ?? 0 })}
+                            />
+                        </Col>
+                        <Col xs={12} lg={8}>
+                            <span className={labelCls}>Meta de remoção (%)</span>
+                            <InputNumber
+                                value={meta.flagRemovalPct ?? 0}
+                                min={0}
+                                max={100}
+                                step={0.5}
+                                className="w-full"
+                                addonAfter="%"
+                                onChange={(v) => onPatch({ flagRemovalPct: v ?? 0 })}
+                            />
+                        </Col>
+                        <Col xs={24} lg={8}>
+                            <div className="text-[11px] uppercase tracking-wide text-gray-500 mb-1">Meta geral FLAG</div>
+                            <div className="text-lg font-bold text-[#210856] tabular-nums">
+                                {flagTotalPct.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%
+                            </div>
+                            <div className="text-[11px] text-gray-400">redução + remoção</div>
+                        </Col>
+                    </Row>
+                </div>
+            )}
 
             {/* Cobertura da meta (atividades) — parte de redução (não em engajamento puro) */}
             {!engagement && (
