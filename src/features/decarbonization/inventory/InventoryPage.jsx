@@ -401,16 +401,21 @@ function InventoryPage() {
                     size="middle"
                     scroll={{ x: 1000 }}
                     summary={(pageData) => {
-                        // pageData reflete os filtros de coluna aplicados na tabela.
-                        const soma = pageData.reduce((t, r) => t + (Number(r.emission) || 0), 0);
-                        const filtrado = pageData.length !== yearActivities.length;
+                        // Se há linhas SELECIONADAS (checkbox), soma só as selecionadas
+                        // (mesmo que filtradas fora da visão); senão, soma o que está visível.
+                        const hasSelection = selectedRowKeys.length > 0;
+                        const selectedSet = new Set(selectedRowKeys);
+                        const rows = hasSelection ? yearActivities.filter((a) => selectedSet.has(a.id)) : pageData;
+                        const soma = rows.reduce((t, r) => t + (Number(r.emission) || 0), 0);
+                        const filtrado = !hasSelection && pageData.length !== yearActivities.length;
+                        const rotulo = hasSelection
+                            ? `Total selecionado · ${rows.length} atividade(s)`
+                            : `Total${filtrado ? ' (filtrado)' : ''} · ${pageData.length} atividade(s)`;
                         return (
                             <Table.Summary fixed>
                                 <Table.Summary.Row className="bg-[#f6f4fc]">
                                     <Table.Summary.Cell index={0} colSpan={4}>
-                                        <span className="font-semibold text-[#210856]">
-                                            Total{filtrado ? ' (filtrado)' : ''} · {pageData.length} atividade(s)
-                                        </span>
+                                        <span className="font-semibold text-[#210856]">{rotulo}</span>
                                     </Table.Summary.Cell>
                                     <Table.Summary.Cell index={4} align="right">
                                         <span className="font-semibold tabular-nums text-[#210856]">{fmt3(soma)} tCO2e</span>
