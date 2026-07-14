@@ -84,7 +84,15 @@ function MetaCoverageTree({ activities, excludedIds, onChange }) {
                     style={{ maxWidth: 320 }}
                 />
                 <span className="text-[11px] text-gray-500">
-                    <b>{pct.toFixed(0)}%</b> das emissões cobertas · {includedCount} de {activities.length} atividades
+                    {/* Nunca arredonda para 100% quando a cobertura não é integral (ex.: 99,6%). */}
+                    <b>
+                        {(pct >= 100
+                            ? 100
+                            : Math.min(99.99, pct)
+                        ).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}
+                        %
+                    </b>{' '}
+                    das emissões cobertas · {includedCount} de {activities.length} atividades
                 </span>
                 {visibleIds.length > 0 && (
                     <Button type="link" size="small" className="px-0 text-[12px]" onClick={() => setMany(visibleIds, !allVisibleIncluded)}>

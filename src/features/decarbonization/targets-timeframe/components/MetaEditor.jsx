@@ -32,10 +32,6 @@ const fmt = (v) => Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 
  * combinada (redução + engajamento, cobertura conjunta ≥ 67%).
  */
 function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, target, issues, onPatch, onRemove }) {
-    const total = useMemo(
-        () => SCOPE_KEYS.reduce((sum, k) => sum + (baselineByScope[k] || 0), 0),
-        [baselineByScope]
-    );
     const scope3Total = baselineByScope.scope3 || 0;
 
     const engagement = isEngagementType(meta.type);
@@ -205,8 +201,6 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                 )}
                 <Row gutter={[8, 8]}>
                     {SCOPE_KEYS.map((k) => {
-                        const value = baselineByScope[k] || 0;
-                        const share = total > 0 ? (value / total) * 100 : 0;
                         const lockScope = (engagement || combined) && k !== 'scope3';
                         return (
                             <Col xs={24} md={8} key={k}>
@@ -218,17 +212,13 @@ function MetaEditor({ meta, params, baselineByScope, baseActivities, drivers, ta
                                         meta.scopes[k] ? 'border-[#210856] bg-[#210856]/5' : 'border-gray-200'
                                     } ${lockScope ? 'opacity-40 cursor-not-allowed' : ''}`}
                                 >
-                                    <div className="flex items-center justify-between">
-                                        <Checkbox
-                                            checked={meta.scopes[k]}
-                                            disabled={lockScope}
-                                            onChange={() => !lockScope && toggleScope(k)}
-                                        >
-                                            <b className="text-sm">{SCOPE_NAME[k]}</b>
-                                        </Checkbox>
-                                    </div>
-                                    <div className="text-lg font-bold tabular-nums mt-1">{fmt(value)}</div>
-                                    <div className="text-[11px] text-gray-500">tCO2e · {share.toFixed(0)}% do total</div>
+                                    <Checkbox
+                                        checked={meta.scopes[k]}
+                                        disabled={lockScope}
+                                        onChange={() => !lockScope && toggleScope(k)}
+                                    >
+                                        <b className="text-sm">{SCOPE_NAME[k]}</b>
+                                    </Checkbox>
                                 </button>
                             </Col>
                         );

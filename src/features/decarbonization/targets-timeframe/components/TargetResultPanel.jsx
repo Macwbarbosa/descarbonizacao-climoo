@@ -101,7 +101,7 @@ function TargetResultPanel({ target, meta, params, scopesLabel, ambitionLabel, t
                         title="Base coberta"
                         value={num(baseCoberta)}
                         unit="tCO2e"
-                        tooltipInfo={`Soma dos escopos cobertos no ano-base (${baseYear}).`}
+                        tooltipInfo={`Soma das atividades selecionadas em "Cobertura da meta" no ano-base (${baseYear}).`}
                     />
                 </Col>
                 <Col xs={24} sm={12} lg={6}>
