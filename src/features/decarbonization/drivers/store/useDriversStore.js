@@ -44,7 +44,9 @@ const useDriversStore = create(
 
             /**
              * Carrega drivers. Não sobrescreve edições locais já persistidas:
-             * só busca o seed do serviço quando ainda não há nenhum driver.
+             * só consulta o serviço quando ainda não há nenhum driver. O serviço
+             * retorna lista vazia — cada empresa cadastra as suas variáveis, e
+             * excluir todas NÃO recria nada.
              */
             loadDrivers: async () => {
                 if (get().drivers.length > 0) {
